@@ -11,5 +11,21 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.styles([
+    'resources/assets/css/mystyle.css',
+    'resources/assets/css/theme/bootstrap.min.css',
+
+    'resources/assets/css/theme/scss/icons/font-awesome/css/font-awesome.min.css',
+    'resources/assets/css/theme/scss/icons/simple-line-icons/css/simple-line-icons.css',
+    'resources/assets/css/theme/scss/icons/weather-icons/css/weather-icons.min.css',
+    'resources/assets/css/theme/scss/icons/linea-icons/linea.css',
+    'resources/assets/css/theme/scss/icons/themify-icons/themify-icons.css',
+    'resources/assets/css/theme/scss/icons/flag-icon-css/flag-icon.min.css',
+    'resources/assets/css/theme/scss/icons/material-design-iconic-font/css/materialdesignicons.min.css',
+    'resources/assets/css/theme/scss/spinners.css',
+    'resources/assets/css/theme/scss/animate.css',
+
+    'resources/assets/css/theme/theme-style.css',
+    'resources/assets/css/theme/default-dark.css',
+
+], 'public/css/dco-scorecard.css');
