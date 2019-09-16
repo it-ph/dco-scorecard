@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +37,10 @@ Route::group(['middleware' => ['auth','web'],],
     Route::group(['middleware' => ['adminOnly'],'prefix'=>'admin' ],
         function(){
             Route::resource('users','Admin\AdminController');
+
+            Route::resource('admin-roles','Admin\RoleController');
+
+            Route::resource('admin-positions','Admin\PositionController');
     });
     
 

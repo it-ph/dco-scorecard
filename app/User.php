@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'role', 'password',
+        'emp_id','name','supervisor','manager', 'email','position_id', 'role', 'password','status'
     ];
 
     /**
@@ -56,6 +56,22 @@ class User extends Authenticatable
         }
         return false;
     }
+
+    public function thesupervisor()
+    {
+        return $this->belongsTo('App\User','supervisor');
+    }
+
+    public function themanager()
+    {
+        return $this->belongsTo('App\User','manager');
+    }
+
+    public function theposition()
+    {
+        return $this->belongsTo('App\Position','position_id');
+    }
+  
   
 
 

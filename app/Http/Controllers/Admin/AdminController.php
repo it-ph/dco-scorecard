@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
+use App\Role;
+use App\Position;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,10 +18,18 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $roles = Role::orderBy('role','ASC')->get();
+        $positions = Position::orderBy('position','ASC')->get();
+        $users = User::whereNotIn('role', ['superadmin'])->orderBy('id','ASC')->get();
+        $supervisors = User::where('role','supervisor')->orderBy('name','ASC')->get();
+        $managers = User::where('role','manager')->orderBy('name','ASC')->get();
 
-
-        return view('admin.user.list',compact('users'));
+        return view('admin.users.list',compact(
+            'users',
+            'roles',
+            'positions',
+            'supervisors',
+            'managers'));
     }
 
     /**
@@ -40,21 +50,26 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        
         $this->validate($request,
             [
+                'emp_id'    => 'required',
                 'name'       => 'required|min:2',
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'position_id' => ['required'],
                 'role' => ['required'],
-                'password' => ['required', 'string', 'min:6', 'confirmed'],
+                'password' => ['required', 'string', 'min:6'],
+                'supervisor' => ( $request['role']=='designer' || $request['role']=='proofer' || $request['role']=='wml' ) ? 'required' : '',
+                'manager' => ( $request['role']=='designer' || $request['role']=='proofer' || $request['role']=='wml' ) ? 'required' : '',
             ],
-                $messages = array('name.required' => 'Username is Required!')
+                $messages = array('emp_id.required' => 'Employee ID is Required!',
+                'name.required' => 'Username is Required!',
+                'position_id.required' => 'Position is Required!',
+                'emp_id.unique' => 'Employee cannot have the same Employee ID!',
+                )
             );
            
             $request['password'] = Hash::make( $request['password']);
-
             $user = User::create($request->all());
-            return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' was created succesfully!');   
+            return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' created succesfully!');    
     }
 
     /**
@@ -91,16 +106,13 @@ class AdminController extends Controller
     {
         $this->validate($request,
         [
+            'emp_id'       => 'required',
             'name'       => 'required|min:2',
-            'email' => ['required', 'string', 'email'],
             'role' => ['required'],
-
         ],
             $messages = array('name.required' => 'Username is Required!')
         );
-
         $user = User::findorfail($id);
-
         if(empty( $request['password']))
         {
             $user->update($request->except('password'));
@@ -108,9 +120,7 @@ class AdminController extends Controller
             $request['password'] = Hash::make( $request['password']);
             $user->update($request->all() );
         }
-
         return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' was Updated succesfully!');   
-
     }
 
     /**
@@ -121,6 +131,7 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
+
         $user = User::findorfail($id);
         $user->delete();
 

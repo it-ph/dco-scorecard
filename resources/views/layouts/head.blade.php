@@ -14,6 +14,13 @@
     <title>DCO - Scorecard</title>
     <link href="{{asset('css/dco-scorecard.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/google.font.css')}}" >
+    @yield('css')
+    <style>
+    .removesz{
+      background: transparent!important;
+   
+    }
+    </style>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
