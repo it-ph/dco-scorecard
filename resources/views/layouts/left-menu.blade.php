@@ -14,7 +14,7 @@
                         <li> <a class=" waves-effect waves-dark  @if (\Request::is('home')) active @endif" href="{{url('home')}}"><i class="mdi mdi-gauge" style="color: #04b381"></i><span class="hide-menu">Dashboard</span></a>
                            
                         </li>
-                        @if(Auth::user()->isAdmin())
+                        @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor())
                         <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-bullseye" style="color: #04b381"></i><span class="hide-menu">Scores</span></a>
                             <ul aria-expanded="false" class="collapse">
                                 <li>
@@ -22,7 +22,7 @@
                                     Agents
                                     </a>
                                 </li>
-                                <li><a href="app-chat.html">Team Leaders </a></li>
+                                <li><a class=" waves-effect waves-dark  @if (\Request::is('scores/tl')) active @endif" href="{{url('scores/tl')}}">Team Leaders </a></li>
                             </ul>
                         </li>
                         @else 

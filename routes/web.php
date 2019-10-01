@@ -51,6 +51,8 @@ Route::group(['middleware' => ['auth','web'],],
     //Score
     Route::group(['prefix'=>'scores' ],
         function(){ 
+
+            //Agent
             Route::GET('agent','ScoreController@agentScore');
             Route::POST('agent','ScoreController@addAgentScore')->name('agent-score.store');
             Route::GET('agent/{score_id}','ScoreController@editAgentScore')->name('agent-score.edit');
@@ -62,6 +64,9 @@ Route::group(['middleware' => ['auth','web'],],
             Route::POST('agent/feedback/{score_id}','ScoreController@agentFeedback')->name('agent-feedback.store');
             Route::POST('agent/action_plan/{score_id}','ScoreController@agentActionPlan')->name('agent-action-plan.store');
             Route::POST('agent/acknowledge/{score_id}','ScoreController@acknowledgeScore')->name('agent-acknowledge.store');
+
+            //Supervisor & TL
+            Route::GET('tl','ScoreController@tlScore');
         });
 
     

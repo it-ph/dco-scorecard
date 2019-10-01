@@ -87,6 +87,11 @@ class ScoreController extends Controller
         //
     }
 
+    public function tlScore(Request $request)
+    {
+        return __FUNCTION__;
+    }
+
     public function agentScore(Request $request)
     {
         
