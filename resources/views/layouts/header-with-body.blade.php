@@ -20,18 +20,18 @@
                 <!-- ============================================================== -->
                 <!-- Logo -->
                 <!-- ============================================================== -->
-                <div class="navbar-header">
+                <div class="navbar-header" style="background: #272c33">
                     <a class="navbar-brand" href="{{url('home')}}">
                         <!-- Logo icon --><b>
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="{{asset('images/personiv/logo.png')}}" style="width: 30px; height: auto" alt="homepage" class="dark-logo" />
+                            <img src="{{asset('images/personiv/logo-white.png')}}" style="width: 30px; height: auto" alt="homepage" class="dark-logo" />
                             <!-- Light Logo icon -->
-                            <img src="{{asset('images/personiv/logo.png')}}" style="width: 30px; height: auto" alt="homepage" class="light-logo" />
+                            <img src="{{asset('images/personiv/logo-white.png')}}" style="width: 30px; height: auto" alt="homepage" class="light-logo" />
                         </b>
                         <!--End Logo icon -->
                         <!-- Logo text -->
-                        <span style="font-size: 14px; font-weight: bold;"> DCO SCORECARD <i class="fa  fa-file-text" style="color: white"></i>
+                        <span style="font-size: 14px; font-weight: bold; color: white"> DCO SCORECARD 
                          <!-- dark Logo text -->
                          {{-- <img src="../assets/images/logo-text.png" alt="homepage" class="dark-logo" /> --}}
                         <!-- Light Logo text -->    
@@ -42,7 +42,7 @@
                 <!-- ============================================================== -->
                 <!-- End Logo -->
                 <!-- ============================================================== -->
-                <div class="navbar-collapse">
+                <div class="navbar-collapse" style="background: #04b381">
                     <!-- ============================================================== -->
                     <!-- toggle and nav items -->
                     <!-- ============================================================== -->

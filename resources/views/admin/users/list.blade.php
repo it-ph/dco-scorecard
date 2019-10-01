@@ -1,5 +1,11 @@
 @extends('layouts.dco-app')
-
+@section('css')
+<style>
+#scorecard_datatable{
+    font-size: 14px !important;
+}
+</style>
+@endsection
 @section('content')
 <h3><strong>USERS LIST</strong></h3>
 
@@ -16,15 +22,16 @@
         @include('notifications.error')
         <div class="card">
             <div class="card-body">
-
-            <table id="scorecard_datatable" class="display nowrap table table-hover table-striped table-bordered dataTable " cellspacing="0" width="100%">            
-                <thead  style="background: #003a5d; color: white; font-weight: bold">
+            <div class="table-responsive">
+            <table id="scorecard_datatable" class="display nowrap table table-hover table-bordered dataTable " cellspacing="0" width="100%">            
+                <thead  style="background: #04b381; color: white; font-weight: bold">
                     <tr>
                         <th>Employee ID</th>
                         <th>Name</th>
                         <th>Position</th>
+                        <th>Department</th>
                         <th>Supervisor</th>
-                        <th>Manager</th>  
+                        <th>Manager</th> 
                         <th>Role</th>
                         <th></th>
                     </tr>
@@ -32,13 +39,14 @@
                 <tbody>
                     @foreach($users as $user)
                     <tr>
-                    <td>{{$user->emp_id}}</td>
-                    <td>{{ucwords($user->name)}}</td>
-                    <td>{{ucwords($user->theposition['position'])}}</td>
-                    <td>{{ ucwords($user->thesupervisor['name']) }}</td>
-                    <td>{{ ucwords($user->themanager['name']) }}</td>
-                    <td>{{ucwords($user->role)}}</td>
-                    <td>
+                    <td class="table-dark-border">{{$user->emp_id}}</td>
+                    <td class="table-dark-border">{{ucwords($user->name)}}</td>
+                    <td class="table-dark-border">{{ucwords($user->theposition['position'])}}</td>
+                    <td class="table-dark-border">{{ucwords($user->thedepartment['department'])}}</td>
+                    <td class="table-dark-border">{{ ucwords($user->thesupervisor['name']) }}</td>
+                    <td class="table-dark-border">{{ ucwords($user->themanager['name']) }}</td>
+                    <td class="table-dark-border">{{ucwords($user->role)}}</td>
+                    <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
@@ -66,7 +74,7 @@
                     @endforeach
                 </tbody>
             </table>
-            
+        </div><!--table-responsive-->
             
             </div><!--card-body-->
         </div><!--card-->
@@ -84,7 +92,7 @@
          var table = $('#scorecard_datatable').DataTable( {
             // @if(\Auth::user()->isAdmin()) "pageLength": 25, @endif
             "pagingType": "full_numbers",
-          
+            "order": [[ 1, "asc" ]],
               orderCellsTop: true,
               fixedHeader: true,
               dom: 'Bfrtip',

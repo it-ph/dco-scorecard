@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Position;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Department;
 
-class PositionController extends Controller
+class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +15,10 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::orderby('position','ASC')
+        $departments = Department::orderby('department','ASC')
         ->get();
         
-        return view('admin.positions.list',compact('positions'));
+        return view('admin.departments.list',compact('departments'));
     }
 
     /**
@@ -41,15 +41,15 @@ class PositionController extends Controller
     {
         $this->validate($request,
         [
-            'position'       => 'required|unique:positions,position',
+            'department'       => 'required|unique:departments,department',
           
         ],
-            $messages = array('position.required' => 'Position is Required!',
-            'position.unique' => 'Duplicate Record found!')
+            $messages = array('department.required' => 'Department is Required!',
+            'department.unique' => 'Duplicate Record found!')
         );
        
-        $position = Position::create($request->all());
-        return redirect()->back()->with('with_success', 'Position : ' . strtoupper($position->position) .' created succesfully!'); 
+        $department = Department::create($request->all());
+        return redirect()->back()->with('with_success', 'Department : ' . strtoupper($department->department) .' created succesfully!'); 
     }
 
     /**
@@ -85,17 +85,17 @@ class PositionController extends Controller
     {
         $this->validate($request,
         [
-            'position'       => 'required|unique:positions,position',
+            'department'       => 'required|unique:departments,department',
           
         ],
-            $messages = array('position.required' => 'Position is Required!',
-            'position.unique' => 'Duplicate Record found!')
+            $messages = array('department.required' => 'Department is Required!',
+            'department.unique' => 'Duplicate Record found!')
         );
 
-        $position = Position::findorfail($id);
-        $position->update(['position' => $request['position']]);
+        $department = Department::findorfail($id);
+        $department->update(['department' => $request['department']]);
 
-       return redirect()->back()->with('with_success', strtoupper($position->position) .' was Updated succesfully!');   
+       return redirect()->back()->with('with_success', strtoupper($department->department) .' was Updated succesfully!');   
     }
 
     /**
@@ -106,8 +106,8 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-        $position = Position::findorfail($id);
-        $position->delete();
-        return redirect()->back()->with('with_success', strtoupper($position->position) .' was Deleted succesfully!');   
+        $department = Department::findorfail($id);
+        $department->delete();
+        return redirect()->back()->with('with_success', strtoupper($department->department) .' was Deleted succesfully!');   
     }
 }

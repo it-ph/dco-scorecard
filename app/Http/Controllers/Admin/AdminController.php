@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
+use App\Department;
 use App\Role;
 use App\Position;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +20,7 @@ class AdminController extends Controller
     public function index()
     {
         $roles = Role::orderBy('role','ASC')->get();
+        $departments = Department::orderBy('department','ASC')->get();
         $positions = Position::orderBy('position','ASC')->get();
         $users = User::whereNotIn('role', ['superadmin'])->orderBy('id','ASC')->get();
         $supervisors = User::where('role','supervisor')->orderBy('name','ASC')->get();
@@ -27,6 +29,7 @@ class AdminController extends Controller
         return view('admin.users.list',compact(
             'users',
             'roles',
+            'departments',
             'positions',
             'supervisors',
             'managers'));

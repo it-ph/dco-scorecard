@@ -1,6 +1,6 @@
-.nav-small-cap{
+/* .nav-small-cap{
     color: white !important;
-}
+} */
 
 .sidebar-nav>ul>li>a.active {
     font-weight: 400;
@@ -9,9 +9,13 @@
 }
 
 .topbar .navbar-light .navbar-nav .nav-item>a.nav-link {
-    color: #003a5d !important;
+    color: white !important;
 }
 
-.sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
+/* .sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
     color: #ffb22b !important;
+} */
+
+.table-dark-border{
+    border: 1px solid #adadad !important;
 }

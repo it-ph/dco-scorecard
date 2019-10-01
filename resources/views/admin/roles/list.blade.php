@@ -30,10 +30,10 @@
                 <tbody>
                     @foreach($roles as $role)
                     <tr>
-                        <td>{{ucwords($role->role)}}</td>
-                        <td>{{$role->created_at->format('M d Y')}}</td>
-                        <td>{{$role->updated_at->format('M d Y')}}</td>
-                        <td>
+                        <td class="table-dark-border">{{ucwords($role->role)}}</td>
+                        <td class="table-dark-border">{{$role->created_at->format('M d Y')}}</td>
+                        <td class="table-dark-border">{{$role->updated_at->format('M d Y')}}</td>
+                        <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action

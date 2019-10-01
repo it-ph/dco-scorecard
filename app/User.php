@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'emp_id','name','supervisor','manager', 'email','position_id', 'role', 'password','status'
+        'emp_id','name','supervisor','manager', 'email','position_id','department_id', 'role', 'password','status'
     ];
 
     /**
@@ -57,6 +57,33 @@ class User extends Authenticatable
         return false;
     }
 
+    public function isAgent()
+    {
+        if($this->role == 'agent')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function isSupervisor()
+    {
+        if($this->role == 'supervisor' || $this->role == 'Supervisor')
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function isManager()
+    {
+        if($this->role == 'manager' || $this->role == 'Manager')
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function thesupervisor()
     {
         return $this->belongsTo('App\User','supervisor');
@@ -71,7 +98,13 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Position','position_id');
     }
-  
+
+    public function thedepartment()
+    {
+        return $this->belongsTo('App\Department','department_id');
+    }
+
+
   
 
 

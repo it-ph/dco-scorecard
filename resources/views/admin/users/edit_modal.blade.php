@@ -4,7 +4,7 @@
     
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header" style="background : #003b5d; color: white">
+            <div class="modal-header" style="background : #04B381; color: white">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title" style="color: white">Editing {{ucwords($user->name)}}</h4>
             </div>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
     
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         {{-- <div class="form-group">
                             <label for="supervisor">Supervisor</label>
                             <input type="text" value="{{$user->supervisor}}" name="supervisor" class="form-control fform" id="supervisor">
@@ -37,6 +37,7 @@
                                 <label for="supervisor">Supervisor <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                                 <select name="supervisor" id="supervisor" class="form-control fform">
                                         <option value="{{$user->supervisor}}">{{ ucwords($user->thesupervisor['name']) }}</option>
+                                        <option value=""></option>
                                         @foreach ($supervisors as $key => $val)
                                         @if (old('supervisor') == $val->supervisor)
                                         <option value="{{ $val->id }}">{{ strtoupper($val->name) }}</option>
@@ -46,7 +47,6 @@
                                         @endforeach
                                         </select>
                                     
-                                
                                 @error('supervisor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -55,10 +55,11 @@
                             </div>
                     </div>
             
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                             <label for="manager">Manager <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                             <select name="manager" id="manager" class="form-control">
                                 <option value="{{$user->manager}}">{{ ucwords($user->themanager['name']) }}</option>
+                                <option value=""></option>
                                 @foreach ($managers as $key => $val)
                                 @if (old('manager') == $val->manager)
                                 <option value="{{ $val->id }}">{{ strtoupper($val->name) }}</option>
@@ -74,6 +75,29 @@
                                 </span>
                             @enderror
                     </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="role">Department<span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                              <select name="department_id" id="department_id" class="form-control">
+                                  <option value="{{$user->department_id}}">{{strtoupper($user->thedepartment['department'])}}</option>
+                                   @foreach ($departments as $key => $val)
+                                  @if (old('department_id') == $val->department)
+                                  <option value="{{ $val->id }}" selected>{{ strtoupper($val->department) }}</option>
+                                  @else
+                                      <option value="{{ $val->id }}">{{ strtoupper($val->department) }}</option>
+                                  @endif
+                                  @endforeach
+                                  </select>
+                              
+                              @error('department_id')
+                                  <span class="invalid-feedback" role="alert">
+                                      <strong>{{ $message }}</strong>
+                                  </span>
+                              @enderror
+                      
+                        </div>
+                </div>
                     
                     <div class="col-md-6">
 
@@ -103,17 +127,11 @@
                             <div class="form-group">
                                 <label for="manager">Role <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                                 <select name="role" required id="role" class="form-control fform">
-                                    @if(old('role'))
-                                        <option value="{{old('role')}}">{{old('role')}}</option>
-                                    @else 
-                                        <option value="{{$user->role}}">{{ucwords($user->role)}}</option>
-                                    @endif
-                                    <option value="proofer">Proofer</option>
-                                    <option value="designer">Designer</option>
-                                    <option value="wml">WML</option>
-                                    <option value="supervisor">Supervisor</option>
-                                    <option value="manager">Manager</option>
-                                    <option value="admin">Administrator</option>
+                                    <option value="{{$user->role}}">{{ucwords($user->role)}}</option>
+                                    @foreach ($roles as $key => $val)
+                                        <option value="{{ $val->role }}">{{ strtoupper($val->role) }}</option>
+                                    @endforeach
+                        
                                 </select>
                             </div>
                         </div>
