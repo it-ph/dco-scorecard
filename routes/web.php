@@ -56,7 +56,6 @@ Route::group(['middleware' => ['auth','web'],],
             Route::GET('agent','ScoreController@agentScore');
             Route::POST('agent','ScoreController@addAgentScore')->name('agent-score.store');
             Route::GET('agent/{score_id}','ScoreController@editAgentScore')->name('agent-score.edit');
-            Route::GET('agent/{score_id}?from_show','ScoreController@editAgentScore')->name('agent-score.edit'); //fordelete
             Route::PUT('agent/{score_id}','ScoreController@updateAgentScore')->name('agent-score.update');
             Route::DELETE('agent/{score_id}','ScoreController@deleteAgentScore')->name('agent-score.destroy');
             Route::GET('agent/show/{score_id}','ScoreController@showAgentScore')->name('agent-score.show');
@@ -67,6 +66,15 @@ Route::group(['middleware' => ['auth','web'],],
 
             //Supervisor & TL
             Route::GET('tl','ScoreController@tlScore');
+            Route::POST('tl','ScoreController@addTLScore')->name('tl-score.store');
+            Route::GET('tl/{score_id}','ScoreController@editTLScore')->name('tl-score.edit');
+            Route::PUT('tl/{score_id}','ScoreController@updateTLScore')->name('tl-score.update');
+            Route::DELETE('tl/{score_id}','ScoreController@deleteTLScore')->name('tl-score.destroy');
+            Route::GET('tl/show/{score_id}','ScoreController@showTLScore')->name('tl-score.show');
+            Route::GET('tl/print/{score_id}','ScoreController@printTLScore')->name('tl-score.print');
+            Route::POST('tl/feedback/{score_id}','ScoreController@tlFeedback')->name('tl-feedback.store');
+            Route::POST('tl/action_plan/{score_id}','ScoreController@tlActionPlan')->name('tl-action-plan.store');
+            Route::POST('tl/acknowledge/{score_id}','ScoreController@acknowledgeScoreTL')->name('agent-acknowledge.store');
         });
 
     

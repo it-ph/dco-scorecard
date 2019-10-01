@@ -4,22 +4,21 @@ namespace App\Scorecard;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Agent extends Model
+class tl extends Model
 {
 
-    // protected $dates = ['month'];
-    protected $table = 'agent_scorecard';
+    protected $table = 'tl_scorecard';
     protected $guarded = [];
 
 
-    public function theagent()
+    public function thetl()
     {
-        return $this->belongsTo('App\User','agent_id');
+        return $this->belongsTo('App\User','tl_id');
     }
 
-    public function scopeAgentdetails($query,$agentID)
+    public function scopeTldetails($query,$tlId)
     {
-        return $query->where('agent_id',$agentID);
+        return $query->where('tl_id',$tlId);
     }
 
     public function scopeMonth($query)

@@ -1,16 +1,16 @@
 @section('modal')
 <!-- Modal -->
-<div id="addAgentScore" class="modal fade" role="dialog">
+<div id="addTlScore" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
       
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header" style="background: #04B381 ">
               <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title" style="color: white; ">Agent Scorecard </h4>
+              <h4 class="modal-title" style="color: white">Team Leader Scorecard</h4>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{route('agent-score.store')}}">
+                <form method="POST" action="{{route('tl-score.store')}}">
                 @csrf
                
             <div class="row">
@@ -48,11 +48,11 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="role">Agents <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
-                                <select name="agent_id" required id="agent_id" class="form-control">
+                        <label for="role">Team Leaders <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                                <select name="tl_id" required id="tl_id" class="form-control">
                                     <option></option>
-                                    @foreach ($agents as $key => $val)
-                                    @if (old('agent_id') == $val->name)
+                                    @foreach ($tls as $key => $val)
+                                    @if (old('tl_id') == $val->name)
                                     <option value="{{ $val->id }}" selected>{{ strtoupper($val->name) }}</option>
                                     @else
                                         <option value="{{ $val->id }}">{{ strtoupper($val->name) }}</option>
@@ -60,7 +60,7 @@
                                     @endforeach
                                     </select>
                                 
-                                @error('agent_id')
+                                @error('tl_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -79,22 +79,40 @@
                             <td style="font-weight: 400">Score</td>
                         </tr>
                         <tr>
-                            <td><span style="font-weight: bold; "> QUALITY (OVER-ALL) <small>40%</small></span>   </td>
-                            <td><input id="actual_quality" required name="actual_quality" value="0" type="text" class="form-control" placeholder="%"></td>
-                            <td><input id="quality" required name="quality" value="0" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"></td>
+                            <td><span style="font-weight: bold; "> QUALITY (OVER-ALL) <small>20%</small></span>   </td>
+                            <td><input id="actual_quality" autocomplete="off" required name="actual_quality" value="0" type="text" class="form-control" placeholder="%"></td>
+                            <td><input id="quality" autocomplete="off" required name="quality" value="0" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"></td>
                         </tr>
 
                         <tr>
-                            <td><span style="font-weight: bold; "> PRODUCTIVITY <small>40%</small></span>   </td>
-                            <td><input id="actual_productivity" required name="actual_productivity" value="0" type="text" class="form-control" placeholder="%"></td>
-                            <td><input id="productivity" required name="productivity" value="0" onkeyup="sumTotalScore()"  type="text" class="form-control" placeholder="%"></td>
+                            <td><span style="font-weight: bold; "> PRODUCTIVITY <small>15%</small></span>   </td>
+                            <td><input id="actual_productivity" autocomplete="off" required name="actual_productivity" value="0" type="text" class="form-control" placeholder="%"></td>
+                            <td><input id="productivity" autocomplete="off" required name="productivity" value="0" onkeyup="sumTotalScore()"  type="text" class="form-control" placeholder="%"></td>
                         </tr>
 
                         <tr>
-                            <td><span style="font-weight: bold; "> RELIABILITY <small>20%</small><br>
-                                    <small> (Absenteeism, Tardiness, Overbreak, Undertime)</small></span>   </td>
-                            <td><input id="actual_reliability" required name="actual_reliability" value="0" type="text" class="form-control" placeholder="%"></td>
-                            <td><input id="reliability" required name="reliability" value="0" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"></td>
+                            <td><span style="font-weight: bold; "> ADMIN & COACHING <small>30%</small>  </td>
+                            <td><input id="actual_admin_coaching" autocomplete="off" required name="actual_admin_coaching" value="0" type="text" class="form-control" placeholder="%"></td>
+                            <td><input id="admin_coaching" autocomplete="off" required name="admin_coaching" value="0" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"></td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold; "> TEAM PERFORMANCE <small>15%</small></span>   </td>
+                            <td><input id="actual_team_performance" autocomplete="off" required name="actual_team_performance" value="0" type="text" class="form-control" placeholder="%"></td>
+                            <td><input id="team_performance" autocomplete="off" required name="team_performance" value="0" onkeyup="sumTotalScore()"  type="text" class="form-control" placeholder="%"></td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold; "> INITIATIVE <small>5%</small></span>   </td>
+                            <td><input id="actual_initiative" autocomplete="off" required name="actual_initiative" value="0" type="text" class="form-control" placeholder="%"></td>
+                            <td><input id="initiative" autocomplete="off" required name="initiative" value="0" onkeyup="sumTotalScore()"  type="text" class="form-control" placeholder="%"></td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold; "> TEAM ATTENDANCE <small>15%</small><br>
+                                <small> (Absenteeism, Tardiness, Overbreak, Undertime)</small></span>   </td>
+                            <td><input id="actual_team_attendance" autocomplete="off" required name="actual_team_attendance" value="0" type="text" class="form-control" placeholder="%"></td>
+                            <td><input id="team_attendance" autocomplete="off" required name="team_attendance" value="0" onkeyup="sumTotalScore()"  type="text" class="form-control" placeholder="%"></td>
                         </tr>
                     </table>
                 </div>

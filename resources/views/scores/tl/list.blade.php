@@ -14,7 +14,7 @@ th{
 </style>
 @endsection
 @section('content')
-<h3><strong>AGENTS SCORECARD</strong></h3>
+<h3><strong>TEAM LEADERS SCORECARD</strong></h3>
 
 <div class="row" id="filterByMonth" style="display: none">
     <div class="col-md-offset-8 col-md-4">
@@ -50,10 +50,10 @@ th{
                     </button>
                     <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
                         <a class="dropdown-item" href="#" onclick="toggleMonthFilter()">By Month</a>
-                        <a class="dropdown-item" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards</a>
-                        <a class="dropdown-item" href="{{url('scores/agent')}}?acknowledge">View Acknowledge Scorecards</a>
+                        <a class="dropdown-item" href="{{url('scores/tl')}}?not_acknowledge">View Un Acknowledge Scorecards</a>
+                        <a class="dropdown-item" href="{{url('scores/tl')}}?acknowledge">View Acknowledge Scorecards</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{url('scores/agent')}}?view_all">View All Scorecards</a>
+                        <a class="dropdown-item" href="{{url('scores/tl')}}?view_all">View All Scorecards</a>
                         
                     </div>
                 </div>
@@ -65,7 +65,7 @@ th{
     </div>
     @if(\Auth::user()->isAdmin()) 
     <div class="col-md-1">
-        <button title="Create Scorcard" class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#addAgentScore" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
+        <button title="Create Scorcard" class="btn btn-success waves-effect waves-light" data-toggle="modal" data-target="#addTlScore" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
     </div>
     @endif
 </div>
@@ -78,13 +78,12 @@ th{
             <div class="card-body">
             <div class="table-responsive">
             <table id="scorecard_datatable" class="display nowrap table table-hover table-bordered dataTable " cellspacing="0" width="100%">            
-                <thead  style="background: #04b381; color: white; font-weight: bold">
+                <thead  style="background: #398bf7; color: white; font-weight: bold">
                     <tr>
                         <th>Month</th>
                         <th>Employee ID</th>
                         <th>Name</th>
                         <th>Department</th>
-                        <th>Supervisor</th>
                         <th>Manager</th>
                         {{-- <th>Quality %</th>
                         <th>Productivity %</th>
@@ -100,30 +99,24 @@ th{
                     <tr>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
                         @if($score->acknowledge == "0")
-                        <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theagent->name)}}"></i>
+                        <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->thetl->name)}}"></i>
                         @else
-                        <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledge by {{ucwords($score->theagent->name)}}"></i>
+                        <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledge by {{ucwords($score->thetl->name)}}"></i>
                         @endif 
                         <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard">
                         {{$score->month}} </a>
                     </td>
-                    <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->theagent->emp_id}}</td>
-                    <td class="table-dark-border">{{ucwords($score->theagent->name)}}</td>
+                    <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->thetl->emp_id}}</td>
+                    <td class="table-dark-border">{{ucwords($score->thetl->name)}}</td>
                     <td class="table-dark-border">
-                        @if($score->theagent->thedepartment)
-                        {{ucwords($score->theagent->thedepartment->department)}}
+                        @if($score->thetl->thedepartment)
+                        {{ucwords($score->thetl->thedepartment->department)}}
                         @endif
                     </td>
 
                     <td class="table-dark-border">
-                        @if($score->theagent->thesupervisor)
-                        {{ucwords($score->theagent->thesupervisor->name)}}
-                        @endif
-                    </td>
-
-                    <td class="table-dark-border">
-                        @if($score->theagent->themanager)
-                        {{ucwords($score->theagent->themanager->name)}}
+                        @if($score->thetl->themanager)
+                        {{ucwords($score->thetl->themanager->name)}}
                         @endif
                     </td>
                     {{-- <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->quality}}</td>
@@ -140,7 +133,7 @@ th{
                                 <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     
                                     <span class="dropdown-item text-center">
-                                         <form method="GET" action="{{route('agent-score.edit', ['id' => $score->id])}}">
+                                         <form method="GET" action="{{route('tl-score.edit', ['id' => $score->id])}}">
                                                 <button class="btn btn-sm btn-primary text-center">
                                                     <i class="fa fa-pencil"></i> Edit
                                                 </button>
@@ -148,7 +141,7 @@ th{
                                     </span>
 
                                    <span class="dropdown-item text-center">
-                                    <form method="POST" action="{{route('agent-score.destroy', ['id' => $score->id])}}">
+                                    <form method="POST" action="{{route('tl-score.destroy', ['id' => $score->id])}}">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" onclick="return confirm('Are you sure you want to delete this score?')" class="btn btn-sm btn-danger"><i class="fa fa-times"></i> Delete</button>
@@ -160,7 +153,7 @@ th{
                      @endif
                      
                    <td class="table-dark-border" style="width: 150px; text-align: center">
-                            <form method="GET" action="{{route('agent-score.show', ['id' => $score->id])}}">
+                            <form method="GET" action="{{route('tl-score.show', ['id' => $score->id])}}">
                             <button type="submit" class="btn btn-sm btn-warning">View Scorecard</button>
                             </form>
                         </td> 
@@ -181,7 +174,7 @@ th{
 @endsection
 
     @if(\Auth::user()->isAdmin()) 
-        @include('scores.agents.add_modal')
+        @include('scores.tl.add_modal')
     @endif
 
 @section('js')
@@ -216,13 +209,19 @@ function sumTotalScore()
 {
     var quality = $("#quality").val();
     var productivity = $("#productivity").val();
-    var reliability = $("#reliability").val();
-
+    var admin_coaching = $("#admin_coaching").val();
+    var team_performance = $("#team_performance").val();
+    var initiative = $("#initiative").val();
+    var team_attendance = $("#team_attendance").val();
+   
     quality = isNaN(quality) ? 0 : quality;
     productivity = isNaN(productivity) ? 0 : productivity;
-    reliability = isNaN(reliability) ? 0 : reliability;
+    admin_coaching = isNaN(admin_coaching) ? 0 : admin_coaching;
+    team_performance = isNaN(team_performance) ? 0 : team_performance;
+    initiative = isNaN(initiative) ? 0 : initiative;
+    team_attendance = isNaN(team_attendance) ? 0 : team_attendance;
 
-    var totalScore = parseInt(quality) + parseInt(productivity) + parseInt(reliability);
+    var totalScore = parseInt(quality) + parseInt(productivity) + parseInt(admin_coaching) + parseInt(team_performance) + parseInt(initiative) + parseInt(team_attendance);
     $("#totalScoreLbl").html(totalScore + "%");
     $("#final_score").val(totalScore)
     console.log(totalScore);
