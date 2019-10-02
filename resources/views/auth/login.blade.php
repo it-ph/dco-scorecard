@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
-    <title>Admin Pro Admin Template - The Ultimate Bootstrap 4 Admin Template</title>
+    <title>DCO - Scorecard</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('css/dco-scorecard.css')}}" rel="stylesheet">
     <!-- page css -->

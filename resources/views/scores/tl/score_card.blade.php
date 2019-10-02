@@ -88,7 +88,9 @@
             <div class="col-md-12">
                 <table  width="100%"  cellspacing="5" cellpadding="5">
                     <tr>
-                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">LEAD ALERTS - OPS SUPERVISOR</td>
+                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">@if($score->thetl->thedepartment)
+                            {{strtoupper($score->thetl->thedepartment->department)}}
+                            @endif - OPS SUPERVISOR</td>
                     </tr>
                     
                     <tr>
@@ -392,7 +394,7 @@
                         <div class="col-print-2"></div>
                         <div class="col-print-4 text-center">
                             <span style="text-decoration: underline; font-weight: bold;">{{strtoupper($score->thetl->name)}}</span>
-                            <br> <span style="font-weight: normal;font-size: 14px">Agent Name</span> </p>
+                            <br> <span style="font-weight: normal;font-size: 14px">Team Leader</span> </p>
                         </div><!--col-md-5-->
 
                         <div class="col-print-6 text-center">
@@ -405,27 +407,20 @@
                             <div class="col-print-2"></div>
                             <div class="col-print-4 text-center">
                                 <span style="text-decoration: underline; font-weight: bold;">
-                                    @if($score->thetl->thesupervisor)
-                                    {{strtoupper($score->thetl->thesupervisor->name)}}
+                                    @if($score->thetl->themanager)
+                                    {{strtoupper($score->thetl->themanager->name)}}
                                     @endif
                             </span>
-                                <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
+                                <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
                             </div><!--col-md-5-->
     
-                            <div class="col-print-6 text-center">
-                                    <span style="text-decoration: underline; font-weight: bold;">
-                                            @if($score->thetl->themanager)
-                                            {{strtoupper($score->thetl->themanager->name)}}
-                                            @endif
-                                    </span>
-                                    <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
-                                </div><!--col-md-5-->
+                            
                     </div><!--row-->
                     <div class="row" style="margin-top: 20px">
                             <div class="col-print-1"></div>
                             <div class="col-print-11 text-center">
                                     <span style="text-decoration: underline; font-weight: bold;">
-                                            DARWIN DOGAYO
+                                        {{ucwords($towerhead->value)}}
                                     </span>
                                     <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
                                 </div><!--col-md-5-->

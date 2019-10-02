@@ -9,6 +9,7 @@ use App\User;
 use Carbon\Carbon;
 use App\Scorecard\Agent as agentScoreCard;
 use App\Scorecard\tl as TLScoreCard;
+use App\Setting;
 
 class ScoreController extends Controller
 {
@@ -97,6 +98,7 @@ class ScoreController extends Controller
     **/
     public function tlScore(Request $request)
     {
+
         $this->userId = Auth::user()->id;
         
         //VIEW ALL AGENT (FOR CREATE CARD)
@@ -230,6 +232,7 @@ class ScoreController extends Controller
     public function showTLScore($id)
     {
         $score = TLScoreCard::findorfail($id);
+        $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
@@ -237,7 +240,21 @@ class ScoreController extends Controller
             return view('notifications.401'); 
         }
           
-        return view('scores.tl.score_card',compact('score'));
+        return view('scores.tl.score_card',compact('score','towerhead'));
+    }
+
+    public function printTLScore ($id)
+    {
+        $score = TLScoreCard::findorfail($id);
+        $towerhead = Setting::where('setting','towerhead')->first();
+        
+        //check if Not admin or not his/her scorecard
+        if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
+        {
+            return view('notifications.401'); 
+        }
+
+      return view('scores.tl.score_print',compact('score','towerhead'));
     }
 
     public function tlFeedback(Request $request, $id)
@@ -318,7 +335,6 @@ class ScoreController extends Controller
             $scores = agentScoreCard::where('month',Carbon::now()->format('M Y'));
         }
     
-
         $avail_months = agentScoreCard::month();
 
         //Agent
@@ -326,24 +342,26 @@ class ScoreController extends Controller
             $scores->agentdetails( $this->userId );
             $avail_months = agentScoreCard::agentdetails( $this->userId )
             ->month();
+
         }
         //Supervisor
         elseif(Auth::user()->isSupervisor()){
             $scores->agentsuperior('supervisor',$this->userId);
             $avail_months =  agentScoreCard::agentsuperior('supervisor',$this->userId)
             ->month();
-        
+
         }//Manager
         elseif(Auth::user()->isManager()){
             $scores->agentsuperior('manager',$this->userId);
             $avail_months =  agentScoreCard::agentsuperior('manager',$this->userId)
             ->month();
+
         }
 
         $scores = $scores->get();
         $avail_months = $avail_months->get();
 
-       return view('scores.agents.list',compact('agents','scores','avail_months'));
+        return view('scores.agents.list',compact('agents','scores','avail_months'));
     }
 
     public function addAgentScore(Request $request)
@@ -413,6 +431,7 @@ class ScoreController extends Controller
     public function showAgentScore($id)
     {
         $score = agentScoreCard::findorfail($id);
+        $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
@@ -421,12 +440,13 @@ class ScoreController extends Controller
         }
           
 
-      return view('scores.agents.score_card',compact('score'));
+      return view('scores.agents.score_card',compact('score','towerhead'));
     }
 
     public function printAgentScore($id)
     {
         $score = agentScoreCard::findorfail($id);
+        $towerhead = Setting::where('setting','towerhead')->first();
         
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
@@ -434,7 +454,7 @@ class ScoreController extends Controller
             return view('notifications.401'); 
         }
 
-      return view('scores.agents.score_print',compact('score'));
+      return view('scores.agents.score_print',compact('score','towerhead'));
     }
 
     public function agentFeedback(Request $request, $id)

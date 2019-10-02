@@ -88,7 +88,9 @@
             <div class="col-md-12">
                 <table  width="100%"  cellspacing="5" cellpadding="5">
                     <tr>
-                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">LEAD ALERTS - AGENT</td>
+                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">@if($score->theagent->thedepartment)
+                            {{strtoupper($score->theagent->thedepartment->department)}}
+                            @endif - AGENT</td>
                     </tr>
                     
                     <tr>
@@ -389,7 +391,7 @@
                             <div class="col-print-1"></div>
                             <div class="col-print-11 text-center">
                                     <span style="text-decoration: underline; font-weight: bold;">
-                                            DARWIN DOGAYO
+                                            {{ucwords($towerhead->value)}}
                                     </span>
                                     <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
                                 </div><!--col-md-5-->

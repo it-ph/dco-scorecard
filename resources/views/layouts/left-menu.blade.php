@@ -11,11 +11,12 @@
                          </li>
                         <li class="nav-devider"></li>
                         <li class="nav-small-cap">MAIN NAVIGATION</li>
-                        <li> <a class=" waves-effect waves-dark  @if (\Request::is('home')) active @endif" href="{{url('home')}}"><i class="mdi mdi-gauge" style="color: #04b381"></i><span class="hide-menu">Dashboard</span></a>
+                        <li> <a class=" waves-effect waves-dark  @if (\Request::is('home')) active @endif" href="{{url('home')}}"><i class="mdi mdi-gauge" style="color: #04b381"></i><span class="hide-menu">Dashboard 
+                      </span></a>
                            
                         </li>
                         @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor())
-                        <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-bullseye" style="color: #04b381"></i><span class="hide-menu">Scores</span></a>
+                    <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-bullseye" style="color: #04b381"></i><span class="hide-menu">Scores </span></a>
                             <ul aria-expanded="false" class="collapse">
                                 <li>
                                     <a class=" waves-effect waves-dark  @if (\Request::is('scores/agent')) active @endif" href="{{url('scores/agent')}}">
@@ -45,7 +46,8 @@
                                 <li><a class="waves-effect waves-dark @if (\Request::is('admin/admin-roles')) active @endif" href="{{url('admin/admin-roles')}}">Roles</a></li>
                                 
                                 <li><a class="waves-effect waves-dark @if (\Request::is('admin/departments')) active @endif" href="{{url('admin/departments')}}">Departments</a></li>
-                            
+                                <li><a class="waves-effect waves-dark @if (\Request::is('admin/settings')) active @endif" href="{{url('admin/
+                                ')}}">Settings</a></li>
                             </ul>
                         </li>
                     @endif

@@ -50,7 +50,10 @@ th{
                     </button>
                     <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
                         <a class="dropdown-item" href="#" onclick="toggleMonthFilter()">By Month</a>
-                        <a class="dropdown-item" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards</a>
+
+                        @if(hasUnAcknowledgeCard() > 0 && \Auth::user()->isAgent())
+                        <a class="dropdown-item" style="background: #e81f37; color: white" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards <span style="font-style: italic; font-size: 12px">({{hasUnAcknowledgeCard()}})</span></a>
+                        @endif
                         <a class="dropdown-item" href="{{url('scores/agent')}}?acknowledge">View Acknowledge Scorecards</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{url('scores/agent')}}?view_all">View All Scorecards</a>

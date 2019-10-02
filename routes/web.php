@@ -28,13 +28,14 @@ Route::get('unauthorized', function () {
 
 // Auth::routes();
 Auth::routes(['register' => false]);
-Route::get('/home', 'HomeController@index')->name('home');
-
 
 /* Authorized Users */
 Route::group(['middleware' => ['auth','web'],],
     function () 
 {
+
+    Route::get('/home', 'HomeController@index')->name('home');
+
     /* Admin Links */
     Route::group(['middleware' => ['adminOnly'],'prefix'=>'admin' ],
         function(){
@@ -45,6 +46,10 @@ Route::group(['middleware' => ['auth','web'],],
             Route::resource('admin-roles','Admin\RoleController');
             Route::resource('admin-positions','Admin\PositionController');
             Route::resource('departments','Admin\DepartmentController');
+
+            //Settings
+            Route::GET('settings','Admin\SettingController@index');
+            Route::post('/towerhead', 'Admin\SettingController@updateTowerHead')->name('towerhead.store');
 
     });
   
