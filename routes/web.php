@@ -79,7 +79,7 @@ Route::group(['middleware' => ['auth','web'],],
             Route::GET('tl/print/{score_id}','ScoreController@printTLScore')->name('tl-score.print');
             Route::POST('tl/feedback/{score_id}','ScoreController@tlFeedback')->name('tl-feedback.store');
             Route::POST('tl/action_plan/{score_id}','ScoreController@tlActionPlan')->name('tl-action-plan.store');
-            Route::POST('tl/acknowledge/{score_id}','ScoreController@acknowledgeScoreTL')->name('agent-acknowledge.store');
+            Route::POST('tl/acknowledge/{score_id}','ScoreController@acknowledgeScoreTL')->name('tl-acknowledge.store');
         });
 
     

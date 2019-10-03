@@ -140,13 +140,13 @@ class ScoreController extends Controller
         }
         //Manager
         elseif(Auth::user()->isManager()){
-            $scores->agentsuperior('manager',$this->userId);
-            $avail_months =  TLScoreCard::agentsuperior('manager',$this->userId)
-            ->month();
+            
+            $scores->tlsuperior('manager',$this->userId)->get();
+            $avail_months =    TLScoreCard::tlsuperior('manager',$this->userId)->month();
         }
 
-        $scores = $scores->get();
-        $avail_months = $avail_months->get();
+         $scores = $scores->get();
+         $avail_months = $avail_months->get();
 
        return view('scores.tl.list',compact('tls','scores','avail_months'));
     }
@@ -235,7 +235,7 @@ class ScoreController extends Controller
         $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
-        if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
+        if(!Auth::user()->isAdmin() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
         {
             return view('notifications.401'); 
         }

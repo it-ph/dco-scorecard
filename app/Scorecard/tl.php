@@ -26,11 +26,11 @@ class tl extends Model
         return $query->groupBy('month')->orderBy('id','desc');
     }
 
-    public function scopeAgentsuperior($query,$position,$authID)
+    public function scopeTlsuperior($query,$position,$authID)
     {
         $this->position = $position;
         $this->authID = $authID;
-        return $query->whereHas('theagent', function($q){
+        return $query->whereHas('thetl', function($q){
             $q->where($this->position,$this->authID);
         });
     }

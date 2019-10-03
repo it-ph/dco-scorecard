@@ -68,7 +68,7 @@
             @endif
             
             @if(\Auth::user()->id == $score->tl_id && $score->acknowledge == 0) 
-            <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+            <form method="POST" action="{{route('tl-acknowledge.store',['id' => $score->id])}}">
                     @csrf
                     <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
                 </form>
