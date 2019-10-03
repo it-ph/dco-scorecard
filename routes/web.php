@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth','web'],],
 {
 
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/profile', 'HomeController@profile')->name('profile');
 
     /* Admin Links */
     Route::group(['middleware' => ['adminOnly'],'prefix'=>'admin' ],
@@ -80,7 +81,12 @@ Route::group(['middleware' => ['auth','web'],],
             Route::POST('tl/feedback/{score_id}','ScoreController@tlFeedback')->name('tl-feedback.store');
             Route::POST('tl/action_plan/{score_id}','ScoreController@tlActionPlan')->name('tl-action-plan.store');
             Route::POST('tl/acknowledge/{score_id}','ScoreController@acknowledgeScoreTL')->name('tl-acknowledge.store');
-        });
+        });// Scores
+
+
+         /* Users */
+            Route::get('user/password', 'HomeController@viewPassword');
+            Route::post('/user/password', 'HomeController@storePassword')->name('user.store');
 
     
 

@@ -22,8 +22,8 @@
                                     <li><a href="#"><i class="ti-user"></i> My Profile</a></li>
                                     <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li>
                                     <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li> --}}
+                                    <li role="separator" class="divider"></li>--}}
+                                    <li><a href="{{url('user/password')}}"><i class="ti-user"></i> Change Password</a></li> 
                                     <li role="separator" class="divider"></li>
                                     <li><a onclick="return confirm('Are you sure you want to Sign-out?')" href="{{url('logout')}}"><i class="fa fa-power-off"></i> Logout</a></li>
                                 </ul>

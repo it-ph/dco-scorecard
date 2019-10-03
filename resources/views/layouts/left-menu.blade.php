@@ -7,7 +7,7 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                         <li class="user-profile" >
-                        <a class="waves-effect waves-dark @if (\Request::is('profile')) active @endif" href="{{url('profile')}}" aria-expanded="false"><img src="{{asset('images/profile.png')}}" alt="user" /><span class="hide-menu">{{strtoupper(Auth::user()->name)}}</span></a>
+                        <a class="waves-effect waves-dark @if (\Request::is('change')) active @endif" href="{{url('change')}}" aria-expanded="false"><img src="{{asset('images/profile.png')}}" alt="user" /><span class="hide-menu">{{strtoupper(Auth::user()->name)}}</span></a>
                          </li>
                         <li class="nav-devider"></li>
                         <li class="nav-small-cap">MAIN NAVIGATION</li>
@@ -46,8 +46,7 @@
                                 <li><a class="waves-effect waves-dark @if (\Request::is('admin/admin-roles')) active @endif" href="{{url('admin/admin-roles')}}">Roles</a></li>
                                 
                                 <li><a class="waves-effect waves-dark @if (\Request::is('admin/departments')) active @endif" href="{{url('admin/departments')}}">Departments</a></li>
-                                <li><a class="waves-effect waves-dark @if (\Request::is('admin/settings')) active @endif" href="{{url('admin/
-                                ')}}">Settings</a></li>
+                                <li><a class="waves-effect waves-dark @if (\Request::is('admin/settings')) active @endif" href="{{url('admin/settings')}}">Settings</a></li>
                             </ul>
                         </li>
                     @endif
