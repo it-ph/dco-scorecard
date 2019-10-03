@@ -7,7 +7,7 @@
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
                         <li class="user-profile" >
-                        <a class="waves-effect waves-dark @if (\Request::is('change')) active @endif" href="{{url('change')}}" aria-expanded="false"><img src="{{asset('images/profile.png')}}" alt="user" /><span class="hide-menu">{{strtoupper(Auth::user()->name)}}</span></a>
+                        <a class="waves-effect waves-dark @if (\Request::is('user/password')) active @endif" href="{{url('user/password')}}" aria-expanded="false"><img src="{{asset('images/profile.png')}}" alt="user" /><span class="hide-menu">{{strtoupper(Auth::user()->name)}}</span></a>
                          </li>
                         <li class="nav-devider"></li>
                         <li class="nav-small-cap">MAIN NAVIGATION</li>
