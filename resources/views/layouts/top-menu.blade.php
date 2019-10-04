@@ -116,7 +116,7 @@
                         </li>
 
                         <!--admin-->
-                        @elseif( \Auth::user()->isAdmin()) 
+                        @elseif( \Auth::user()->isAdmin() && allAgentUnacknowledgeCard() > 0 ||  \Auth::user()->isAdmin() && allTLUnacknowledgeCard() > 0) 
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
