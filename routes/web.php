@@ -17,6 +17,11 @@ Route::get('/', function () {
     return redirect()->guest('/login');
 });
 
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});
+
 
 Route::get('template', function () {
     return view('template');
