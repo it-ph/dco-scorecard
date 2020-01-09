@@ -41,7 +41,7 @@ class User extends Authenticatable
     //check if admin . = 1
     public function isAdmin()
     {
-        if($this->role == 'admin')
+        if($this->role == 'admin' || $this->role == 'Admin')
         {
             return true;
         }
@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function isUser()
     {
-        if($this->role == 'user')
+        if($this->role == 'user' || $this->role == 'User' || $this->role == 'users' || $this->role == 'Users')
         {
             return true;
         }
@@ -59,7 +59,7 @@ class User extends Authenticatable
 
     public function isAgent()
     {
-        if($this->role == 'agent')
+        if($this->role == 'agent' || $this->role == 'Agent' || $this->role == 'agents' || $this->role == 'Agents')
         {
             return true;
         }
