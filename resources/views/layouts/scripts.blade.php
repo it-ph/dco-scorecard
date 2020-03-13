@@ -21,5 +21,3 @@
     <script src="{{asset('js/theme/jQuery.style.switcher.js')}}"></script>
 
     <script src="{{asset('js/theme/jquery.dataTables.min.js')}}"></script>
-
-    @yield('js')

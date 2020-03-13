@@ -36,9 +36,8 @@ Auth::routes(['register' => false]);
 
 /* Authorized Users */
 Route::group(['middleware' => ['auth','web'],],
-    function () 
+function () 
 {
-
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/profile', 'HomeController@profile')->name('profile');
 
@@ -58,6 +57,8 @@ Route::group(['middleware' => ['auth','web'],],
             Route::post('/towerhead', 'Admin\SettingController@updateTowerHead')->name('towerhead.store');
 
     });
+
+    
   
     //Score
     Route::group(['prefix'=>'scores' ],
@@ -90,9 +91,58 @@ Route::group(['middleware' => ['auth','web'],],
 
 
          /* Users */
-            Route::get('user/password', 'HomeController@viewPassword');
-            Route::post('/user/password', 'HomeController@storePassword')->name('user.store');
+            Route::GET('user/password', 'HomeController@viewPassword');
+            Route::POST('/user/password', 'HomeController@storePassword')->name('user.store');
 
     
 
+
+    /**
+     * 
+     *  VERSION 2.0
+     */
+
+     /* Admin Links */
+    Route::group(['middleware' => ['adminOnly'],'prefix'=>'v2/admin' ],
+    function(){
+
+
+        //Setup
+        Route::resource('admin-roles','Admin\RoleController');
+        Route::resource('admin-positions','Admin\PositionController');
+        Route::resource('departments','Admin\DepartmentController');
+
+        //Settings
+        Route::GET('settings','Admin\SettingController@index');
+        Route::POST('/towerhead', 'Admin\SettingController@updateTowerHead')->name('towerhead.store');
+
+        //Advanced Settings
+        Route::GET('metrics','v2\SettingController@metrics');
+
+        
+        //Templates
+        Route::GET('template/create','v2\TemplateController@create')->name('template.create');
+        Route::POST('template','v2\TemplateController@store')->name('template.store');
+        Route::POST('template/destroy/{templateId}','v2\TemplateController@destroy')->name('template.destroy');
+        
+        ////Column
+        Route::GET('template/column/create/{templateId}','v2\TemplateController@createColumn')->name('template.column.create');
+        Route::POST('template/column/create/{templateId}','v2\TemplateController@storeColumn')->name('template.column.store');
+        Route::POST('template/column/update/{columnId}','v2\TemplateController@updateColumn')->name('template.column.update');
+        Route::POST('template/column/destroy/{templateId}/{columnPosition}/{columnId}','v2\TemplateController@destroyColumn')->name('template.column.destroy');
+       
+        ////Content
+        Route::GET('template/content/create/{templateId}','v2\TemplateController@createContent')->name('template.content.create');
+        Route::POST('template/content/create/{templateId}','v2\TemplateController@storecreateContent')->name('template.content.store');
+        Route::POST('template/content/update/{templateId}/{rowPosition}/{columnPosition}','v2\TemplateController@updateContent')->name('template.content.update');
+        Route::POST('template/content/destroy/{templateContentId}','v2\TemplateController@destroyContent')->name('template.content.destroy');
+        Route::POST('template/content/destroy/row/{templateId}/{rowPosition}','v2\TemplateController@destroyContentRow')->name('template.content.destroy.row');
+       
+        
+}); // adminOnly
+
+
 }); //Middleware auth
+
+
+

@@ -49,6 +49,15 @@
                                 <li><a class="waves-effect waves-dark @if (\Request::is('admin/settings')) active @endif" href="{{url('admin/settings')}}">Settings</a></li>
                             </ul>
                         </li>
+                        
+                        <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-cog" style="color: #e99d23"></i><span class="hide-menu" >Scorecard Settings</span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a class="waves-effect waves-dark @if (\Request::is('v2/admin/metrics')) active @endif" href="{{url('v2/admin/metrics')}}"> Metrics</a></li>
+                                <li><a class="waves-effect waves-dark @if (\Request::is('v2/admin/template/create')) active @endif" href="{{url('v2/admin/template/create')}}"> Template Create</a></li>
+                            
+                            </ul>
+                        </li>
+                  
                     @endif
  
                         
