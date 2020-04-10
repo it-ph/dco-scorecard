@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Role;
+use App\v2\Template;
 
 class RoleController extends Controller
 {
@@ -18,9 +19,11 @@ class RoleController extends Controller
     {
         $roles = Role::orderby('role','ASC')
         ->get();
+
+        $templates = Template::where('is_active',1)->get();
         // ->paginate(2);
         // $functions->setPath('functions');
-        return view('admin.roles.list',compact('roles'));
+        return view('admin.roles.list',compact('roles','templates'));
     }
 
     /**
@@ -88,15 +91,15 @@ class RoleController extends Controller
 
         $this->validate($request,
         [
-            'role'       => 'required|unique:roles,role',
+            'role'       => 'required',
           
         ],
-            $messages = array('role.required' => 'Role is Required!',
-            'role.unique' => 'Duplicate Record found!')
+            $messages = array('role.required' => 'Role is Required!')
         );
 
         $role = Role::findorfail($id);
-        $role->update(['role' => $request['role']]);
+        $role->update(['role' => $request['role'],
+        'default_template' => $request['default_template']]);
 
        return redirect()->back()->with('with_success', strtoupper($role->role) .' was Updated succesfully!');   
 
@@ -113,5 +116,15 @@ class RoleController extends Controller
         $role = Role::findorfail($id);
         $role->delete();
         return redirect()->back()->with('with_success', strtoupper($role->role) .' was Deleted succesfully!');   
+    }
+
+
+    
+    public function columnFillable(Request $request,$roleId)
+    {
+        $role = Role::findorfail($roleId);
+        $role->update(['is_hide' => $request['is_hide'] ]);
+        
+        return redirect()->back()->with('with_success', 'Set succesfully!'); 
     }
 }

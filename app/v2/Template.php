@@ -14,4 +14,9 @@ class Template extends Model
         return $this->hasMany('App\v2\TemplateColumn', 'template_id', 'id');
     }
 
+    public function thecontent()
+    {
+        return $this->hasMany('App\v2\TemplateContent', 'template_id', 'id');
+    }
+
 }

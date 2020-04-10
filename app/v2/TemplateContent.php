@@ -15,4 +15,9 @@ class TemplateContent extends Model
         return $query->where('row_position', $num);
     }
 
+    public function thetemplate()
+    {
+        return $this->belongsTo('App\Template','template_id');
+    }
+
 }

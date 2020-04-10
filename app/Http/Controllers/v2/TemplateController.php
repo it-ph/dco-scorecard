@@ -8,6 +8,11 @@ use App\v2\Template;
 use App\v2\TemplateColumn;
 use App\v2\TemplateContent;
 
+use App\v2\Scorecard;
+use App\v2\ScorecardColumn;
+use App\v2\ScorecardContent;
+
+
 class TemplateController extends Controller
 {
 
@@ -32,9 +37,20 @@ class TemplateController extends Controller
         );
        
 
-        $template = Template::create(['name'=> $request->name]);
+        $template = Template::create(['name'=> $request->name,
+        'default_target_score'=> $request->default_target_score]);
         return redirect()->route('template.column.create', [$template->id]);
         // return redirect()->back()->with('with_success', 'Template created succesfully!'); 
+    }
+
+    public function update(Request $request,$templateId)
+    {
+        $template = Template::findorfail($templateId);
+
+        $template->update(['name'=> $request->name,
+        'default_target_score'=> $request->default_target_score]);
+
+        return redirect()->back()->with('with_success', 'Template updated succesfully!'); 
     }
 
     public function destroy($templateId)
@@ -43,7 +59,7 @@ class TemplateController extends Controller
 
         $template->update(['is_active'=>0]);
 
-        return redirect()->back()->with('with_success', 'Column deleted succesfully!'); 
+        return redirect()->back()->with('with_success', 'Template deleted succesfully!'); 
     }
 
 
@@ -89,7 +105,9 @@ class TemplateController extends Controller
         }//if has existing val
         
       
-        return redirect()->route('template.content.create', [$templateId]);
+        // return redirect()->route('template.content.create', [$templateId]);
+
+        return redirect()->back()->with('with_success', 'Added succesfully!'); 
     }
 
     public function updateColumn(Request $request,$columnId)
@@ -171,12 +189,25 @@ class TemplateController extends Controller
              
                  }
 
-
-
-
-       
-
     return redirect()->back()->with('with_success', 'Column deleted succesfully!'); 
+    }
+
+
+    public function columnFillable(Request $request,$columnId)
+    {
+        $column = TemplateColumn::findorfail($columnId);
+        $column->update(['is_fillable' => $request['is_fillable'] ]);
+
+        $scorecardColumn = ScorecardColumn::where('parent_template_column_id',$columnId);
+
+        if($scorecardColumn )
+        {
+            $scorecardColumn->update(['is_fillable' => $request['is_fillable'] ]);
+        }
+   
+
+        
+        return redirect()->back()->with('with_success', 'Set succesfully!'); 
     }
 
     /**

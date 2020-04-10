@@ -33,6 +33,7 @@
                         <th>Supervisor</th>
                         <th>Manager</th> 
                         <th>Role</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -45,7 +46,16 @@
                     <td class="table-dark-border">{{ucwords($user->thedepartment['department'])}}</td>
                     <td class="table-dark-border">{{ ucwords($user->thesupervisor['name']) }}</td>
                     <td class="table-dark-border">{{ ucwords($user->themanager['name']) }}</td>
-                    <td class="table-dark-border">{{ucwords($user->role)}}</td>
+                    <td class="table-dark-border">
+                        @if($user->therole){{ucwords($user->therole->role)}}@endif
+                    </td>
+                    <td class="table-dark-border">
+                        @if($user->status =='active')
+                        <span style="color: #026c4e; font-weight: bold;font-size: 11px">ACTIVE</span>
+                        @elseif($user->status =='deactivated')
+                        <span style="color: #ce1126; font-weight: bold;font-size: 11px">IN-ACTIVE</span>
+                        @endif
+                    </td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

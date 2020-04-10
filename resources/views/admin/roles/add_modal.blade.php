@@ -22,7 +22,23 @@
                     </div>
                     @enderror
                 </div><!--form-group-->
+
+                <div class="form-group">
+                    <label class="control-label">Default Template</label>
+                    <select class="form-control" name="default_template">
+                      <option value="">--Please Select--</option>
+                      @foreach($templates as $template)
+                        <option value="{{$template->id}}">{{$template->name}}</option>
+                      @endforeach
+                    </select>
+                    @error('role')
+                    <div class="has-danger">
+                        <small class="form-control-feedback"> {{$message}} </small>
+                    </div>
+                    @enderror
+                </div><!--form-group-->
            
+
              
             </div>
             <div class="modal-footer">

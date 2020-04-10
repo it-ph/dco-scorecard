@@ -77,25 +77,26 @@ th{
                                     
                                     @if($tq) <!--check if has result -->  
                                         <td>
+
+                                                <div class="row" id="actionBtn-row{{$i}}-col{{$j}}" style="margin-top: 5px;text-align: center;">
+                                          
+                                                        <button style="margin-left: 10px" class="btn btn-xs btn-default" data-toggle="modal" data-target="#editModal-row{{$i}}-col{{$j}}"><i class="fa fa-pencil"></i> Edit </button>
+                                              
+    
+                                                    
+                                                          <!--delete content-->
+                                                        @if(!empty($tq->content))
+                                                            <form method="POST" action="{{route('template.content.destroy',['templateContentId'=>$tq->id])}}"> 
+                                                            @csrf 
+                                                            <button style="margin-left: 10px" class="btn btn-xs btn-default delete-btn-{{$j}}" onclick="return confirm('Are you sure you want to delete this Content?')"><i class="fa fa-times"></i> Delete </button>
+                                                            </form>
+                                                        @endif
+                                                        <!--delete content -->
+                                                 
+    
+                                                </div><!--divrow-->
                                             {!! nl2br($tq->content) !!}
 
-                                            <div class="row" id="actionBtn-row{{$i}}-col{{$j}}" style="margin-top: 5px;text-align: center;">
-                                          
-                                                    <button style="margin-left: 10px" class="btn btn-xs btn-default" data-toggle="modal" data-target="#editModal-row{{$i}}-col{{$j}}"><i class="fa fa-pencil"></i> Edit </button>
-                                          
-
-                                                
-                                                      <!--delete content-->
-                                                    @if(!empty($tq->content))
-                                                        <form method="POST" action="{{route('template.content.destroy',['templateContentId'=>$tq->id])}}"> 
-                                                        @csrf 
-                                                        <button style="margin-left: 10px" class="btn btn-xs btn-default delete-btn-{{$j}}" onclick="return confirm('Are you sure you want to delete this Content?')"><i class="fa fa-times"></i> Delete </button>
-                                                        </form>
-                                                    @endif
-                                                    <!--delete content -->
-                                             
-
-                                            </div><!--divrow-->
                                           
                                           
                                         </td>

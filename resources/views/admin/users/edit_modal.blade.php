@@ -126,10 +126,14 @@
                     <div class="col-md-6">
                             <div class="form-group">
                                 <label for="manager">Role <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
-                                <select name="role" required id="role" class="form-control fform">
-                                    <option value="{{$user->role}}">{{ucwords($user->role)}}</option>
+                                <select name="role_id" required id="role_id" class="form-control fform">
+                                   @if($user->therole)
+                                    <option value="{{$user->therole->id}}">{{ucwords($user->therole->role)}}</option>
+                                    @else
+                                    <option value="">--Please Select--</option>
+                                    @endif
                                     @foreach ($roles as $key => $val)
-                                        <option value="{{ $val->role }}">{{ strtoupper($val->role) }}</option>
+                                        <option value="{{ $val->id }}">{{ strtoupper($val->role) }}</option>
                                     @endforeach
                         
                                 </select>
@@ -152,9 +156,9 @@
                                         <option value="{{old('status')}}">{{old('status')}}</option>
                                     @elseif($user->status == 'active')
                                         <option value="active">Active</option>
-                                        <option value="deactivated">Deactivate</option>
+                                        <option value="deactivated">In-Active</option>
                                     @else
-                                        <option value="deactivated">Deactivate</option>
+                                        <option value="deactivated">In-Active</option>
                                         <option value="active">Active</option>
                                     @endif
                                 

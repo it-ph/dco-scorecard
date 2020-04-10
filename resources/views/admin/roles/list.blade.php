@@ -22,8 +22,10 @@
                 <thead style="background: #04b381; color: white; font-weight: bold">
                     <tr>
                         <td>Role</td>
-                        <td>Created At</td> 
-                        <td>Updated At</td>
+                        <td>Show in Menu</td>
+                        <td>Default Template <td>
+                        {{-- <td>Created At</td> 
+                        <td>Updated At</td> --}}
                         <td></td>
                     </tr>
                 </thead>
@@ -31,8 +33,37 @@
                     @foreach($roles as $role)
                     <tr>
                         <td class="table-dark-border">{{ucwords($role->role)}}</td>
-                        <td class="table-dark-border">{{$role->created_at->format('M d Y')}}</td>
-                        <td class="table-dark-border">{{$role->updated_at->format('M d Y')}}</td>
+                        <td  class="table-dark-border" style=" text-align: center;">
+                            <form method="POST" id="fillableId{{$role->id}}" action="{{route('role.fillable',['roleId'=>$role->id])}}"> 
+                                @csrf 
+                               
+                                @if($role->is_hide == 0)
+                                <div class="demo-checkbox" style="text-align: center">
+                                    <input type="checkbox" id="basic_checkbox_{{$role->id}}" onclick="is_fillable({{$role->id}})"  checked="" class="filled-in">
+                                    <label for="basic_checkbox_{{$role->id}}"  ></label>
+            
+                                </div><input type="hidden" value="1" name="is_hide">  
+            
+                                @else
+      
+                                <div class="demo-checkbox" style="text-align: center">
+                                    <input type="checkbox" id="basic_checkbox_{{$role->id}}" onclick="is_fillable({{$role->id}})"  class="filled-in">
+                                    <label for="basic_checkbox_{{$role->id}}"  ></label>
+                                   
+                                </div>  <input type="hidden" value="0" name="is_hide">
+                               @endif
+                               
+                            </form>
+
+                        </td>
+
+                        <td class="table-dark-border" style="text-align: center">
+                            @if($role->thetemplate)
+                            {{$role->thetemplate['name']}}
+                            @endif
+                        </td> 
+                        {{-- <td class="table-dark-border">{{$role->created_at->format('M d Y')}}</td>
+                        <td class="table-dark-border">{{$role->updated_at->format('M d Y')}}</td> --}}
                         <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,7 +89,7 @@
                             
                             <!-- Modal -->
                             <div id="edit{{$role->id}}" class="modal fade" role="dialog">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-lg">
                             
                                 <!-- Modal content-->
                                 <div class="modal-content">
@@ -71,6 +102,15 @@
                                      @csrf
                                      @method('PUT')
                                         <input type="text" name="role" class="form-control" value="{{$role->role}}">
+                                            <br><br>
+                                        <select class="form-control" name="default_template">
+                                                @if($role->thetemplate)
+                                                <option value="{{$role->thetemplate['id']}}">{{$role->thetemplate['name']}}</option>
+                                                @endif
+                                                @foreach($templates as $template)
+                                                <option value="{{$template->id}}">{{$template->name}}</option>
+                                               @endforeach
+                                        </select>
                                     </div>
                                     <div class="modal-footer">
                                     <button ty[e="submit" onclick="return confirm('Are you sure you want to Change this Role?')" class="btn btn-info"><i class="fa fa-save"></i> Save</button>
@@ -116,4 +156,15 @@
           } );
       } );
 </script>
+
+<script>
+     function is_fillable(num){
+        var r = confirm("Confirm Changes?");
+        if (r == true) {
+            document.getElementById("fillableId" + num).submit();
+        }else{
+            event.preventDefault();
+        }
+     }
+     </script>
 @endsection

@@ -35,7 +35,7 @@
         <small>e.g.</small> <img src="{{asset('images/column_sample.png')}}">
     </div><!--div 12-->  
    
-    <div class="col-md-11" style="margin-top: 20px">    
+    <div class="col-md-10" style="margin-top: 20px">    
         <form method="POST" action="{{route('template.column.store',['templateId'=>$template->id])}}"> 
             @csrf       
     @if(count($columns) > 0)
@@ -60,12 +60,14 @@
 
     @if(count($columns) > 0)
     {{-- <div class="col-md-1"></div> --}}
-    <div class="col-md-12" style="background: white; margin-top: 20px">  
+    <div class="col-md-11" style="background: white; margin-top: 20px">  
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th style="background: #026C4E; color: white;font-weight: bold">COLUMNS</th>
-                    <th colspan=2 style="background: #026C4E; color: white;"></th>
+                    <th style="background: #026C4E; color: white;font-weight: bold">IS FILLABLE?</th>
+                    <th colspan="2" style="background: #026C4E; color: white;"></th>
+               
                 </tr>
             </thead>
         @foreach($columns as $column)
@@ -73,6 +75,35 @@
                 <td>
                     {{strtoupper($column->column_name)}}
                 </td>
+
+                <td style="text-align: center">
+                    <form method="POST" id="fillableId{{$column->id}}" action="{{route('template.column.fillable',['columnId'=>$column->id])}}"> 
+                        @csrf 
+                       
+                        @if($column->is_fillable == 0)
+                        <div class="demo-checkbox">
+                            <input type="checkbox" id="basic_checkbox_{{$column->id}}" onclick="is_fillable({{$column->id}})"  class="filled-in">
+                            <label for="basic_checkbox_{{$column->id}}" onclick="is_fillable({{$column->id}})" ></label>
+                           
+                        </div>  <input type="hidden" value="1" name="is_fillable">
+    
+                        {{-- <input type="hidden" value="1" name="is_fillable"> --}}
+                        {{-- <button class="btn btn-xs btn-secondary" onclick="return confirm('Confirm this Column is Fillable?')">Make this Fillable</button> --}}
+            
+                        @else
+                        <div class="demo-checkbox">
+                            <input type="checkbox" id="basic_checkbox_{{$column->id}}" onclick="is_fillable({{$column->id}})"  checked="" class="filled-in">
+                            <label for="basic_checkbox_{{$column->id}}" onclick="is_fillable({{$column->id}})" ></label>
+    
+                        </div><input type="hidden" value="0" name="is_fillable">  
+                          
+                        {{-- <input type="hidden" value="0" name="is_fillable">
+                        <button class="btn btn-xs btn-danger" onclick="return confirm('Unfillable this Column?')"> <i class="fa fa-times"></i> Unfillable</button> --}}
+                       @endif
+                       
+                    </form>
+                </td>
+                
             <td style="text-align: right">
                 <button class="btn btn-xs btn-warning" data-toggle="modal" data-target="#editModal-{{$column->id}}"><i class="fa fa-pencil"></i> </button>
             
@@ -102,12 +133,15 @@
                         </div>
                     </div>
             </td>
+
             <td style="text-align: left">
-                <form method="POST" action="{{route('template.column.destroy',['templateId'=>$template->id,'columnPosition'=>$column->column_position,'columnId'=>$column->id])}}"> 
-                    @csrf 
-                    <button class="btn btn-xs btn-danger" onclick="return confirm('Deleting this Column will delete all its Content, Confirm?')"><i class="fa fa-times"></i> </button>
-                </form>
-            </td>
+                    <form method="POST" action="{{route('template.column.destroy',['templateId'=>$template->id,'columnPosition'=>$column->column_position,'columnId'=>$column->id])}}"> 
+                        @csrf 
+                        <button class="btn btn-xs btn-danger" onclick="return confirm('Deleting this Column will delete all its Content, Confirm?')"><i class="fa fa-times"></i> </button>
+                    </form>
+                </td>
+
+            
             </tr>
         @endforeach
         </table>
@@ -125,7 +159,15 @@
 
 @section('js')
 <script type="text/javascript">
-     
+     function is_fillable(num){
+        var r = confirm("Confirm Changes?");
+        if (r == true) {
+            document.getElementById("fillableId" + num).submit();
+        }else{
+            event.preventDefault();
+        }
+     }
+
     
     $(document).ready(function(){      
      

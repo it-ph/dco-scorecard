@@ -19,10 +19,15 @@ class AdminController extends Controller
      */
     public function index()
     {
+       
         $roles = Role::orderBy('role','ASC')->get();
         $departments = Department::orderBy('department','ASC')->get();
         $positions = Position::orderBy('position','ASC')->get();
-        $users = User::whereNotIn('role', ['superadmin'])->orderBy('id','ASC')->get();
+        
+        $users = User::whereNotIn('role', ['superadmin'])
+        ->where('status','<>','deleted')
+        ->orderBy('id','ASC')->get();
+        
         $supervisors = User::where('role','supervisor')->orderBy('name','ASC')->get();
         $managers = User::where('role','manager')->orderBy('name','ASC')->get();
 
@@ -57,15 +62,16 @@ class AdminController extends Controller
             [
                 'emp_id'    => 'required',
                 'name'       => 'required|min:2',
-                'position_id' => ['required'],
-                'role' => ['required'],
+                // 'position_id' => ['required'],
+                'role_id' => ['required'],
                 'password' => ['required', 'string', 'min:6'],
-                'supervisor' => ( $request['role']=='designer' || $request['role']=='proofer' || $request['role']=='wml' ) ? 'required' : '',
-                'manager' => ( $request['role']=='designer' || $request['role']=='proofer' || $request['role']=='wml' ) ? 'required' : '',
+                // 'supervisor' => ( $request['role']=='designer' || $request['role']=='proofer' || $request['role']=='wml' ) ? 'required' : '',
+                // 'manager' => ( $request['role']=='designer' || $request['role']=='proofer' || $request['role']=='wml' ) ? 'required' : '',
             ],
                 $messages = array('emp_id.required' => 'Employee ID is Required!',
                 'name.required' => 'Username is Required!',
-                'position_id.required' => 'Position is Required!',
+                // 'position_id.required' => 'Position is Required!',
+                'role_id.required' => 'Role is Required!',
                 'emp_id.unique' => 'Employee cannot have the same Employee ID!',
                 )
             );
@@ -111,7 +117,7 @@ class AdminController extends Controller
         [
             'emp_id'       => 'required',
             'name'       => 'required|min:2',
-            'role' => ['required'],
+            'role_id' => ['required'],
         ],
             $messages = array('name.required' => 'Username is Required!')
         );
@@ -123,7 +129,7 @@ class AdminController extends Controller
             $request['password'] = Hash::make( $request['password']);
             $user->update($request->all() );
         }
-        return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' was Updated succesfully!');   
+        return redirect()->back()->with('with_success', 'Account updated succesfully!');   
     }
 
     /**
@@ -136,9 +142,10 @@ class AdminController extends Controller
     {
 
         $user = User::findorfail($id);
-        $user->delete();
+        // $user->delete();
+        $user->update(['status'=>'deleted']);
 
-        return redirect()->back()->with('with_success', strtoupper($user->name) .'\'s Account was Deleted succesfully!');   
+        return redirect()->back()->with('with_success', strtoupper($user->name) .'\'s account was deleted succesfully!');   
 
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use App\Role;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'emp_id','name','supervisor','manager', 'email','position_id','department_id', 'role', 'password','status'
+        'emp_id','name','supervisor','manager', 'email','position_id','department_id', 'role', 'role_id','password','status'
     ];
 
     /**
@@ -39,14 +40,63 @@ class User extends Authenticatable
 
 
     //check if admin . = 1
-    public function isAdmin()
+    // public function isAdmin()
+    // {
+    //     if($this->role == 'admin' || $this->role == 'Admin')
+    //     {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    public function isAdmin() //Updated
     {
-        if($this->role == 'admin' || $this->role == 'Admin')
-        {
-            return true;
+        $role = Role::where('id', $this->role_id)->first();
+        
+        if($role){
+            if($role->role == 'admin' || $role->role == 'Admin'){
+                return true;
+            }
         }
+       
         return false;
     }
+
+    // public function isSupervisor()
+    // {
+    //     if($this->role == 'supervisor' || $this->role == 'Supervisor')
+    //     {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+    public function isSupervisor()
+    {
+        $role = Role::where('id', $this->role_id)->first();
+        
+        if($role){
+            if($role->role == 'supervisor' || $role->role == 'Supervisor'){
+                return true;
+            }
+        }
+       
+        return false;
+    }
+
+    public function isManager()
+    {
+        $role = Role::where('id', $this->role_id)->first();
+        
+        if($role){
+            if($role->role == 'manager' || $role->role == 'Manager'){
+                return true;
+            }
+        }
+       
+        return false;
+    }
+
 
     public function isUser()
     {
@@ -66,23 +116,7 @@ class User extends Authenticatable
         return false;
     }
 
-    public function isSupervisor()
-    {
-        if($this->role == 'supervisor' || $this->role == 'Supervisor')
-        {
-            return true;
-        }
-        return false;
-    }
 
-    public function isManager()
-    {
-        if($this->role == 'manager' || $this->role == 'Manager')
-        {
-            return true;
-        }
-        return false;
-    }
 
     public function thesupervisor()
     {
@@ -104,7 +138,14 @@ class User extends Authenticatable
         return $this->belongsTo('App\Department','department_id');
     }
 
-
+    /**
+     * 
+     * THE ROLE
+     */
+    public function therole()
+    {
+        return $this->belongsTo('App\Role','role_id');
+    }
   
 
 

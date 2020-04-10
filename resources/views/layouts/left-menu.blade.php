@@ -1,3 +1,4 @@
+@inject('allRoles', 'App\helpers\AllRoles')
 <!-- Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
         <aside class="left-sidebar" style="border-bottom: 10px solid #04b381;">
@@ -18,18 +19,27 @@
                         @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor())
                     <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-bullseye" style="color: #04b381"></i><span class="hide-menu">Scores </span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li>
+                                @foreach($allRoles->roles() as $allRoles)
+                                    
+                                    <li>
+                                        <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{$allRoles->id}}" >
+                                            {{ucwords($allRoles->role)}}
+                                        </a>
+                                    </li>
+                                @endforeach
+                                {{-- <li>
                                     <a class=" waves-effect waves-dark  @if (\Request::is('scores/agent')) active @endif" href="{{url('scores/agent')}}">
                                     Agents
                                     </a>
                                 </li>
-                                <li><a class=" waves-effect waves-dark  @if (\Request::is('scores/tl')) active @endif" href="{{url('scores/tl')}}">Team Leaders </a></li>
+                                <li><a class=" waves-effect waves-dark  @if (\Request::is('scores/tl')) active @endif" href="{{url('scores/tl')}}">Team Leaders </a></li> --}}
                             </ul>
                         </li>
                         @else 
-                         <li>
-                                <a class=" waves-effect waves-dark  @if (\Request::is('scores/agent')) active @endif" href="{{url('scores/agent')}}">
-                                    <i class="mdi mdi-bullseye" style="color: #04b381"></i> <span class="hide-menu">Scores</span>
+                        <li>
+                                <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{Auth::user()->role_id}}" >
+                                    <i class="mdi mdi-bullseye" 
+                                    @if(Auth::user()->isAdmin() || Auth::user()->isManager())  style="color: #04b381 @else style="color: #ffc107" @endif></i><span class="hide-menu">Scores </span>
                                 </a>
                             </li>
                         @endif
@@ -50,10 +60,10 @@
                             </ul>
                         </li>
                         
-                        <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-cog" style="color: #e99d23"></i><span class="hide-menu" >Scorecard Settings</span></a>
+                        <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fa fa-cog" style="color: #e99d23"></i><span class="hide-menu" >Scorecard</span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a class="waves-effect waves-dark @if (\Request::is('v2/admin/metrics')) active @endif" href="{{url('v2/admin/metrics')}}"> Metrics</a></li>
-                                <li><a class="waves-effect waves-dark @if (\Request::is('v2/admin/template/create')) active @endif" href="{{url('v2/admin/template/create')}}"> Template Create</a></li>
+                                {{-- <li><a class="waves-effect waves-dark @if (\Request::is('v2/admin/metrics')) active @endif" href="{{url('v2/admin/metrics')}}"> Metrics</a></li> --}}
+                                <li><a class="waves-effect waves-dark @if (\Request::is('v2/admin/template/create')) active @endif" href="{{url('v2/admin/template/create')}}"> Templates</a></li>
                             
                             </ul>
                         </li>

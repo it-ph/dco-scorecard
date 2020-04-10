@@ -92,7 +92,7 @@
                     <div class="col-md-6">
 
                         <div class="form-group">
-                              <label for="position">Position <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                              <label for="position">Position </label>
                                 <select name="position_id" id="position" class="form-control">
                                     <option></option>
                                     @foreach ($positions as $key => $val)
@@ -117,15 +117,11 @@
 
                           <div class="form-group">
                                 <label for="role">Role <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
-                                  <select name="role" id="role" class="form-control">
+                                  <select name="role_id" id="role_id" class="form-control">
                                       <option></option>
-                                      @foreach ($roles as $key => $val)
-                                      @if (old('role') == $val->role)
-                                      <option value="{{ $val->role }}" selected>{{ strtoupper($val->role) }}</option>
-                                      @else
-                                          <option value="{{ $val->role }}">{{ strtoupper($val->role) }}</option>
-                                      @endif
-                                      @endforeach
+                                      @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}">{{ strtoupper($role->role) }}</option>
+                                ]       @endforeach
                                       </select>
                                   
                                   @error('role')
