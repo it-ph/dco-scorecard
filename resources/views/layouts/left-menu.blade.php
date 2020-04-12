@@ -1,4 +1,5 @@
 @inject('allRoles', 'App\helpers\AllRoles')
+@inject('ScoreCardHelper', 'App\helpers\ScoreCardHelper')
 <!-- Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
         <aside class="left-sidebar" style="border-bottom: 10px solid #04b381;">
@@ -23,7 +24,11 @@
                                     
                                     <li>
                                         <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{$allRoles->id}}" >
-                                            {{ucwords($allRoles->role)}}
+                                            {{ucwords($allRoles->role)}} 
+                                            <?php $u_count = count($ScoreCardHelper->unAcknowledgeCountPerRole($allRoles->id)); ?>
+                                            @if($u_count > 0)
+                                            <span title="Unacknowledge Scorecard count" class="label label-rouded label-danger pull-right">{{$u_count}}</span>
+                                            @endif
                                         </a>
                                     </li>
                                 @endforeach

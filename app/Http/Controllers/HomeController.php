@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 use Auth;
+use App\helpers\HomeQueries;
+use App\helpers\ScoreCardHelper;
 use App\User;
 use Carbon\Carbon;
 use App\v2\Scorecard;
@@ -29,13 +31,55 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-
+        $homeQuery = new HomeQueries($request);
+      
+   
         if(Auth::user()->isAdmin() || Auth::user()->isManager()) 
         {
-            $scores =[];
+            $avail_year_in_scorecard =  $homeQuery->availableYearInScorecard();
+           
+           $scores = $homeQuery->adminGraphs();
+           $avail_users_in_score =  ($homeQuery->scorecardUsers()) ? $homeQuery->scorecardUsers() : [];
+           $unAcknowledge_list =  ($homeQuery->adminUnAcknowledgeList()) ? $homeQuery->adminUnAcknowledgeList() : [];
+           
+           $selected_year = ($request['search_year']=="") ? $request['search_year'] :  Carbon::now()->format('Y');
+
+           $last_score_card_score =  [];
+        
         }elseif(Auth::user()->isSupervisor()) 
         {
+            //Check If userid is Team member or own
+
+            if( $request->has('user_id') && $request->filled('user_id') )
+            {
+                $user = User::findorfail($request['user_id']);
+                if($user->supervisor == Auth::user()->id || $user->id == Auth::user()->id){
+                    $avail_year_in_scorecard =  $homeQuery->availableYearInScorecard();
            
+                    $scores = $homeQuery->adminGraphs();
+                    $avail_users_in_score =  ($homeQuery->scorecardUsersForSupervisor()) ? $homeQuery->scorecardUsersForSupervisor() : [];
+                    $unAcknowledge_list =  ($homeQuery->unAcknowledgeListForSupervisor()) ? $homeQuery->unAcknowledgeListForSupervisor() : [];
+                    
+                    $selected_year = ($request['search_year']=="") ? $request['search_year'] :  Carbon::now()->format('Y');
+
+                    $last_score_card_score =  $homeQuery->lastScoreCard();
+                    
+                }else{
+                    return \Redirect::back()->withErrors(['Restricted View']);
+                }
+            }
+                $avail_year_in_scorecard =  $homeQuery->availableYearInScorecard();
+           
+                $scores = $homeQuery->adminGraphs();
+                $avail_users_in_score =  ($homeQuery->scorecardUsersForSupervisor()) ? $homeQuery->scorecardUsersForSupervisor() : [];
+                $unAcknowledge_list =  ($homeQuery->unAcknowledgeListForSupervisor()) ? $homeQuery->unAcknowledgeListForSupervisor() : [];
+                
+                $selected_year = ($request['search_year']=="") ? $request['search_year'] :  Carbon::now()->format('Y');
+
+                $last_score_card_score =  $homeQuery->lastScoreCard();
+           
+
+            
        
         }else{
             //User by default
@@ -54,8 +98,6 @@ class HomeController extends Controller
 
                 $selected_year = $request['search_year'];
                 
-                $last_score_card_score = $scores->last();
-
             }else{
                 $scores = Scorecard::where('year',Carbon::now()->format('Y'))
                 ->where('user_id', Auth::user()->id)
@@ -63,18 +105,20 @@ class HomeController extends Controller
                 ->where('is_deleted',0)
                 ->get();
 
-                $last_score_card_score = $scores->last();
-
                 $selected_year = Carbon::now()->format('Y');
             }
 
+
+            $last_score_card_score =  $homeQuery->lastScoreCard();
+
+            $avail_users_in_score =  [];
+            $unAcknowledge_list= [];
             
         }
         
-        return view('home',compact('scores','avail_year_in_scorecard','selected_year','last_score_card_score'));
+        return view('home',compact('scores','avail_year_in_scorecard','avail_users_in_score','selected_year','last_score_card_score','unAcknowledge_list'));
     }
-
-
+    
     public function profile()
     {
         return view('profile.account');

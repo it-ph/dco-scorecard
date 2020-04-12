@@ -1,61 +1,105 @@
+@inject('ScoreCardHelper', 'App\helpers\ScoreCardHelper')
 @extends('layouts.dco-app')
 
 @section('content')
-
 <div class="row">
-    <div class="col-md-7">
-            <h3> Hello, <strong>{{strtoupper(Auth::user()->name)}}!</strong></h3> 
-    </div><!--div 5 -->
+        <div class="col-md-12">
+                @include('notifications.success')
+                @include('notifications.error')
+        </div>
+    </div>
+<div class="row">
 
-    <div class="col-md-5">
-
-            <div class="card">
-                    <div class="card-header" style="background: #06d79c">
-                        <h4 class="m-b-0 text-white"> @if($last_score_card_score){{$last_score_card_score->month}}  @endif </h4></div>
-                    <div class="card-body" style="text-align: center">
-                        <h3 class="card-title"> Score  </h3>
-                    @if($last_score_card_score)
-                        <h2 style="font-weight: bold; font-family: arial; font-size: 30px; margin-bottom: 10px">{{$last_score_card_score->final_score}}% 
-                        @if($last_score_card_score->is_acknowledge==0)<i class="fa fa-warning" title="You have NOT yet acknowledge this Scorecard" style="color: #ffb22b;font-size: 18px;"></i>
-                        @else <i class="fa fa-check-circle" title="You acknowledge this Scorecard" style="color: #026c4e;font-size: 18px;"></i>
-                        @endif
-                        </h2>
-                    @endif
-                        <hr>
-                    @if($last_score_card_score)
-                    <a href="{{url('/v2/scores/show/')}}/{{$last_score_card_score->id}}/{{Auth::user()->role_id}}" class="btn btn-inverse btn-sm pull-right">View card</a>
-                   @endif
-                    </div>
-                </div>
-
-                
-    </div><!--div 5 -->
+        @if(Auth::user()->isAdmin() || Auth::user()->isManager()) 
+            @include('home-graphs.admin')
+        @elseif(Auth::user()->isSupervisor())
+            @include('home-graphs.supervisor')
+        @else
+            @include('home-graphs.user')
+        @endif
+        
 </div><!--row-->
+
 
 <div class="row  m-t-10" >
         <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <div class="row m-b-10">
-                            <div class="col-md-1">
-                                    <label for="">Year : </label> 
-                            </div>
-                            <div class="col-md-2">
+                           
+                          
+                                
                                 <form action="" method="GET">
                                 @csrf
-                                <select name="search_year" onchange="this.form.submit()" class="form-control" id="search_year">
-                                    <option value=""></option>
-                                    @foreach($avail_year_in_scorecard as $year)
-                                    <option>{{$year->year}}</option>
-                                    @endforeach
-                                </select>
-                                         
+                                <div class="col-md-12">
+                                        <div class="row">
+
+                                @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor()) 
+                                
+                                    <div class="col-md-5">
+                                        <label for="">Name</label>
+                                            <select name="user_id"  class="form-control" id="user_id">
+                                            <option value=""></option>
+                                            @if(Auth::user()->isSupervisor())
+                                            <option value="{{\Auth::user()->id}}">{{strtoupper(\Auth::user()->name)}}</option>
+                                            @endif
+                                            @foreach($avail_users_in_score as $scorecard_users)
+                                            <option value="{{$scorecard_users->theuser->id}}">{{strtoupper($scorecard_users->theuser->name)}}</option>
+                                            @endforeach
+                                                </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="">Year </label>
+                                        <select name="search_year" class="form-control" id="search_year">
+                                            @if($selected_year)<option>{{$selected_year}}</option> @else<option>{{date('Y')}}</option>@endif
+                                                @foreach($avail_year_in_scorecard as $year)
+                                            <option>{{$year->year}}</option>
+                                             @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <label for="">&nbsp;</label>
+                                        <button type="submit" class="btn btn-info">GO</button>
+                                    </div>
+                                    
+
+                                @else
+                                    <div class="col-md-4">
+                                        <label for="">Year: </label> 
+                                    </div>
+
+                                <div class="col-md-8">
+                                    <select name="search_year" onchange="this.form.submit()" class="form-control" id="search_year">
+                                    @if($selected_year)<option>{{$selected_year}}</option> @else<option>{{date('Y')}}</option>@endif
+                                            
+                                        @foreach($avail_year_in_scorecard as $year)
+                                        <option>{{$year->year}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                          
+                                @endif
+                                        
+                            </div><!--row-->
+                                    
+                               
+                        </div><!--md 12-->
                                 </form>
-                            </div>
+                           
 
                         </div><!--row mb5-->
                        
-                        <h4 class="card-title">Monthly Scorecard</h4>
+                        <h4 class="card-title">Monthly Scorecard 
+                            @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor()) 
+                                @if(\Request::has('user_id')) 
+                                 for :  {{strtoupper($ScoreCardHelper->whosTheUser(\Request()->user_id))}}    
+                                @endif
+                          
+                                {{-- @if($last_score_card_score)for {{ucwords($last_score_card_score->theuser->name)}} @endif --}}
+                            @endif
+                                
+                        </h4>
                         <div id="bar-chart" style="width:100%; height:400px;"></div>
                     </div>
                 </div>
@@ -88,13 +132,13 @@ option = {
             saveAsImage : {show: true}
         }
     },
-    color: ["#009efb", "#009efb"],
+    color: ["#55ce63", "#009efb"],
     calculable : true,
     xAxis : [
         {
             type : 'category',
             data :  [ @foreach($scores as $score)
-"{{substr($score->month, 0,3)}}",
+"{{substr($score->month, 0,3)}} {{$selected_year}}",
             @endforeach ]
             // data : ['Jan','Feb','Mar','Apr','May','Jun','July','Aug','Sept','Oct','Nov','Dec']
         }
@@ -106,7 +150,7 @@ option = {
     ],
     series : [
         {
-            name:'Year {{$selected_year}}',
+            name:'Final Score',
             type:'bar',
             // data:[80, 90, 60, 90, 80, 95, 85, 95, 88, 90, 85, 95],
             data :  [ @foreach($scores as $score)
@@ -123,6 +167,14 @@ option = {
                     {type : 'average', name: 'Average'}
                 ]
             }
+        }, {
+            name:'Target',
+            type:'bar',
+            // data:[80, 90, 60, 90, 80, 95, 85, 95, 88, 90, 85, 95],
+            data :  [ @foreach($scores as $score)
+"{{$score->target}}",
+            @endforeach ],
+            
         },
 
     ]

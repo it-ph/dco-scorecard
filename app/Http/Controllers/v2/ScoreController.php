@@ -48,7 +48,15 @@ class ScoreController extends Controller
         if( $request->has('filter_month') && $request->filled('filter_month') )
         {
             $scores = Scorecard::where('month',$request['filter_month']);
-        }elseif( $request->has('view_all'))
+
+        }elseif( $request->has('not_acknowledge'))
+        {
+            $scores = Scorecard::where('is_acknowledge',0);
+        }elseif( $request->has('acknowledge'))
+        {
+            $scores = Scorecard::where('is_acknowledge',1);
+        }
+        elseif( $request->has('view_all'))
         {
             $scores = Scorecard::orderBy('id','desc');
             

@@ -59,15 +59,15 @@ th{
                     <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
                         <a class="dropdown-item" href="#" onclick="toggleMonthFilter()">By Month</a>
 
-                        @if(agentHasUnAcknowledgeCard() > 0 && \Auth::user()->isAgent())
-                        <a class="dropdown-item" style="background: #e81f37; color: white" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards <span style="font-style: italic; font-size: 12px">({{agentHasUnAcknowledgeCard()}})</span></a>
+                        @if(agentHasUnAcknowledgeCard() > 0 && \Auth::user()->isAgent()) <!--TO FIX -->
+                        <a class="dropdown-item" style="background: #e81f37; color: white" href="{{url('v2/scores')}}?not_acknowledge">View Un Acknowledge Scorecards <span style="font-style: italic; font-size: 12px">({{agentHasUnAcknowledgeCard()}})</span></a>
                         @else 
-                        <a class="dropdown-item" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards</a>
+                        <a class="dropdown-item" href="{{URL::current()}}?not_acknowledge">View Un Acknowledge Scorecards</a>
                        
                         @endif
-                        <a class="dropdown-item" href="{{url('scores/agent')}}?acknowledge">View Acknowledge Scorecards</a>
+                        <a class="dropdown-item" href="{{URL::current()}}?acknowledge">View Acknowledge Scorecards</a>
                         <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{url('v2/scores')}}/{{$role->id}}?view_all">View All Scorecards</a>
+                    <a class="dropdown-item" href="{{URL::current()}}?view_all">View All Scorecards</a>
                         
                     </div>
                 </div>
