@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('public/images/favicon.ico')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon.ico')}}">
     <title>DCO - Scorecard</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('css/dco-scorecard.css')}}" rel="stylesheet">
