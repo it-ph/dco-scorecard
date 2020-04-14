@@ -23,7 +23,7 @@
 
 <div class="row  m-t-10" >
         <div class="col-lg-12">
-                <div class="card">
+                <div class="card" style="border-top: 2px solid #ffb22b;">
                     <div class="card-body">
                         <div class="row m-b-10">
                            
@@ -31,7 +31,7 @@
                                 
                                 <form action="" method="GET">
                                 @csrf
-                                <div class="col-md-12">
+                                <div class="col-md-12" style="margin-top: 5px">
                                         <div class="row">
 
                                 @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor()) 
@@ -39,7 +39,15 @@
                                     <div class="col-md-5">
                                         <label for="">Name</label>
                                             <select name="user_id"  class="form-control" id="user_id">
+                                            @if(\Request::has('user_id')) 
+                                                <?php $theUser = $ScoreCardHelper->whosTheUser(\Request()->user_id); ?>
+                                                @if($theUser) 
+                                                    <option value="{{$theUser->id}}">{{strtoupper($theUser->name)}}</option>    
+                                                   @endif
+                                            @else
                                             <option value=""></option>
+                                            @endif
+
                                             @if(Auth::user()->isSupervisor())
                                             <option value="{{\Auth::user()->id}}">{{strtoupper(\Auth::user()->name)}}</option>
                                             @endif
@@ -93,10 +101,9 @@
                         <h4 class="card-title">Monthly Scorecard 
                             @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor()) 
                                 @if(\Request::has('user_id')) 
-                                 for :  {{strtoupper($ScoreCardHelper->whosTheUser(\Request()->user_id))}}    
+                                 for :  @if($theUser) {{strtoupper($theUser->name)}}@endif
                                 @endif
                           
-                                {{-- @if($last_score_card_score)for {{ucwords($last_score_card_score->theuser->name)}} @endif --}}
                             @endif
                                 
                         </h4>

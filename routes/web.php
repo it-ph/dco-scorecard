@@ -126,13 +126,15 @@ function ()
         Route::POST('template','v2\TemplateController@store')->name('template.store');
         Route::POST('template/destroy/{templateId}','v2\TemplateController@destroy')->name('template.destroy');
         Route::POST('template/{templateId}/update','v2\TemplateController@update')->name('template.update');
-
+        Route::GET('template/preview/{templateId}/{from}','v2\TemplateController@preview')->name('template.preview');
         ////Column
         Route::GET('template/column/create/{templateId}','v2\TemplateController@createColumn')->name('template.column.create');
         Route::POST('template/column/create/{templateId}','v2\TemplateController@storeColumn')->name('template.column.store');
         Route::POST('template/column/update/{columnId}','v2\TemplateController@updateColumn')->name('template.column.update');
         Route::POST('template/column/destroy/{templateId}/{columnPosition}/{columnId}','v2\TemplateController@destroyColumn')->name('template.column.destroy');
         Route::POST('template/column/isfillable/{columnId}','v2\TemplateController@columnFillable')->name('template.column.fillable');
+        Route::POST('template/column/isfinalscore/{columnId}','v2\TemplateController@columnFinalScore')->name('template.column.isfinalscore');
+       
        
         ////Content
         Route::GET('template/content/create/{templateId}','v2\TemplateController@createContent')->name('template.content.create');
@@ -141,6 +143,12 @@ function ()
         Route::POST('template/content/destroy/{templateContentId}','v2\TemplateController@destroyContent')->name('template.content.destroy');
         Route::POST('template/content/destroy/row/{templateId}/{rowPosition}','v2\TemplateController@destroyContentRow')->name('template.content.destroy.row');
         
+        ////User Remarks
+        Route::GET('template/remarks/create/{templateId}','v2\TemplateController@createRemarks')->name('template.remarks.create');
+        Route::POST('template/remarks/create/{templateId}','v2\TemplateController@storeRemarks')->name('template.remarks.store');
+        Route::POST('template/remarks/update/{remarksId}','v2\TemplateController@updateRemarks')->name('template.remarks.update');
+        Route::POST('template/remarks/destroy/{remarksId}','v2\TemplateController@destroyRemarks')->name('template.remarks.destroy');
+       
 
          
         
@@ -159,8 +167,8 @@ function ()
             Route::GET('/print/{scoreCardId}/{roleId}','v2\ScoreController@printScoreCard')->name('v2.score.print');
             Route::DELETE('delete/{scoreCardId}','v2\ScoreController@deleteScorecard')->name('v2.score.destroy');
             Route::POST('acknowledge/{scoreCardId}','v2\ScoreController@acknowledgeScorecard')->name('v2.score.acknowledge');
-            Route::POST('/feedback/{scoreCardId}','v2\ScoreController@feedbackScorecard')->name('v2.score.feedback');
-            Route::POST('/action-plan/{scoreCardId}','v2\ScoreController@actionplanScorecard')->name('v2.score.actionplan');
+            Route::POST('/feedback/{scoreCardId}/{remarksId}','v2\ScoreController@feedbackScorecard')->name('v2.score.feedback');
+            // Route::POST('/action-plan/{scoreCardId}','v2\ScoreController@actionplanScorecard')->name('v2.score.actionplan');
             
             //  Route::POST('agent','ScoreController@scores')->name('agent-score.store');
             //  Route::GET('agent/{score_id}','ScoreController@editAgentScore')->name('agent-score.edit');

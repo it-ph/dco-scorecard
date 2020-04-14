@@ -28,9 +28,30 @@ class AdminController extends Controller
         ->where('status','<>','deleted')
         ->orderBy('id','ASC')->get();
         
-        $supervisors = User::where('role','supervisor')->orderBy('name','ASC')->get();
-        $managers = User::where('role','manager')->orderBy('name','ASC')->get();
+        //Supervisor
+        $sup_role = Role::where('role', 'supervisor')
+        ->orWhere('role', 'Supervisor')
+        ->first();
+        
+        if($sup_role)
+        {
+            $supervisors = User::where('role_id',$sup_role->id)->orderBy('name','ASC')->get();
+        }else{
+            $supervisors =[];
+        }
 
+        //Supervisor
+        $manager_role = Role::where('role', 'manager')
+        ->orWhere('role', 'Manager')
+        ->first();
+        
+        if($manager_role)
+        {
+            $managers = User::where('role_id',$manager_role->id)->orderBy('name','ASC')->get();
+        }else{
+            $managers =[];
+        }
+        
         return view('admin.users.list',compact(
             'users',
             'roles',

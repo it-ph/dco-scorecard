@@ -4,6 +4,8 @@ namespace App\helpers;
 
 use Auth;
 use App\User;
+use App\Role;
+
 use App\v2\Template;
 use App\v2\TemplateColumn;
 use App\v2\TemplateContent;
@@ -67,10 +69,13 @@ class ScoreCardHelper {
      
      if($user)
      {
-         return $user->name;
+         return $user;
      }
      return [];
    }
+
+
+
 }
 
 

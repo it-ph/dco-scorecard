@@ -4,9 +4,12 @@ namespace App\Http\Controllers\v2;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+use Auth;
 use App\v2\Template;
 use App\v2\TemplateColumn;
 use App\v2\TemplateContent;
+use App\v2\TemplateRemarks;
 
 use App\v2\Scorecard;
 use App\v2\ScorecardColumn;
@@ -210,6 +213,25 @@ class TemplateController extends Controller
         return redirect()->back()->with('with_success', 'Set succesfully!'); 
     }
 
+    public function columnFinalScore(Request $request,$columnId)
+    {
+        $column = TemplateColumn::findorfail($columnId);
+        $column->update(['is_final_score' => $request['is_final_score'] ]);
+
+        $scorecardColumn = ScorecardColumn::where('parent_template_column_id',$columnId);
+
+        if($scorecardColumn )
+        {
+            $scorecardColumn->update(['is_final_score' => $request['is_final_score'] ]);
+        }
+   
+
+        
+        return redirect()->back()->with('with_success', 'Set succesfully!'); 
+    }
+
+    
+
     /**
      * 
      * 
@@ -318,7 +340,95 @@ class TemplateController extends Controller
 
         return redirect()->back()->with('with_success', 'Row deleted succesfully!'); 
     }
+    /**
+     * 
+     * 
+     *  USER REMARKS
+     * 
+     */
+    public function createRemarks(Request $request,$templateId)
+    {
+        $template = Template::findorfail($templateId);
 
+        $templateRemarks = TemplateRemarks::where('template_id',$templateId)->get();
+        
+        return view('templates.remarks.create',compact('template','templateRemarks'));
+    }
+
+
+    public function storeRemarks(Request $request,$templateId)
+    {
+        $this->validate($request,
+        [
+            'name'       => 'required',
+        ]);
+
+        $template = TemplateRemarks::create(['template_id'=> $templateId,
+        'name'=> $request['name']]);
+
+        
+      
+        return redirect()->back()->with('with_success', 'Added succesfully!'); 
+    }
+
+    public function updateRemarks(Request $request,$remarksId)
+    {
+
+        $this->validate($request,
+        [
+            'name'       => 'required',
+        ]);
+                
+        $remarks = TemplateRemarks::findorfail($remarksId);
+
+        $remarks->update(['name'=>$request['name']]);
+
+        return redirect()->back()->with('with_success', 'Remarks updated succesfully!'); 
+    }
+
+
+    public function destroyRemarks($remarksId)
+    {
+        $remarks = TemplateRemarks::findorfail($remarksId);
+        $remarks->delete();
+
+        return redirect()->back()->with('with_success', 'Remarks deleted succesfully!'); 
+   
+
+    }
+    
+
+    /**
+     * 
+     * 
+     *  Preview
+     * 
+     */
+    public function preview(Request $request,$templateId,$from)
+    {
+        $template = Template::findorfail($templateId);
+        
+        //Check if Score is Deleted
+         if($template->is_deleted == 1)
+         {
+             return \Redirect::back()->withErrors(['Error on Scorecard print']);
+         }
+
+        $role = []; //Role::findorfail($roleId);
+
+        $template_column =   TemplateColumn::where('template_id',$template->id)->get();
+
+        $templatecontent_lastrow = TemplateContent::where('template_id',$template->id)->orderBy('row_position','desc')->first();
+        $templatecontent = TemplateContent::where('template_id',$template->id)->get();
+       
+        $towerhead =[];// Setting::where('setting','towerhead')->first();
+
+        $template_remarks =   TemplateRemarks::where('template_id',$template->id)->get();
+    
+        $from = $from;
+        return view('templates.preview',compact('role','template_column','templatecontent_lastrow','templatecontent','template','template_remarks','towerhead','from'));
+   
+    }
 
     
 }

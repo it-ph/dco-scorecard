@@ -176,23 +176,11 @@
                                         </div> 
 
                                         {{-- <input type="text" class="form-control" id="content-fillable-{{$irow}}-{{$jcol}}" value="{{$tq->content}}"> <br> --}}
-                                       {{-- {{$tqCol->is_final_score}} --}}
-                                        @if($tqCol->is_final_score == 1)
-                                        <input type="text" onkeypress="javascript: if(event.keyCode == 13) updateScorecardFillable({{$score->id}},{{$irow}},{{$jcol}},1); "    class="form-control" id="content-fillable-{{$irow}}-{{$jcol}}" value="{{$tq->content}}">
-                                        <br>
+                                        <input type="text" onkeypress="javascript: if(event.keyCode == 13) updateScorecardFillable({{$score->id}},{{$irow}},{{$jcol}}); " class="form-control" id="content-fillable-{{$irow}}-{{$jcol}}" value="{{$tq->content}}"> <br>
                                         
                                         <input type="hidden" class="form-control" id="x_content-fillable-{{$irow}}-{{$jcol}}" value="{{$tq->content}}"> <br>
                                         
-                                        <button onclick="updateScorecardFillable({{$score->id}},{{$irow}},{{$jcol}},1)" style="margin-top: 2px;" class="btn waves-effect waves-light btn-rounded btn-xs btn-info pull-right">save</button>
-                                        @else
-                                        <input type="text" onkeypress="javascript: if(event.keyCode == 13) updateScorecardFillable({{$score->id}},{{$irow}},{{$jcol}},0); "    class="form-control" id="content-fillable-{{$irow}}-{{$jcol}}" value="{{$tq->content}}">
-                                        <br>
-                                        
-                                        <input type="hidden" class="form-control" id="x_content-fillable-{{$irow}}-{{$jcol}}" value="{{$tq->content}}"> <br>
-                                        
-                                        <button onclick="updateScorecardFillable({{$score->id}},{{$irow}},{{$jcol}},0)" style="margin-top: 2px;" class="btn waves-effect waves-light btn-rounded btn-xs btn-info pull-right">save</button>
-                                   
-                                        @endif
+                                        <button onclick="updateScorecardFillable({{$score->id}},{{$irow}},{{$jcol}})" style="margin-top: 2px;" class="btn waves-effect waves-light btn-rounded btn-xs btn-info pull-right">save</button>
                                     @else
                                         <span style="font-weight: bold ;font-size: 16px;">{{$tq->content}}</span>
                                     @endif
@@ -227,7 +215,7 @@
                         <tr>
                             @if(\Auth::user()->id == $score->user_id && empty($user_remarks->user_update) ) 
                                 <td style="text-align: center">
-                                <button class="btn btn-info text-center btn-sm" style="margin: 10px" data-toggle="modal" data-target="#addRemarks-{{$user_remarks->id}}">Add</button>
+                                <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addRemarks-{{$user_remarks->id}}">Add</button>
                                 </td>
                             <!-- Modal -->
                             <div id="addRemarks-{{$user_remarks->id}}" class="modal fade" role="dialog">
@@ -240,12 +228,12 @@
                                         <h4 class="modal-title" style="color: white">Add {{ucwords($user_remarks->name)}} </h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="POST" action="{{route('v2.score.feedback',['scoreCardId' => $score->id,'remarksId' => $user_remarks->id])}}">
+                                            <form method="POST" action="{{route('v2.score.feedback',['id' => $score->id])}}">
                                             @csrf
                                             <textarea name="user_update" class="form-control" id="" cols="30" rows="10"></textarea>
                                         </div>
                                         <div class="modal-footer">
-                                        <button type="submit" onclick="return confirm('Are you sure you want to Submit?')" class="btn btn-info">Save</button>
+                                        <button type="submit" onclick="return confirm('Are you sure you want to Submit this feedback?')" class="btn btn-info">Save</button>
                                             </form>
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                         </div>
@@ -257,8 +245,8 @@
                              @elseif(\Auth::user()->id == $score->user_id && !empty($user_remarks->user_update) && $score->is_acknowledge == 0) 
                                 <td>
                                 <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$user_remarks->user_update}}</textarea>
-                                <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateRemarks-{{$user_remarks->id}}" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit {{strtolower($user_remarks->name)}}</button>
-                                </td> 
+                                <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateRemarks-{{$user_remarks->id}}" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Feedback</button>
+                            </td> 
                             <!-- Modal -->
                             <div id="updateRemarks-{{$user_remarks->id}}" class="modal fade" role="dialog">
                                     <div class="modal-dialog modal-lg">
@@ -270,7 +258,7 @@
                                         <h4 class="modal-title" style="color: white">Update your feedback for {{strtoupper($user_remarks->name)}}</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="POST" action="{{route('v2.score.feedback',['scoreCardId' => $score->id,'remarksId' => $user_remarks->id])}}">
+                                            <form method="POST" action="{{route('v2.score.feedback',['id' => $user_remarks->id])}}">
                                             @csrf
                                             <textarea name="user_update" class="form-control" id="" cols="30" rows="10">{{$user_remarks->user_update}}</textarea>
                                         </div>
@@ -286,7 +274,7 @@
 
                             @else 
                                 <td>
-                                <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$user_remarks->user_update}}</textarea>
+                                <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
                                 </td>  
                             @endif
                         </tr>
@@ -298,7 +286,167 @@
             </div><!--row-->
             @endforeach
 
+            <div class="row">
+                    <div class="col-md-12">
+                        <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
+                            <tr>
+                                <td colspan="4" style="background: gray; font-weight: bold">EMPLOYEE FEEDBACK:</td>
+                            </tr>
+                            
+                            <tr>
+                                @if(\Auth::user()->id == $score->user_id && empty($score->agent_feedback) ) 
+                                    <td style="text-align: center">
+                                    <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addFeedback">Add Feedback</button>
+                                    </td>
+                                <!-- Modal -->
+                                <div id="addFeedback" class="modal fade" role="dialog">
+                                        <div class="modal-dialog modal-lg">
+                                    
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background: #026B4D;">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title" style="color: white">Add Feedback </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="{{route('v2.score.feedback',['id' => $score->id])}}">
+                                                @csrf
+                                                <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to Submit this feedback?')" class="btn btn-info">Save</button>
+                                                </form>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    
+                                        </div>
+                                    </div>
+
+                                 @elseif(\Auth::user()->id == $score->user_id && !empty($score->agent_feedback) && $score->is_acknowledge == 0) 
+                                    <td>
+                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                    <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateFeedback" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Feedback</button>
+                                </td> 
+                                <!-- Modal -->
+                                <div id="updateFeedback" class="modal fade" role="dialog">
+                                        <div class="modal-dialog modal-lg">
+                                    
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background: #026B4D;">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title" style="color: white">Update Feedback </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="{{route('v2.score.feedback',['id' => $score->id])}}">
+                                                @csrf
+                                                <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10">{{$score->agent_feedback}}</textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to update your feedback?')" class="btn btn-info">Save</button>
+                                                </form>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    
+                                        </div>
+                                    </div>
+
+                                @else 
+                                    <td>
+                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                    </td>  
+                                @endif
+                            </tr>
+                            
+                            
+                        </table>
+        
+                    </div><!--col-md-12-->
+                </div><!--row-->
+
+                <!--ACTION PLAN -->
+                <div class="row">
+                        <div class="col-md-12">
+                           
+                                <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
+                                        <tr>
+                                            <td colspan="4" style="background: gray; font-weight: bold">ACTION PLAN/S:</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            @if(\Auth::user()->id == $score->user_id && empty($score->action_plan) ) 
+                                                <td style="text-align: center">
+                                                <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addActionPlan">Add Action Plan</button>
+                                                </td>
+                                            <!-- Modal -->
+                                            <div id="addActionPlan" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background: #026B4D;">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title" style="color: white">Add Action Plan </h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="POST" action="{{route('v2.score.actionplan',['id' => $score->id])}}">
+                                                            @csrf
+                                                            <textarea name="action_plan" class="form-control" id="" cols="30" rows="10"></textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                        <button type="submit" onclick="return confirm('Are you sure you want to Submit this Action Plan?')" class="btn btn-info">Save</button>
+                                                            </form>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    </div>
+                                                </div>
             
+                                             @elseif(\Auth::user()->id == $score->user_id && !empty($score->action_plan) && $score->is_acknowledge == 0) 
+                                                <td>
+                                                <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
+                                                <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateActionPlan" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Action Plan</button>
+                                            </td> 
+                                            <!-- Modal -->
+                                            <div id="updateActionPlan" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header" style="background: #026B4D;">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title" style="color: white">Update Action Plan </h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="POST" action="{{route('v2.score.actionplan',['id' => $score->id])}}">
+                                                            @csrf
+                                                            <textarea name="action_plan" class="form-control" id="" cols="30" rows="10">{{$score->action_plan}}</textarea>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                        <button type="submit" onclick="return confirm('Are you sure you want to update your action plan?')" class="btn btn-info">Save</button>
+                                                            </form>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    </div>
+                                                </div>
+            
+                                            @else 
+                                                <td>
+                                                <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
+                                                </td>  
+                                            @endif
+                                        </tr>
+                                        
+                                        
+                                    </table>
+            
+                        </div><!--col-md-12-->
+                    </div><!--row-->
 
                     <div class="row" style="margin-top: 20px">
                         <div class="col-print-2"></div>
@@ -358,8 +506,7 @@
             window.print();
         }
 
-        function updateScorecardFillable(scorecardId,row,col,is_final_score){
-            console.log("here" + is_final_score);
+        function updateScorecardFillable(scorecardId,row,col){
             var cntn = $("#content-fillable-"+row+"-"+col).val();
             var x_cntn = $("#x_content-fillable-"+row+"-"+col).val();
             if(cntn == ""){
@@ -376,24 +523,10 @@
                 //check if previous is empty
                 if(x_cntn == "")
                 {
-                    if(is_final_score==1)
-                    {
-                        finalScore = parseFloat(finalScoreNow) + parseFloat(cntn); 
-                    }else
-                    {
-                        finalScore = parseFloat(finalScoreNow) + 0;
-                    }
-                   
+                    finalScore = parseFloat(finalScoreNow) + parseFloat(cntn);
                 }else{
-
-                    if(is_final_score==1)
-                    {
                     finalScore_1 = parseFloat(finalScoreNow) - parseFloat(x_cntn);
                     finalScore = finalScore_1 + parseFloat(cntn);
-                    }else{
-                        finalScore_1 = parseFloat(finalScoreNow) - 0;
-                        finalScore = finalScore_1 + 0;
-                    }
                 }
 
              

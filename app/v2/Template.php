@@ -19,4 +19,10 @@ class Template extends Model
         return $this->hasMany('App\v2\TemplateContent', 'template_id', 'id');
     }
 
+
+    public function theremarks()
+    {
+        return $this->hasMany('App\v2\TemplateRemarks', 'template_id', 'id');
+    }
+
 }

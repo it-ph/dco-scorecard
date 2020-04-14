@@ -25,12 +25,12 @@
 </div><!--div 4 -->
  <div class="col-md-4">
     <div class="card">
-            <div class="card-header" style="background: #20787b">
+            <div class="card-header" style="background: #06d79c">
                 <h4 class="m-b-0 text-white"> Team Un-Acknowledge card: <span style="font-weight: bold; font-size: 25px;"></span>  </h4></div>
             <div class="card-body" style="text-align: center">
                 <h3 class="card-title"> Count  </h3>
             <h2 style="font-weight: bold; font-family: arial; font-size: 40px; margin-bottom: 10px">
-                        {{count($unAcknowledge_list)}}
+                        {{count($unAcknowledge_list)}} @if(count($unAcknowledge_list) >0)<i class="fa fa-warning"  style="color: #ffb22b;font-size: 18px;"></i>@endif
                 </h2>
                 <hr>
              </div>

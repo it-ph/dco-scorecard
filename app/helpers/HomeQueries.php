@@ -14,13 +14,14 @@ use App\v2\ScorecardContent;
 
 class HomeQueries {
 
-    public function __construct($request)
+    // public function __construct($request)
+    // {
+    //     $this->req = $request;
+    // }
+
+    function adminGraphs($request)
     {
         $this->req = $request;
-    }
-
-    function adminGraphs()
-    {
         if($this->req->has('search_year') && $this->req->filled('search_year') && 
             $this->req->has('user_id') && $this->req->filled('user_id'))
         {
@@ -78,6 +79,19 @@ class HomeQueries {
         $unAcknowledge = array_merge($unAcknowledge_member->toArray(),$unAcknowledge_sup->toArray()) ;
         return $unAcknowledge;
     }
+
+    function unAcknowledgeListForMemberOnly()
+    {
+        $unAcknowledge = Scorecard::where('is_acknowledge',0)
+        ->whereHas('theuser', function($q){
+            $q->where('user_id', Auth::user()->id);
+        })
+        ->where('is_deleted',0)
+        ->get();
+
+         return $unAcknowledge;
+    }
+
 
 
     function scorecardUsers()

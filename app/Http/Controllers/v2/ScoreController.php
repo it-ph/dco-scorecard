@@ -16,11 +16,12 @@ use App\Setting;
 use App\v2\Template;
 use App\v2\TemplateColumn;
 use App\v2\TemplateContent;
+use App\v2\TemplateRemarks;
 
 use App\v2\Scorecard;
 use App\v2\ScorecardColumn;
 use App\v2\ScorecardContent;
-
+use App\v2\ScorecardRemarks;
 
 
 class ScoreController extends Controller
@@ -111,7 +112,13 @@ class ScoreController extends Controller
         
 
 
-        $avail_months = Scorecard::groupBy('month')->orderBy('id','desc')->get();
+        $avail_months = Scorecard::
+        groupBy('month')
+        // ->groupBy('month')
+        ->orderBy('year','desc')
+        ->orderBy('month_numerical_value','desc')
+        // ->orderBy('year','asc')
+        ->get();
 
         return view('scores.card.list',compact('users','role','scorecard_templates','scores','avail_months'));
     }
@@ -193,6 +200,7 @@ class ScoreController extends Controller
                 'column_name'=>$columns->column_name,
                 'column_position'=>$columns->column_position,
                 'is_fillable'=>$columns->is_fillable,
+                'is_final_score'=>$columns->is_final_score,
                 'parent_template_column_id'=>$columns->id]);
             }
         }
@@ -207,6 +215,17 @@ class ScoreController extends Controller
                 'content'=>$content->content,
                 'row_position'=>$content->row_position,
                 'column_position'=>$content->column_position]);
+            }
+        }
+
+        //Generate User Remarks
+        $template_remarks =   TemplateRemarks::where('template_id',$templateId)->get();
+        
+        if(count($template_remarks) > 0)
+        {
+            foreach($template_remarks as $remarks){
+                ScorecardRemarks::create(['scorecard_id'=>$scorecard->id,
+                'name'=>$remarks->name]);
             }
         }
 
@@ -264,8 +283,10 @@ class ScoreController extends Controller
         $templatecontent = ScorecardContent::where('scorecard_id',$score->id)->get();
        
         $towerhead = Setting::where('setting','towerhead')->first();
-
-        return view('scores.card.cards',compact('role','scorecard_column','templatecontent_lastrow','templatecontent','score','towerhead'));
+        
+        $scorecard_remarks =   ScorecardRemarks::where('scorecard_id',$score->id)->get();
+        
+        return view('scores.card.cards',compact('role','scorecard_column','templatecontent_lastrow','templatecontent','score','scorecard_remarks','towerhead'));
    
     }
 
@@ -316,7 +337,9 @@ class ScoreController extends Controller
        
         $towerhead = Setting::where('setting','towerhead')->first();
 
-        return view('scores.card.print',compact('role','scorecard_column','templatecontent_lastrow','templatecontent','score','towerhead'));
+        $scorecard_remarks =   ScorecardRemarks::where('scorecard_id',$score->id)->get();
+
+        return view('scores.card.print',compact('role','scorecard_column','templatecontent_lastrow','templatecontent','score','scorecard_remarks','towerhead'));
    
    
     }
@@ -335,9 +358,8 @@ class ScoreController extends Controller
         return redirect()->back()->with('with_success', 'Score card has been Acknowledge succesfully!'); 
     }
 
-    public function feedbackScorecard(Request $request, $scoreCardId)
+    public function feedbackScorecard(Request $request,$scoreCardId ,$remarksId)
     {
-        
         $score = Scorecard::findorfail($scoreCardId);
 
         if($score->user_id <> Auth::user()->id)
@@ -345,10 +367,16 @@ class ScoreController extends Controller
             return \Redirect::back()->withErrors(['Restricted View']);
         }
 
-        $score->update(['agent_feedback' => $request['agent_feedback']]);
-        return redirect()->back()->with('with_success', 'Feedback submitted succesfully!'); 
-    }
+        $remarks = ScorecardRemarks::findorfail($remarksId);
 
+        $remarks->update(['user_update' => $request['user_update']]);
+        return redirect()->back()->with('with_success', 'Submitted succesfully!'); 
+    }
+    /**
+     * REMOVED DUE TO SCORECARD REMARKS DYNAMIC METHOD
+     * 
+     * 
+     * */
     public function actionplanScorecard(Request $request, $scoreCardId)
     {
         

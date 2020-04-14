@@ -59,9 +59,12 @@
     <div class="container-fluid">
         <div class="row noprint" style="margin-top: 20px;">
             <div class="col-md-12">
-            <a href="{{url('v2/scores/show')}}/{{$score->id}}/{{$role->id}}"><button type="button" title="Click to go back to Lists" class="btn btn-success btn-sm"><i class="fa fa-chevron-left"></i> Back to Lists</button></a>
-            <button type="button" title="Click to Print Scorecard" class="btn btn-info bt-sm pull-right" onclick="printThis()"><i class="fa fa-print"></i> Print</button>
-        </div>
+            @if($from==0)
+            <a href="{{url('v2/admin/template/create')}}"><button type="button" title="Click to go back to Lists" class="btn btn-success btn-sm"><i class="fa fa-chevron-left"></i> Back to Lists</button></a>
+            @else
+            <a href="javascript: history.go(-1)"><button type="button" title="Click to go back to Lists" class="btn btn-success btn-sm"><i class="fa fa-chevron-left"></i> Go Back</button></a>
+            @endif
+          </div>
         </div>
 
 
@@ -70,42 +73,36 @@
             <div class="col-md-12">
                 <table  width="100%"  cellspacing="5" cellpadding="5">
                     <tr>
-                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">@if($score->theuser->thedepartment)
-                            {{strtoupper($role->role) }}
-                            @endif - SCORECARD</td>
+                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">
+                            SCORECARD</td>
                     </tr>
                     
                     <tr>
                         <td class="lbl-bold">Employee Name:</td>
-                        <td>{{ucwords($score->theuser->name)}}</td>
+                        <td></td>
                         <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 18px;"> FINAL SCORE :</span> </td>
-                        <td rowspan="2" style="text-align: center;font-weight: bold; font-size: 18px;"><span id="finalScoreId"> {{$score->final_score}}</span> <span>%</span>
-                            {{-- <input type="text" class="form-control" id="scorecardFinalScore-{{$score->id}}" value="{{$score->final_score}}" placeholder="%"><br>
-                            <button onclick="updateScorecardFinalScore({{$score->id}})" style="margin-top: 5px;" class="btn waves-effect waves-light btn-rounded btn-xs btn-info pull-right">save</button> --}}
+                        <td rowspan="2" style="text-align: center;font-weight: bold; font-size: 18px;"><span id="finalScoreId"> </span> <span></span>
                         </td>
                     </tr>
 
                     <tr>
                         <td class="lbl-bold">Emp ID:</td>
-                        <td>{{$score->theuser->emp_id}}</td>
+                        <td></td>
                       
                     </tr>
 
                     <tr>
                         <td class="lbl-bold">Position</td>
-                        <td>{{ucwords($score->theuser->theposition->position)}}</td>
+                        <td></td>
                         <td class="lbl-bold">Month:</td>
-                        <td>{{$score->month}}</td>
+                        <td></td>
                     </tr>
 
                     <tr>
                         <td class="lbl-bold">Department</td>
-                        <td>@if($score->theuser->thedepartment)
-                            {{ucwords($score->theuser->thedepartment->department)}}
-                            @endif
-                        </td>
+                        <td> </td>
                         <td class="lbl-bold">Target:</td>
-                        <td>{{$score->target}}%</td>
+                        <td></td>
                     </tr>
                 </table>
 
@@ -117,7 +114,7 @@
                     <table  width="100%" style="margin-top: 40px; font-size: 14px" cellspacing="5" cellpadding="5">
                         <tr  style="background: gray; text-align: center; font-weight: bold;">
 
-                            @foreach($scorecard_column as $columns)
+                            @foreach($template_column as $columns)
                             <td>{{strtoupper($columns->column_name)}}</td>
 
                             @endforeach
@@ -136,17 +133,17 @@
                                 {{-- ANG LAST ROW  AY : {{$lastrow}} <!--add start with 0--> --}}
                             @for ($irow = 0; $irow <= $lastrow; $irow++)
                             <tr>
-                                @for ($jcol = 0; $jcol+1 <= count($scorecard_column) ; $jcol++) <!--column -->
-                                <?php $tq = $templateQueries->scorecardContentBaseOnRowAndColumnPosition($score->id,$irow,$jcol); ?>
-                                <?php  $tqCol = $templateQueries->scorecardContentBaseonColumn($score->id,$jcol); ?>
-                                <?php $isSame = $templateQueries->duplicateChecker($score->id,$irow,$jcol); ?>
+                                @for ($jcol = 0; $jcol+1 <= count($template_column) ; $jcol++) <!--column -->
+                                <?php $tq = $templateQueries->contentBaseOnRowAndColumnPosition($template->id,$irow,$jcol); ?>
+                                <?php  $tqCol = $templateQueries->contentBaseonColumn($template->id,$jcol); ?>
+                                <?php $isSame = $templateQueries->templateDuplicateChecker($template->id,$irow,$jcol); ?>
                                 <td style="text-align: center">
                                 @if($tqCol->is_fillable == 1)
-                                    {!! nl2br($tq->content) !!}%
+                                   @if($tq)  <div style="border: 1px solid #5e5d62; background: #5e5d62; color: white; font-style: italic">&nbsp;</div> @endif
                                 @elseif($isSame)  
                                 
                                 @else
-                                    {!! nl2br($tq->content) !!}%
+                                    @if($tq) {!! nl2br($tq->content) !!} @endif
                                 @endif
                                 </td>
                                 @endfor<!--jcol-->
@@ -159,7 +156,7 @@
                 </div><!--col-md-12-->
             </div><!--row-->
 
-            @foreach($scorecard_remarks as $user_remarks)
+            @foreach($template_remarks as $user_remarks)
             <div class="row">
                 <div class="col-md-12">
                     <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
@@ -169,7 +166,7 @@
                         
                         <tr>
                            <td>
-                            <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$user_remarks->user_update}}</textarea>
+                            <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;"></textarea>
                         </td>  
                           
                         </tr>
@@ -181,19 +178,15 @@
             </div><!--row-->
             @endforeach
 
-
-            
-            
-
                     <div class="row" style="margin-top: 20px">
                         <div class="col-print-2"></div>
                         <div class="col-print-4 text-center">
-                            <span style="text-decoration: underline; font-weight: bold;">{{strtoupper($score->theuser->name)}}</span>
-                            <br> <span style="font-weight: normal;font-size: 14px">Agent Name</span> </p>
+                            <span style="text-decoration: underline; font-weight: bold;"></span>
+                            <br> <span style="font-weight: normal;font-size: 14px">Employee Name</span> </p>
                         </div><!--col-md-5-->
 
                         <div class="col-print-6 text-center">
-                                <span style="text-decoration: underline; font-weight: bold;">{{strtoupper(date('m/d/Y'))}}</span>
+                                <span style="text-decoration: underline; font-weight: bold;"></span>
                                 <br> <span style="font-weight: normal;font-size: 14px">Date</span> </p>
                             </div><!--col-md-5-->
                     </div><!--row-->
@@ -202,19 +195,13 @@
                             <div class="col-print-2"></div>
                             <div class="col-print-4 text-center">
                                 <span style="text-decoration: underline; font-weight: bold;">
-                                    @if($score->theuser->thesupervisor)
-                                    {{strtoupper($score->theuser->thesupervisor->name)}}
-                                    @endif
-                            </span>
+                               </span>
                                 <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
                             </div><!--col-md-5-->
     
                             <div class="col-print-6 text-center">
                                     <span style="text-decoration: underline; font-weight: bold;">
-                                            @if($score->theuser->themanager)
-                                            {{strtoupper($score->theuser->themanager->name)}}
-                                            @endif
-                                    </span>
+                                     </span>
                                     <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
                                 </div><!--col-md-5-->
                     </div><!--row-->
@@ -222,7 +209,7 @@
                             <div class="col-print-1"></div>
                             <div class="col-print-11 text-center">
                                     <span style="text-decoration: underline; font-weight: bold;">
-                                         {{strtoupper($towerhead->value)}}
+                                 
                                     </span>
                                     <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
                                 </div><!--col-md-5-->
@@ -233,14 +220,3 @@
 </body>
 </html>
 
-<script>
-     window.print();
-     
-    function goBack() {
-        window.history.back();
-    }
-
-    function printThis(){
-        window.print();
-    }
-</script>

@@ -57,6 +57,35 @@ class TemplateQueries {
         return $content;
     }
 
+    function templateDuplicateChecker($template_id,$row_position,$column_position)
+    {
+
+        $template_id = filter_var($template_id, FILTER_SANITIZE_STRING);
+        $row_position = filter_var($row_position, FILTER_SANITIZE_STRING);
+        $column_position = filter_var($column_position, FILTER_SANITIZE_STRING);
+
+        $content = TemplateContent::where('template_id',$template_id)
+        ->where('row_position',$row_position)
+        ->where('column_position',$column_position)
+        ->first();
+
+        $prev = TemplateContent::where('template_id',$template_id)
+        ->where('row_position',$row_position-1)
+        ->where('column_position',$column_position)
+        ->first();
+
+        if($prev){
+            if($content->content == $prev->content)
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+
     function duplicateChecker($scorecard_id,$row_position,$column_position)
     {
 

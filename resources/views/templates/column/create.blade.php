@@ -21,14 +21,19 @@
     </div> --}}
 
          
-    <div class="col-md-12">
+    <div class="col-md-10">
          <ol style="margin: 0px" class="cd-breadcrumb triangle">
                     <li data-toggle="tooltip" data-placement="top" data-original-title="view template Lists"><a style="font-size: 16px" href="{{url('v2/admin/template/create')}}">Template</a></li>
                     <li class="current" ><em style="font-size: 14px;background: #28a745;border-color: #28a745;">Columns</em></li>
-                    <li data-toggle="tooltip" data-placement="top" data-original-title="view contents"><a style="font-size: 16px" href="{{url('v2/admin/template/content/create')}}/{{$template->id}}">Content</a></li>
-                    </ol> 
+                    <li data-toggle="tooltip" data-placement="top" data-original-title="view Contents"><a style="font-size: 16px" href="{{url('v2/admin/template/content/create')}}/{{$template->id}}">Contents</a></li>
+                    <li data-toggle="tooltip" data-placement="top" data-original-title="view Remarks"><a style="font-size: 16px" href="{{url('v2/admin/template/remarks/create')}}/{{$template->id}}">User Remarks</a></li>    
+                </ol> 
 
-</div><!--md12-->
+</div><!--md10-->
+<div class="col-md-2">
+         
+    <a href="{{url('/v2/admin/template/preview')}}/{{$template->id}}/1"><button class="btn btn-sm btn-secondary">Preview Card</button></a>
+</div><!--md2-->
 
 
     <div class="col-md-12" style="margin-top: 30px">   
@@ -51,7 +56,7 @@
                 <td><input class="form-control" type="text" name="columns[]"></td>  
             </tr>  
         </table> 
-        <button class="btn btn-primary waves-effect waves-light" type="button" title="Click to add more column" name="add_column" id="add_column"><span class="btn-label" title="Click to add more attachment"><i class="fa fa-plus"></i> </span>Add More</button>
+        <button class="btn btn-primary waves-effect waves-light" type="button" title="Click to add more column" name="add_column" id="add_column"><span class="btn-label" title="Click to add more Column"><i class="fa fa-plus"></i> </span>Add More</button>
         <hr>
        @endif
        <button class="btn btn-info pull-right" type="submit" onclick="return confirm('Are you sure you want to Create this Columns?')"><i class="fa fa-floppy-o"></i> Save</button>
@@ -66,6 +71,7 @@
                 <tr>
                     <th style="background: #026C4E; color: white;font-weight: bold">COLUMNS</th>
                     <th style="background: #026C4E; color: white;font-weight: bold">IS FILLABLE?</th>
+                    <th style="background: #026C4E; color: white;font-weight: bold">IS FINAL SCORE?</th>
                     <th colspan="2" style="background: #026C4E; color: white;"></th>
                
                 </tr>
@@ -103,6 +109,34 @@
                        
                     </form>
                 </td>
+
+                <td style="text-align: center">
+                        <form method="POST" id="finalId{{$column->id}}" action="{{route('template.column.isfinalscore',['columnId'=>$column->id])}}"> 
+                            @csrf 
+                           
+                            @if($column->is_final_score == 0)
+                            <div class="demo-checkbox">
+                                <input type="checkbox" id="basic_checkbox_{{$column->id}}" onclick="is_final_score({{$column->id}})"  class="filled-in">
+                                <label for="basic_checkbox_{{$column->id}}" onclick="is_final_score({{$column->id}})" ></label>
+                               
+                            </div>  <input type="hidden" value="1" name="is_final_score">
+        
+                            {{-- <input type="hidden" value="1" name="is_fillable"> --}}
+                            {{-- <button class="btn btn-xs btn-secondary" onclick="return confirm('Confirm this Column is Fillable?')">Make this Fillable</button> --}}
+                
+                            @else
+                            <div class="demo-checkbox">
+                                <input type="checkbox" id="basic_checkbox_{{$column->id}}" onclick="is_final_score({{$column->id}})"  checked="" class="filled-in">
+                                <label for="basic_checkbox_{{$column->id}}" onclick="is_final_score({{$column->id}})" ></label>
+        
+                            </div><input type="hidden" value="0" name="is_final_score">  
+                              
+                            {{-- <input type="hidden" value="0" name="is_fillable">
+                            <button class="btn btn-xs btn-danger" onclick="return confirm('Unfillable this Column?')"> <i class="fa fa-times"></i> Unfillable</button> --}}
+                           @endif
+                           
+                        </form>
+                    </td>
                 
             <td style="text-align: right">
                 <button class="btn btn-xs btn-warning" data-toggle="modal" data-target="#editModal-{{$column->id}}"><i class="fa fa-pencil"></i> </button>
@@ -163,6 +197,15 @@
         var r = confirm("Confirm Changes?");
         if (r == true) {
             document.getElementById("fillableId" + num).submit();
+        }else{
+            event.preventDefault();
+        }
+     }
+
+     function is_final_score(num){
+        var r = confirm("Confirm Changes?");
+        if (r == true) {
+            document.getElementById("finalId" + num).submit();
         }else{
             event.preventDefault();
         }

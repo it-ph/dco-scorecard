@@ -31,19 +31,19 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        $homeQuery = new HomeQueries($request);
+        $homeQuery = new HomeQueries();
       
-   
+        $selected_year = ($request->has('search_year') && $request->filled('search_year')) ? $request['search_year'] :  Carbon::now()->format('Y');
+
         if(Auth::user()->isAdmin() || Auth::user()->isManager()) 
         {
             $avail_year_in_scorecard =  $homeQuery->availableYearInScorecard();
            
-           $scores = $homeQuery->adminGraphs();
+           $scores = $homeQuery->adminGraphs($request);
            $avail_users_in_score =  ($homeQuery->scorecardUsers()) ? $homeQuery->scorecardUsers() : [];
            $unAcknowledge_list =  ($homeQuery->adminUnAcknowledgeList()) ? $homeQuery->adminUnAcknowledgeList() : [];
            
-           $selected_year = ($request['search_year']=="") ? $request['search_year'] :  Carbon::now()->format('Y');
-
+           
            $last_score_card_score =  [];
         
         }elseif(Auth::user()->isSupervisor()) 
@@ -56,12 +56,10 @@ class HomeController extends Controller
                 if($user->supervisor == Auth::user()->id || $user->id == Auth::user()->id){
                     $avail_year_in_scorecard =  $homeQuery->availableYearInScorecard();
            
-                    $scores = $homeQuery->adminGraphs();
+                    $scores = $homeQuery->adminGraphs($request);
                     $avail_users_in_score =  ($homeQuery->scorecardUsersForSupervisor()) ? $homeQuery->scorecardUsersForSupervisor() : [];
                     $unAcknowledge_list =  ($homeQuery->unAcknowledgeListForSupervisor()) ? $homeQuery->unAcknowledgeListForSupervisor() : [];
                     
-                    $selected_year = ($request['search_year']=="") ? $request['search_year'] :  Carbon::now()->format('Y');
-
                     $last_score_card_score =  $homeQuery->lastScoreCard();
                     
                 }else{
@@ -69,13 +67,13 @@ class HomeController extends Controller
                 }
             }
                 $avail_year_in_scorecard =  $homeQuery->availableYearInScorecard();
-           
-                $scores = $homeQuery->adminGraphs();
+            
+                $request['user_id']= Auth::user()->id;
+                $request['search_year'] = Carbon::now()->format('Y');
+                $scores = $homeQuery->adminGraphs($request);
                 $avail_users_in_score =  ($homeQuery->scorecardUsersForSupervisor()) ? $homeQuery->scorecardUsersForSupervisor() : [];
                 $unAcknowledge_list =  ($homeQuery->unAcknowledgeListForSupervisor()) ? $homeQuery->unAcknowledgeListForSupervisor() : [];
                 
-                $selected_year = ($request['search_year']=="") ? $request['search_year'] :  Carbon::now()->format('Y');
-
                 $last_score_card_score =  $homeQuery->lastScoreCard();
            
 

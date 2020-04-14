@@ -23,13 +23,18 @@
                                 @foreach($allRoles->roles() as $allRoles)
                                     
                                     <li>
-                                        <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{$allRoles->id}}" >
-                                            {{ucwords($allRoles->role)}} 
                                             <?php $u_count = count($ScoreCardHelper->unAcknowledgeCountPerRole($allRoles->id)); ?>
                                             @if($u_count > 0)
+                                            <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{$allRoles->id}}?not_acknowledge" >
+                                                {{ucwords($allRoles->role)}} 
                                             <span title="Unacknowledge Scorecard count" class="label label-rouded label-danger pull-right">{{$u_count}}</span>
+                                            </a>
+                                            @else
+                                            <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{$allRoles->id}}" >
+                                            {{ucwords($allRoles->role)}} 
+                                            </a>
                                             @endif
-                                        </a>
+                                        
                                     </li>
                                 @endforeach
                                 {{-- <li>
@@ -43,8 +48,7 @@
                         @else 
                         <li>
                                 <a class=" waves-effect waves-dark" href="{{url('v2/scores')}}/{{Auth::user()->role_id}}" >
-                                    <i class="mdi mdi-bullseye" 
-                                    @if(Auth::user()->isAdmin() || Auth::user()->isManager())  style="color: #04b381 @else style="color: #ffc107" @endif></i><span class="hide-menu">Scores </span>
+                                    <i class="mdi mdi-bullseye" style="color: #04b381" ></i><span class="hide-menu">Scores </span>
                                 </a>
                             </li>
                         @endif
