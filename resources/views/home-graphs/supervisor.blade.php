@@ -7,7 +7,7 @@
             <div class="card-header" style="background: #06d79c">
                 <h4 class="m-b-0 text-white"> @if($last_score_card_score) <i class="mdi mdi-book-open"></i> Your Recent card @endif </h4></div>
             <div class="card-body" style="text-align: center">
-                <h3 class="card-title"> Score :  {{$last_score_card_score->month}}  </h3>
+                <h3 class="card-title"> Score :   @if($last_score_card_score) {{$last_score_card_score->month}} @endif  </h3>
             @if($last_score_card_score)
                 <h2 style="font-weight: bold; font-family: arial; font-size: 30px; margin-bottom: 10px">{{$last_score_card_score->final_score}}% 
                 @if($last_score_card_score->is_acknowledge==0)<i class="fa fa-warning" title="You have NOT yet acknowledge this Scorecard" style="color: #ffb22b;font-size: 18px;"></i>
