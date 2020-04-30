@@ -117,12 +117,12 @@ th{
                         @if($score->is_acknowledge == 0)
                             <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theuser->name)}}"></i>
                         
-                            <button class="btn btn-danger btn btn-sm" title="Click to view Scorecard">
+                            <button class="btn btn-danger btn btn-xs" title="Click to view Scorecard">
                                 {{$score->month}} 
                             </button>
                         @else
                         <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledged by {{ucwords($score->theuser->name)}}"></i>
-                        <button class="btn btn-success btn btn-sm" title="Click to view Scorecard">
+                        <button class="btn btn-success btn btn-xs" title="Click to view Scorecard">
                             {{$score->month}} 
                         </button>
                         @endif 
