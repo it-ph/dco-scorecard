@@ -112,7 +112,7 @@ th{
                 <tbody> @foreach($scores as $score)
                     <tr>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
-                        <a href="{{route('v2.score.show', ['scoreCardId' => $score->id,'roleId' => $role->id])}}" class="btn btn-info btn-xs" style="color: black;" title="Click to view Scorecard">
+                        <a href="{{route('v2.score.show', ['scoreCardId' => $score->id,'roleId' => $role->id])}}" >
                        
                         @if($score->is_acknowledge == 0)
                             <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theuser->name)}}"></i>
