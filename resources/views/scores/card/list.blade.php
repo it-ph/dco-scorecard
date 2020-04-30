@@ -112,14 +112,23 @@ th{
                 <tbody> @foreach($scores as $score)
                     <tr>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
+                        <a href="{{route('v2.score.show', ['scoreCardId' => $score->id,'roleId' => $role->id])}}" class="btn btn-info btn-xs" style="color: black;" title="Click to view Scorecard">
+                       
                         @if($score->is_acknowledge == 0)
-                        <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theuser->name)}}"></i>
+                            <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theuser->name)}}"></i>
+                        
+                            <button class="btn btn-danger btn btn-sm" title="Click to view Scorecard">
+                                {{$score->month}} 
+                            </button>
                         @else
                         <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledged by {{ucwords($score->theuser->name)}}"></i>
+                        <button class="btn btn-success btn btn-sm" title="Click to view Scorecard">
+                            {{$score->month}} 
+                        </button>
                         @endif 
-                        <a href="{{route('v2.score.show', ['scoreCardId' => $score->id,'roleId' => $role->id])}}" class="btn btn-info btn-xs" style="color: black;" title="Click to view Scorecard">know more</a> 
-                        {{-- <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard"> --}}
-                        {{$score->month}} </a>
+                       
+                    
+                        </a>
                     </td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->theuser->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($score->theuser->name)}}</td>
@@ -157,11 +166,11 @@ th{
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td> --}}
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->final_score}}%</td>
                                
-                   <td class="table-dark-border" style="width: 150px; text-align: center">
+                   {{-- <td class="table-dark-border" style="width: 150px; text-align: center">
                         <form method="GET" action="{{route('v2.score.show', ['scoreCardId' => $score->id,'roleId' => $role->id])}}">
                         <button type="submit" class="btn btn-sm btn-warning">View Scorecard</button>
                         </form>
-                    </td> 
+                    </td>  --}}
 
                     @if(Auth::user()->isAdmin())
                     <td class="table-dark-border" style="width: 150px; text-align: center">
