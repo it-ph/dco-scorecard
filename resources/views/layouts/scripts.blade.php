@@ -22,4 +22,47 @@
 
     <script src="{{asset('js/theme/jquery.dataTables.min.js')}}"></script>
 
+    <script src="{{asset('themes/assets/plugins/moment/moment.js')}}"></script>
+    <script src="{{asset('themes/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
+    <script src="{{asset('themes/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
+    <script src="{{asset('themes/assets/plugins/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+    <script>
+
+    $('.mdate').bootstrapMaterialDatePicker({
+        weekStart: 0, time: false,
+    });
+
+    // Daterange picker
+    $('.input-daterange-datepicker').daterangepicker({
+            buttonClasses: ['btn', 'btn-sm'],
+            applyClass: 'btn-success',
+            cancelClass: 'btn-inverse'
+    });
+
+    $('.ddate').datepicker( {
+        format: "M yyyy",
+        startView: "months",
+        minViewMode: "months",
+        orientation: "bottom auto",
+    });
+
+    </script>
+
+
+    <script>
+        function isTarget()
+        {
+            $("#date_div").slideDown();
+            // report = $("#report").val();
+            // if(report == 'target')
+            // {
+            //     $("#date_div").slideUp();
+            //     $("#div_effectivity_year").slideDown();
+            // }else{
+            //     $("#date_div").slideDown();
+            //     $("#div_effectivity_year").slideUp();
+            // }
+        }
+    </script>
+
     @yield('js')

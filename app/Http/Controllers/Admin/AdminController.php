@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
-use App\Department;
 use App\Role;
+use App\User;
 use App\Position;
-use Illuminate\Support\Facades\Hash;
+use App\Department;
+use App\HrPortalEmployees;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -69,10 +70,10 @@ class AdminController extends Controller
                 'emp_id.unique' => 'Employee cannot have the same Employee ID!',
                 )
             );
-           
+
             $request['password'] = Hash::make( $request['password']);
             $user = User::create($request->all());
-            return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' created succesfully!');    
+            return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' created succesfully!');
     }
 
     /**
@@ -83,7 +84,7 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-      // 
+      //
     }
 
     /**
@@ -123,7 +124,7 @@ class AdminController extends Controller
             $request['password'] = Hash::make( $request['password']);
             $user->update($request->all() );
         }
-        return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' was Updated succesfully!');   
+        return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' was Updated succesfully!');
     }
 
     /**
@@ -138,7 +139,25 @@ class AdminController extends Controller
         $user = User::findorfail($id);
         $user->delete();
 
-        return redirect()->back()->with('with_success', strtoupper($user->name) .'\'s Account was Deleted succesfully!');   
+        return redirect()->back()->with('with_success', strtoupper($user->name) .'\'s Account was Deleted succesfully!');
+
+    }
+
+    public function getHrPortalEmployeesAPI(Request $request)
+    {
+        $employee =  HrPortalEmployees::where('emp_code',$request['search_key'])->first();
+
+        if($employee)
+        {
+            return response()->json([
+                'found'=>true,
+                'emp_code' => strtoupper($employee->emp_code),
+                'first_name' => strtoupper($employee->fullname),
+                'middle_name' => strtoupper($employee->middle_name),
+                'last_name' => strtoupper($employee->last_name  . " " . $employee->suffix_name)]);
+        }else{
+            return response()->json(['found' => false]);
+        }
 
     }
 }

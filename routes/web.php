@@ -36,18 +36,23 @@ Auth::routes(['register' => false]);
 
 /* Authorized Users */
 Route::group(['middleware' => ['auth','web'],],
-    function () 
+    function ()
 {
 
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::post('/export', 'ExportController@export')->name('export');
+    Route::get('/export_agent_template/upload-agent_template', 'ExportController@uploadAgentTemplate')->name('export-upload-agent_template');
+    Route::get('/export_tl_template/upload-tl_template', 'ExportController@uploadTLTemplate')->name('export-upload-tl_template');
+    Route::post('/import', 'ImportController@import')->name('import');
+
     Route::get('/profile', 'HomeController@profile')->name('profile');
 
     /* Admin Links */
     Route::group(['middleware' => ['adminOnly'],'prefix'=>'admin' ],
         function(){
             Route::resource('users','Admin\AdminController');
+            Route::GET('/api/users/details', 'Admin\AdminController@getHrPortalEmployeesAPI')->name('users.details.api');
 
-  
             //Setup
             Route::resource('admin-roles','Admin\RoleController');
             Route::resource('admin-positions','Admin\PositionController');
@@ -55,13 +60,15 @@ Route::group(['middleware' => ['auth','web'],],
 
             //Settings
             Route::GET('settings','Admin\SettingController@index');
-            Route::post('/towerhead', 'Admin\SettingController@updateTowerHead')->name('towerhead.store');
+            Route::post('towerhead', 'Admin\SettingController@updateTowerHead')->name('towerhead.store');
+            Route::post('target', 'Admin\SettingController@updateTarget')->name('target.store');
+            Route::post('weightage', 'Admin\SettingController@updateWeightage')->name('weightage.store');
 
     });
-  
+
     //Score
     Route::group(['prefix'=>'scores' ],
-        function(){ 
+        function(){
 
             //Agent
             Route::GET('agent','ScoreController@agentScore');
@@ -93,6 +100,6 @@ Route::group(['middleware' => ['auth','web'],],
             Route::get('user/password', 'HomeController@viewPassword');
             Route::post('/user/password', 'HomeController@storePassword')->name('user.store');
 
-    
+
 
 }); //Middleware auth

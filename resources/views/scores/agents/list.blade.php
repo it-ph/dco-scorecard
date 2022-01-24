@@ -20,7 +20,7 @@ th{
     <div class="col-md-offset-8 col-md-4">
         <div class="form-group">
             <label for="target">Filter by Month: </label>
-            <form action="" method="GET" name="myform" id="myform"> 
+            <form action="" method="GET" name="myform" id="myform">
 
             <select name="filter_month" required id="filter_month" class="form-control">
                     <option></option>
@@ -28,13 +28,13 @@ th{
                         <option value="{{$avail_month->month}}">{{$avail_month->month}}</option>
                     @endforeach
                     </select>
-                
+
                 @error('filter_month')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
-                
+
                 <button type="submit" class="btn btn-success bt-sm pull-right" style="margin-top: 10px">Go <i class="fa fa-chevron-circle-right"></i></button>
             </form>
         </div>
@@ -53,14 +53,14 @@ th{
 
                         @if(agentHasUnAcknowledgeCard() > 0 && \Auth::user()->isAgent())
                         <a class="dropdown-item" style="background: #e81f37; color: white" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards <span style="font-style: italic; font-size: 12px">({{agentHasUnAcknowledgeCard()}})</span></a>
-                        @else 
+                        @else
                         <a class="dropdown-item" href="{{url('scores/agent')}}?not_acknowledge">View Un Acknowledge Scorecards</a>
-                       
+
                         @endif
                         <a class="dropdown-item" href="{{url('scores/agent')}}?acknowledge">View Acknowledge Scorecards</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{url('scores/agent')}}?view_all">View All Scorecards</a>
-                        
+
                     </div>
                 </div>
 
@@ -69,21 +69,21 @@ th{
         </a>     --}}
         {{-- <button onclick="toggleMonthFilter()" title="Click to Filter Month" class="btn btn-sm btn-primary waves-effect waves-light" type="button"><span class="btn-label"> <i class="fa fa-search"></i> </span>Month </button> --}}
     </div>
-    @if(\Auth::user()->isAdmin()) 
+    @if(\Auth::user()->isAdmin())
     <div class="col-md-1">
         <button title="Create Scorcard" class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#addAgentScore" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
     </div>
     @endif
 </div>
 <div class="row">
- 
+
     <div class="col-md-12">
         @include('notifications.success')
         @include('notifications.error')
         <div class="card">
             <div class="card-body">
             <div class="table-responsive">
-            <table id="scorecard_datatable" class="display nowrap table table-hover table-bordered dataTable " cellspacing="0" width="100%">            
+            <table id="scorecard_datatable" class="display nowrap table table-hover table-bordered dataTable " cellspacing="0" width="100%">
                 <thead  style="background: #04b381; color: white; font-weight: bold">
                     <tr>
                         <th>Month</th>
@@ -97,21 +97,53 @@ th{
                         <th>Reliability %</th> --}}
                         <th>Final Score</th>
                         <th ></th>
-                        @if(Auth::user()->isAdmin()) 
-                        <th ></th> 
+                        @if(Auth::user()->isAdmin())
+                        <th ></th>
                          @endif
                     </tr>
                 </thead>
                 <tbody> @foreach($scores as $score)
                     <tr>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
-                        @if($score->acknowledge == "0")
-                        <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theagent->name)}}"></i>
+                        {{-- @if($score->acknowledge_by_agent == "0")
+                            <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px" title="Not yet Acknowledge by {{ucwords($score->theagent->name)}}"></i>
                         @else
-                        <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledge by {{ucwords($score->theagent->name)}}"></i>
-                        @endif 
-                        <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard">
-                        {{$score->month}} </a>
+                            <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledge by {{ucwords($score->theagent->name)}}"></i>
+                        @endif --}}
+
+                        @if(Auth::user()->isAdmin())
+                            @if($score->acknowledge_by_agent == "0" || $score->acknowledge_by_tl == "0" || $score->acknowledge_by_manager == "0")
+                                {{-- <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px"></i> --}}
+                                @if($score->acknowledge_by_tl == "0")
+                                    <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px"></i>
+                                @else
+                                    <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px"></i>
+                                @endif
+                            @else
+                                <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px"></i>
+                            @endif
+                        @elseif(Auth::user()->isAgent())
+                            @if($score->acknowledge_by_agent == "0")
+                                <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px"></i>
+                            @else
+                                <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px"></i>
+                            @endif
+                        @elseif(Auth::user()->isSupervisor())
+                            @if($score->acknowledge_by_tl == "0")
+                                <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px"></i>
+                            @else
+                                <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px"></i>
+                            @endif
+                        @elseif(Auth::user()->isManager())
+                            @if($score->acknowledge_by_manager == "0")
+                                <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px"></i>
+                            @else
+                                <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px"></i>
+                            @endif
+                        @endif
+
+
+                        <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard"> {{$score->month}} </a>
                     </td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->theagent->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($score->theagent->name)}}</td>
@@ -136,7 +168,7 @@ th{
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->productivity}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td> --}}
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->final_score}}%</td>
-                    
+
                     @if(Auth::user()->isAdmin())
                     <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
@@ -144,7 +176,7 @@ th{
                                     Action
                                 </button>
                                 <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    
+
                                     <span class="dropdown-item text-center">
                                          <form method="GET" action="{{route('agent-score.edit', ['id' => $score->id])}}">
                                                 <button class="btn btn-sm btn-primary text-center">
@@ -164,21 +196,21 @@ th{
                             </div><!--btn-group-->
                     </td>
                      @endif
-                     
+
                    <td class="table-dark-border" style="width: 150px; text-align: center">
                             <form method="GET" action="{{route('agent-score.show', ['id' => $score->id])}}">
                             <button type="submit" class="btn btn-sm btn-warning">View Scorecard</button>
                             </form>
-                        </td> 
+                        </td>
                     </tr>
 
                     {{-- @include('scores.agents.edit_modal') --}}
                     @endforeach
-                 
+
                 </tbody>
             </table>
         </div><!--table-responsive-->
-            
+
             </div><!--card-body-->
         </div><!--card-->
     </div><!--col-md-12-->
@@ -186,7 +218,7 @@ th{
 
 @endsection
 
-    @if(\Auth::user()->isAdmin()) 
+    @if(\Auth::user()->isAdmin())
         @include('scores.agents.add_modal')
     @endif
 
@@ -208,11 +240,11 @@ th{
                 columns: [0,1,2,4]
                 }
             }
-            
+
         ]
-                 
-      
-      
+
+
+
           } );
       } );
 </script>
@@ -220,17 +252,43 @@ th{
 <script>
 function sumTotalScore()
 {
-    var quality = $("#quality").val();
-    var productivity = $("#productivity").val();
-    var reliability = $("#reliability").val();
+
+    // var quality = $("#quality").val();
+    // var productivity = $("#productivity").val();
+    // var reliability = $("#reliability").val();
+
+    var q = $("#q").val();
+    var p = $("#p").val();
+    var r = $("#r").val();
+
+    var actual_quality = $("#actual_quality").val();
+    var actual_productivity = $("#actual_productivity").val();
+    var actual_reliability = $("#actual_reliability").val();
+
+    var quality = (q / 100) * actual_quality;
+    var productivity = (p / 100) * actual_productivity;
+    var reliability = (r / 100) * actual_reliability;
 
     quality = isNaN(quality) ? 0 : quality;
     productivity = isNaN(productivity) ? 0 : productivity;
     reliability = isNaN(reliability) ? 0 : reliability;
 
-    var totalScore = parseInt(quality) + parseInt(productivity) + parseInt(reliability);
-    $("#totalScoreLbl").html(totalScore + "%");
-    $("#final_score").val(totalScore)
+    quality = quality > q ? q : quality;
+    productivity = productivity > p ? p : productivity;
+    reliability = reliability > r ? r : reliability;
+
+    $("#q_val").val(parseFloat(quality).toFixed(2));
+    $("#p_val").val(parseFloat(productivity).toFixed(2));
+    $("#r_val").val(parseFloat(reliability).toFixed(2));
+
+    $("#quality").html(parseFloat(quality).toFixed(2));
+    $("#productivity").html(parseFloat(productivity).toFixed(2));
+    $("#reliability").html(parseFloat(reliability).toFixed(2));
+
+
+    var totalScore = parseFloat(quality) + parseFloat(productivity) + parseFloat(reliability);
+    $("#totalScoreLbl").html(parseFloat(totalScore).toFixed(2) + "%");
+    $("#final_score").val(parseFloat(totalScore).toFixed(2));
     console.log(totalScore);
 }
 

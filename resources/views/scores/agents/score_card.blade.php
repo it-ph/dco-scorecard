@@ -7,7 +7,7 @@
         }
         td, th {
         border: 1px solid black;
-        
+
         }
         .lbl-bold{
             font-weight: bold
@@ -39,8 +39,8 @@
         .col-print-10{width:83%; float:left;}
         .col-print-11{width:92%; float:left;}
         .col-print-12{width:100%; float:left;}
-        
-        
+
+
     </style>
 @endsection
 @section('content')
@@ -50,7 +50,7 @@
             <a href="{{url('scores/agent')}}">
             <button type="button" title="Click to go back to Lists" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back to Lists</button>
             </a>
-            
+
 
             <form method="GET" action="{{route('agent-score.print', ['id' => $score->id])}}">
                 <button type="submit" title="Click to Print Scorecard"  style="margin-top: 10px; margin-right: 10px" class="btn btn-info btn-sm pull-left"><i class="fa fa-print"></i> Print</button>
@@ -66,17 +66,78 @@
                 </button>
             </a> --}}
             @endif
-            
-            @if(\Auth::user()->id == $score->agent_id && $score->acknowledge == 0) 
-            <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+{{-- 
+            @if(Auth::user()->id == $score->agent_id && $score->acknowledge_by_agent == 0)
+                <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
                     @csrf
                     <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
                 </form>
-            @elseif($score->acknowledge == "0")
+            @elseif((Auth::user()->isSupervisor() || Auth::user()->isAdmin()) && ($score->acknowledge_by_agent == 1 && $score->acknowledge_by_tl == 0))
+                <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+                    @csrf
+                    <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
+                </form>
+            @elseif((Auth::user()->isManager() || Auth::user()->isAdmin()) && ($score->acknowledge_by_agent == 1 && $score->acknowledge_by_tl == 1 && $score->acknowledge_by_manager == 0))
+                <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+                    @csrf
+                    <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
+                </form>
+            @elseif(Auth::user()->isAdmin() && ($score->acknowledge_by_agent == "0" || $score->acknowledge_by_tl == "0" || $score->acknowledge_by_manager == "0"))
                 <i class="fa fa-warning fa-2x pull-right" style="color: #dd4b39;" title="Not yet Acknowledge by {{ucwords($score->theagent->name)}}"></i>
+                <i class="fa fa-warning fa-2x pull-right" style="color: #dd4b39;"></i>
             @else
                 <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;" title="This Scorecard was Acknowledge by {{ucwords($score->theagent->name)}}"></i>
-                
+                <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;"></i>
+            @endif --}}
+
+            @if(Auth::user()->isAdmin())
+                @if($score->acknowledge_by_agent == "0" || $score->acknowledge_by_tl == "0" || $score->acknowledge_by_manager == "0")
+                    {{-- <i class="fa fa-warning fa-2x pull-right" style="color: #dd4b39;"></i> --}}
+                    @if($score->acknowledge_by_agent == "1" && $score->acknowledge_by_tl == "0")
+                        <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+                            @csrf
+                            <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
+                        </form>
+                    @elseif($score->acknowledge_by_agent == "0" && $score->acknowledge_by_tl == "0")
+                        <i class="fa fa-warning fa-2x pull-right" style="color: #dd4b39;"></i>
+                    @else
+                        <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;"></i>
+                    @endif
+                @else
+                    <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;"></i>
+                @endif
+
+            @elseif(Auth::user()->isAgent())
+                @if($score->acknowledge_by_agent == "0")
+                    <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+                        @csrf
+                        <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
+                    </form>
+                @else
+                    <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;"></i>
+                @endif
+            @elseif(Auth::user()->isSupervisor())
+                @if($score->acknowledge_by_agent == "1" && $score->acknowledge_by_tl == "0")
+                    <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+                        @csrf
+                        <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
+                    </form>
+                @elseif($score->acknowledge_by_agent == "0" && $score->acknowledge_by_tl == "0")
+                    <i class="fa fa-warning fa-2x pull-right" style="color: #dd4b39;"></i>
+                @else
+                    <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;"></i>
+                @endif
+            @elseif(Auth::user()->isManager())
+                @if($score->acknowledge_by_agent == "1" && $score->acknowledge_by_tl == "1" && $score->acknowledge_by_manager == "0")
+                    <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
+                        @csrf
+                        <button type="submit" title="Click to Acknowledge This Scorecard" onclick="return confirm('Are you sure you want to Acknowledge this Score card?')" class="btn btn-warning pull-right" style="margin-right: 10px"><i class="mdi mdi-check-circle"></i> Acknowledge</button>
+                    </form>
+                @elseif($score->acknowledge_by_agent == "0" || $score->acknowledge_by_tl == "0")
+                    <i class="fa fa-warning fa-2x pull-right" style="color: #dd4b39;"></i>
+                @else
+                    <i class="mdi mdi-check-circle fa-2x pull-right" style="color: #04b381;"></i>
+                @endif
             @endif
         </div>
         </div>
@@ -84,7 +145,7 @@
         @include('notifications.success')
         @include('notifications.error')
         <div class="row" style="margin-top: 40px;">
-         
+
             <div class="col-md-12">
                 <table  width="100%"  cellspacing="5" cellpadding="5">
                     <tr>
@@ -92,7 +153,7 @@
                             {{strtoupper($score->theagent->thedepartment->department)}}
                             @endif - AGENT</td>
                     </tr>
-                    
+
                     <tr>
                         <td class="lbl-bold">Employee Name:</td>
                         <td>{{ucwords($score->theagent->name)}}</td>
@@ -103,7 +164,7 @@
                     <tr>
                         <td class="lbl-bold">Emp ID:</td>
                         <td>{{$score->theagent->emp_id}}</td>
-                      
+
                     </tr>
 
                     <tr>
@@ -138,10 +199,10 @@
                             <td>ACTUAL SCORE</td>
                             <td>SCORE</td>
                         </tr>
-                        
+
                         <tr>
                             <td style="width: 200px" class="lbl-bold ttxt-center">QUALITY <br> (OVER-ALL)</td>
-                            <td class="ttxt-center">40%</td>
+                            <td class="ttxt-center">@if($quality) {{$quality->value}} @else {{ 0 }} @endif%</td>
                             <td class="ttxt-center"><span>95% <br>Quality <br>Monthly Average</span> </td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                 <span style="font-weight: 500">40%</span> -  >= 95%  Quality average <br>
@@ -151,10 +212,10 @@
                             <td class="ttxt-center lbl-bold">{{$score->actual_quality}}%</td>
                             <td class="ttxt-center lbl-bold">{{$score->quality}}%</td>
                         </tr>
-    
+
                         <tr>
                             <td style="width: 200px" class="lbl-bold ttxt-center">PRODUCTIVITY</td>
-                            <td class="ttxt-center">40%</td>
+                            <td class="ttxt-center">@if($productivity) {{$productivity->value}} @else {{ 0 }} @endif%</td>
                             <td class="ttxt-center"><span>90% <br>Productivity <br> Average</span> </td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                 <span style="font-weight: 500">40%</span> - >=100% productivity average<br>
@@ -169,7 +230,7 @@
 
                         <tr>
                             <td style="width: 200px" class="lbl-bold ttxt-center">RELIABILITY <br> <span style="font-weight: normal">(Absenteeism, Tardiness, Overbreak, Undertime)</span></td>
-                            <td class="ttxt-center">40%</td>
+                            <td class="ttxt-center">@if($reliability) {{$reliability->value}} @else {{ 0 }} @endif%</td>
                             <td class="ttxt-center"><span>95% <br>Over-all <br> Reliability</span> </td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                     <span style="font-weight: 500">20%</span> - >=95% Reliability<br>
@@ -187,7 +248,7 @@
                             <td class="ttxt-center lbl-bold">TOTAL SCORE</td>
                             <td class="ttxt-center lbl-bold" style="font-size: 20px">{{$score->final_score}}%</td>
                         </tr>
-    
+
                     </table>
                 </div><!--col-md-12-->
             </div><!--row-->
@@ -198,16 +259,16 @@
                             <tr>
                                 <td colspan="4" style="background: gray; font-weight: bold">EMPLOYEE FEEDBACK:</td>
                             </tr>
-                            
+
                             <tr>
-                                @if(\Auth::user()->id == $score->agent_id && empty($score->agent_feedback) ) 
+                                @if(\Auth::user()->id == $score->agent_id && empty($score->agent_feedback) )
                                     <td style="text-align: center">
                                     <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addFeedback">Add Feedback</button>
                                     </td>
                                 <!-- Modal -->
                                 <div id="addFeedback" class="modal fade" role="dialog">
                                         <div class="modal-dialog modal-lg">
-                                    
+
                                         <!-- Modal content-->
                                         <div class="modal-content">
                                             <div class="modal-header" style="background: #026B4D;">
@@ -225,19 +286,19 @@
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
-                                    
+
                                         </div>
                                     </div>
 
-                                 @elseif(\Auth::user()->id == $score->agent_id && !empty($score->agent_feedback) && $score->acknowledge == 0) 
+                                 @elseif(\Auth::user()->id == $score->agent_id && !empty($score->agent_feedback) && $score->acknowledge == 0)
                                     <td>
                                     <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
                                     <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateFeedback" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Feedback</button>
-                                </td> 
+                                </td>
                                 <!-- Modal -->
                                 <div id="updateFeedback" class="modal fade" role="dialog">
                                         <div class="modal-dialog modal-lg">
-                                    
+
                                         <!-- Modal content-->
                                         <div class="modal-content">
                                             <div class="modal-header" style="background: #026B4D;">
@@ -255,41 +316,41 @@
                                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                             </div>
                                         </div>
-                                    
+
                                         </div>
                                     </div>
 
-                                @else 
+                                @else
                                     <td>
                                     <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
-                                    </td>  
+                                    </td>
                                 @endif
                             </tr>
-                            
-                            
+
+
                         </table>
-        
+
                     </div><!--col-md-12-->
                 </div><!--row-->
 
                 <!--ACTION PLAN -->
                 <div class="row">
                         <div class="col-md-12">
-                           
+
                                 <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
                                         <tr>
                                             <td colspan="4" style="background: gray; font-weight: bold">ACTION PLAN/S:</td>
                                         </tr>
-                                        
+
                                         <tr>
-                                            @if(\Auth::user()->id == $score->agent_id && empty($score->action_plan) ) 
+                                            @if(Auth::user()->id == $score->agent_id && empty($score->action_plan) )
                                                 <td style="text-align: center">
                                                 <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addActionPlan">Add Action Plan</button>
                                                 </td>
                                             <!-- Modal -->
                                             <div id="addActionPlan" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
-                                                
+
                                                     <!-- Modal content-->
                                                     <div class="modal-content">
                                                         <div class="modal-header" style="background: #026B4D;">
@@ -307,19 +368,19 @@
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
-                                                
+
                                                     </div>
                                                 </div>
-            
-                                             @elseif(\Auth::user()->id == $score->agent_id && !empty($score->action_plan) && $score->acknowledge == 0) 
+
+                                             @elseif(Auth::user()->id == $score->agent_id && !empty($score->action_plan) && $score->acknowledge == 0)
                                                 <td>
                                                 <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
                                                 <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateActionPlan" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Action Plan</button>
-                                            </td> 
+                                            </td>
                                             <!-- Modal -->
                                             <div id="updateActionPlan" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
-                                                
+
                                                     <!-- Modal content-->
                                                     <div class="modal-content">
                                                         <div class="modal-header" style="background: #026B4D;">
@@ -337,27 +398,34 @@
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
-                                                
+
                                                     </div>
                                                 </div>
-            
-                                            @else 
+
+                                            @else
                                                 <td>
                                                 <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
-                                                </td>  
+                                                </td>
                                             @endif
                                         </tr>
-                                        
-                                        
+
+
                                     </table>
-            
+
                         </div><!--col-md-12-->
                     </div><!--row-->
 
-                    <div class="row" style="margin-top: 20px">
+                    <div class="row" style="margin-top: 40px">
                         <div class="col-print-2"></div>
                         <div class="col-print-4 text-center">
-                            <span style="text-decoration: underline; font-weight: bold;">{{strtoupper($score->theagent->name)}}</span>
+                            <span style="font-weight: bold;">
+                                @if($score->date_acknowledge_by_agent)
+                                    <i class="mdi mdi-check-circle fa-1x" style="color: #04b381;"></i> {{ date('m/d/Y', strtotime($score->date_acknowledge_by_agent)) }}
+                                @else
+                                    <i class="fa fa-warning fa-1x" style="color: #dd4b39;"></i>
+                                @endif
+                            </span>
+                            <br> <span style="text-decoration: underline; font-weight: bold;">{{strtoupper($score->theagent->name)}}</span>
                             <br> <span style="font-weight: normal;font-size: 14px">Agent Name</span> </p>
                         </div><!--col-md-5-->
 
@@ -370,22 +438,36 @@
                     <div class="row" style="margin-top: 20px">
                             <div class="col-print-2"></div>
                             <div class="col-print-4 text-center">
+                                <span style="font-weight: bold;">
+                                    @if($score->date_acknowledge_by_tl)
+                                        <i class="mdi mdi-check-circle fa-1x" style="color: #04b381;"></i> {{ date('m/d/Y', strtotime($score->date_acknowledge_by_tl)) }}
+                                    @else
+                                        <i class="fa fa-warning fa-1x" style="color: #dd4b39;"></i>
+                                    @endif
+                                </span>
                                 <span style="text-decoration: underline; font-weight: bold;">
                                     @if($score->theagent->thesupervisor)
-                                    {{strtoupper($score->theagent->thesupervisor->name)}}
+                                        <br> {{strtoupper($score->theagent->thesupervisor->name)}}
                                     @endif
-                            </span>
+                                </span>
                                 <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
                             </div><!--col-md-5-->
-    
+
                             <div class="col-print-6 text-center">
+                                    <span style="font-weight: bold;">
+                                        @if($score->date_acknowledge_by_manager)
+                                            <i class="mdi mdi-check-circle fa-1x" style="color: #04b381;"></i> {{ date('m/d/Y', strtotime($score->date_acknowledge_by_manager)) }}
+                                        @else
+                                            <i class="fa fa-warning fa-1x" style="color: #dd4b39;"></i>
+                                        @endif
+                                    </span>
                                     <span style="text-decoration: underline; font-weight: bold;">
                                             @if($score->theagent->themanager)
-                                            {{strtoupper($score->theagent->themanager->name)}}
+                                                <br> {{strtoupper($score->theagent->themanager->name)}}
                                             @endif
                                     </span>
                                     <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
-                                </div><!--col-md-5-->
+                            </div><!--col-md-5-->
                     </div><!--row-->
                     <div class="row" style="margin-top: 20px">
                             <div class="col-print-1"></div>
@@ -396,7 +478,7 @@
                                     <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
                                 </div><!--col-md-5-->
                     </div><!--row-->
-    
+
 
     </div><!--container-->
 @endsection
@@ -407,7 +489,7 @@
         function goBack() {
             window.history.back();
         }
-    
+
         function printThis(){
             window.print();
         }

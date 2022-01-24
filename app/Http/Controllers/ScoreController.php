@@ -90,7 +90,7 @@ class ScoreController extends Controller
     }
 
 
-    /** 
+    /**
     *
     *
     * TL SCORECARD
@@ -100,7 +100,7 @@ class ScoreController extends Controller
     {
 
         $this->userId = Auth::user()->id;
-        
+
         //VIEW ALL AGENT (FOR CREATE CARD)
         $tls = User::where('role','supervisor')->orderBy('name','ASC')->get();
 
@@ -108,27 +108,27 @@ class ScoreController extends Controller
         if( $request->has('not_acknowledge') || $request->filled('not_acknowledge') )
         {
             $scores = TLScoreCard::where('acknowledge',0);
-            
+
         //FILTER BY ACKNOWLEDGE
         }elseif( $request->has('acknowledge') || $request->filled('acknowledge') )
         {
             $scores = TLScoreCard::where('acknowledge',1);
-            
-        //FILTER BY MONTH 
+
+        //FILTER BY MONTH
         }elseif( $request->has('filter_month') && $request->filled('filter_month') )
         {
             $scores = TLScoreCard::where('month',$request['filter_month']);
-            
+
         //VIEW ALL
         }elseif( $request->has('view_all') || $request->filled('view_all') )
         {
             $scores = TLScoreCard::orderBy('id','desc');
-            
-        //DEFAULT MONTH NOW    
+
+        //DEFAULT MONTH NOW
         }else{
             $scores = TLScoreCard::where('month',Carbon::now()->format('M Y'));
         }
-    
+
 
         $avail_months = TLScoreCard::month();
 
@@ -140,7 +140,7 @@ class ScoreController extends Controller
         }
         //Manager
         elseif(Auth::user()->isManager()){
-            
+
             $scores->tlsuperior('manager',$this->userId)->get();
             $avail_months =    TLScoreCard::tlsuperior('manager',$this->userId)->month();
         }
@@ -171,16 +171,16 @@ class ScoreController extends Controller
             'actual_team_attendance'    => 'required|numeric',
             'team_attendance'       => 'required|numeric',
             'final_score'       => 'required|numeric'
-           
-          
+
+
         ],
             $messages = array('tl_id.required' => 'Team Leader is Required!')
         );
 
         // $request['month'] = $request['month'] . " 00:00:00";
-       
+
         $tl = TLScoreCard::create($request->all());
-        return redirect()->back()->with('with_success', 'Scorecard created succesfully!'); 
+        return redirect()->back()->with('with_success', 'Scorecard created succesfully!');
     }
 
     public function editTLScore($id)
@@ -210,23 +210,23 @@ class ScoreController extends Controller
             'actual_team_attendance'    => 'required|numeric',
             'team_attendance'       => 'required|numeric',
             'final_score'       => 'required|numeric'
-           
-          
+
+
         ],
             $messages = array('tl_id.required' => 'Agent is Required!')
         );
-        
+
         $score = TLScoreCard::findorfail($id);
         $score->update($request->all());
 
-        return redirect()->back()->with('with_success', 'Scorecard updated succesfully!'); 
+        return redirect()->back()->with('with_success', 'Scorecard updated succesfully!');
     }
 
     public function deleteTLScore($id)
     {
         $score = TLScoreCard::findorfail($id);
         $score->delete();
-        return redirect()->back()->with('with_success', 'Scorecard was Deleted succesfully!');   
+        return redirect()->back()->with('with_success', 'Scorecard was Deleted succesfully!');
     }
 
     public function showTLScore($id)
@@ -237,9 +237,9 @@ class ScoreController extends Controller
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
         {
-            return view('notifications.401'); 
+            return view('notifications.401');
         }
-          
+
         return view('scores.tl.score_card',compact('score','towerhead'));
     }
 
@@ -247,11 +247,11 @@ class ScoreController extends Controller
     {
         $score = TLScoreCard::findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
-        
+
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
         {
-            return view('notifications.401'); 
+            return view('notifications.401');
         }
 
       return view('scores.tl.score_print',compact('score','towerhead'));
@@ -265,11 +265,11 @@ class ScoreController extends Controller
         ],
             $messages = array('feedback.required' => 'Agent Feedback is Required!')
         );
-        
+
         $score = TLScoreCard::findorfail($id);
         $score->update(['feedback'=> $request['feedback']]);
 
-        return redirect()->back()->with('with_success', 'Feedback Succesfully Added!'); 
+        return redirect()->back()->with('with_success', 'Feedback Succesfully Added!');
     }
 
     public function tlActionPlan(Request $request, $id)
@@ -280,11 +280,11 @@ class ScoreController extends Controller
         ],
             $messages = array('action_plan.required' => 'Action Plan Feedback is Required!')
         );
-        
+
         $score = TLScoreCard::findorfail($id);
         $score->update(['action_plan'=> $request['action_plan']]);
 
-        return redirect()->back()->with('with_success', 'Action Plan Succesfully Added!'); 
+        return redirect()->back()->with('with_success', 'Action Plan Succesfully Added!');
     }
 
     public function acknowledgeScoreTL(Request $request, $id)
@@ -292,12 +292,12 @@ class ScoreController extends Controller
         $score = TLScoreCard::findorfail($id);
         $score->update(['acknowledge'=> 1]);
 
-        return redirect()->back()->with('with_success', 'Scorecard Acknowledged Succesfully!'); 
+        return redirect()->back()->with('with_success', 'Scorecard Acknowledged Succesfully!');
     }
 
 
 
-    /** 
+    /**
     *
     *
     * AGENT SCORECARD
@@ -306,35 +306,66 @@ class ScoreController extends Controller
     public function agentScore(Request $request)
     {
         $this->userId = Auth::user()->id;
-        
+
         //VIEW ALL AGENT (FOR CREATE CARD)
         $agents = User::where('role','agent')->orderBy('name','ASC')->get();
 
         //FILTER BY NOT-ACKNOWLEDGE
         if( $request->has('not_acknowledge') || $request->filled('not_acknowledge') )
         {
-            $scores = agentScoreCard::where('acknowledge',0);
-            
+            //Agent
+            if (Auth::user()->isAgent()) {
+                $scores = agentScoreCard::where('acknowledge_by_agent', 0);
+            }
+            //Supervisor
+            elseif(Auth::user()->isSupervisor()){
+                $scores = agentScoreCard::where('acknowledge_by_agent', 1)->where('acknowledge_by_tl',0);
+            }
+            //Manager
+            elseif(Auth::user()->isManager()){
+                $scores = agentScoreCard::where('acknowledge_by_agent', 1)->where('acknowledge_by_tl', 1)->where('acknowledge_by_manager', 0);
+            }
+            else
+            {
+                $scores = agentScoreCard::where('acknowledge_by_agent', 0)->Orwhere('acknowledge_by_tl', 0)->Orwhere('acknowledge_by_manager', 0);
+            }
+
         //FILTER BY ACKNOWLEDGE
         }elseif( $request->has('acknowledge') || $request->filled('acknowledge') )
         {
-            $scores = agentScoreCard::where('acknowledge',1);
-            
-        //FILTER BY MONTH 
+            // $scores = agentScoreCard::where('acknowledge',1);
+            //Agent
+            if (Auth::user()->isAgent()) {
+                $scores = agentScoreCard::where('acknowledge_by_agent', 1);
+            }
+            //Supervisor
+            elseif(Auth::user()->isSupervisor()){
+                $scores = agentScoreCard::where('acknowledge_by_tl',1);
+            }
+            //Manager
+            elseif(Auth::user()->isManager()){
+                $scores = agentScoreCard::where('acknowledge_by_manager', 1);
+            }
+            else
+            {
+                $scores = agentScoreCard::where('acknowledge_by_agent', 1)->Orwhere('acknowledge_by_tl', 1)->Orwhere('acknowledge_by_manager', 1);
+            }
+
+        //FILTER BY MONTH
         }elseif( $request->has('filter_month') && $request->filled('filter_month') )
         {
             $scores = agentScoreCard::where('month',$request['filter_month']);
-            
+
         //VIEW ALL
         }elseif( $request->has('view_all') || $request->filled('view_all') )
         {
             $scores = agentScoreCard::orderBy('id','desc');
-            
-        //DEFAULT MONTH NOW    
+
+        //DEFAULT MONTH NOW
         }else{
             $scores = agentScoreCard::where('month',Carbon::now()->format('M Y'));
         }
-    
+
         $avail_months = agentScoreCard::month();
 
         //Agent
@@ -361,7 +392,12 @@ class ScoreController extends Controller
         $scores = $scores->get();
         $avail_months = $avail_months->get();
 
-        return view('scores.agents.list',compact('agents','scores','avail_months'));
+        $target = Setting::where('setting','target')->first();
+        $quality = Setting::where('setting','quality')->first();
+        $productivity = Setting::where('setting','productivity')->first();
+        $reliability = Setting::where('setting','reliability')->first();
+
+        return view('scores.agents.list',compact('agents','scores','avail_months','target','quality','productivity','reliability'));
     }
 
     public function addAgentScore(Request $request)
@@ -378,22 +414,28 @@ class ScoreController extends Controller
             'productivity'       => 'required|numeric',
             'reliability'       => 'required|numeric',
             'final_score'       => 'required|numeric'
-          
+
         ],
             $messages = array('agent_id.required' => 'Agent is Required!')
         );
 
         // $request['month'] = $request['month'] . " 00:00:00";
-       
+
         $agent = agentScoreCard::create($request->all());
-        return redirect()->back()->with('with_success', 'Scorecard created succesfully!'); 
+        return redirect()->back()->with('with_success', 'Scorecard created succesfully!');
     }
 
     public function editAgentScore($id)
     {
         $agents = User::where('role','agent')->orderBy('name','ASC')->get();
         $score = agentScoreCard::findorfail($id);
-        return view('scores.agents.edit',compact('agents','score'));
+
+        $target = Setting::where('setting','target')->first();
+        $quality = Setting::where('setting','quality')->first();
+        $productivity = Setting::where('setting','productivity')->first();
+        $reliability = Setting::where('setting','reliability')->first();
+
+        return view('scores.agents.edit',compact('agents','score','target','quality','productivity','reliability'));
     }
 
     public function updateAgentScore(Request $request, $id)
@@ -410,48 +452,51 @@ class ScoreController extends Controller
             'productivity'       => 'required|numeric',
             'reliability'       => 'required|numeric',
             'final_score'       => 'required|numeric'
-          
+
         ],
             $messages = array('agent_id.required' => 'Agent is Required!')
         );
-        
+
         $score = agentScoreCard::findorfail($id);
         $score->update($request->all());
 
-        return redirect()->back()->with('with_success', 'Scorecard updated succesfully!'); 
+        return redirect()->back()->with('with_success', 'Scorecard updated succesfully!');
     }
 
     public function deleteAgentScore($id)
     {
         $score = agentScoreCard::findorfail($id);
         $score->delete();
-        return redirect()->back()->with('with_success', 'Scorecard was Deleted succesfully!');   
+        return redirect()->back()->with('with_success', 'Scorecard was Deleted succesfully!');
     }
 
     public function showAgentScore($id)
     {
         $score = agentScoreCard::findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
+        $productivity = Setting::where('setting','productivity')->first();
+        $quality = Setting::where('setting','quality')->first();
+        $reliability = Setting::where('setting','reliability')->first();
 
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
         {
-            return view('notifications.401'); 
+            return view('notifications.401');
         }
-          
 
-      return view('scores.agents.score_card',compact('score','towerhead'));
+
+      return view('scores.agents.score_card',compact('score','towerhead','productivity','quality','reliability'));
     }
 
     public function printAgentScore($id)
     {
         $score = agentScoreCard::findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
-        
+
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
         {
-            return view('notifications.401'); 
+            return view('notifications.401');
         }
 
       return view('scores.agents.score_print',compact('score','towerhead'));
@@ -465,11 +510,11 @@ class ScoreController extends Controller
         ],
             $messages = array('agent_feedback.required' => 'Agent Feedback is Required!')
         );
-        
+
         $score = agentScoreCard::findorfail($id);
         $score->update(['agent_feedback'=> $request['agent_feedback']]);
 
-        return redirect()->back()->with('with_success', 'Feedback Succesfully Added!'); 
+        return redirect()->back()->with('with_success', 'Feedback Succesfully Added!');
     }
 
     public function agentActionPlan(Request $request, $id)
@@ -480,22 +525,44 @@ class ScoreController extends Controller
         ],
             $messages = array('action_plan.required' => 'Action Plan Feedback is Required!')
         );
-        
+
         $score = agentScoreCard::findorfail($id);
         $score->update(['action_plan'=> $request['action_plan']]);
 
-        return redirect()->back()->with('with_success', 'Action Plan Succesfully Added!'); 
+        return redirect()->back()->with('with_success', 'Action Plan Succesfully Added!');
     }
 
     public function acknowledgeScore(Request $request, $id)
     {
         $score = agentScoreCard::findorfail($id);
-        $score->update(['acknowledge'=> 1]);
+        // $score->update(['acknowledge'=> 1]);
 
-        return redirect()->back()->with('with_success', 'Scorecard Acknowledged Succesfully!'); 
+        // Acknowledged by Agent
+        if(Auth::user()->isAgent())
+        {
+            $score->update([
+                'acknowledge_by_agent' => 1,
+                'date_acknowledge_by_agent' => Carbon::now()->format('Y-m-d')
+            ]);
+        }
+        // Acknowledged by Supervisor
+        elseif(Auth::user()->isSupervisor() || Auth::user()->isAdmin())
+        {
+            $score->update([
+                'acknowledge_by_tl' => 1,
+                'date_acknowledge_by_tl' => Carbon::now()->format('Y-m-d')
+            ]);
+        }
+        // Acknowledged by Manager
+        elseif(Auth::user()->isManager() || Auth::user()->isAdmin())
+        {
+            $score->update([
+                'acknowledge_by_manager' => 1,
+                'date_acknowledge_by_manager' => Carbon::now()->format('Y-m-d')
+            ]);
+        }
+
+
+        return redirect()->back()->with('with_success', 'Scorecard Acknowledged Succesfully!');
     }
-
-   
-
-    
 }

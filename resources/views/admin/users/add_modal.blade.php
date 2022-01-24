@@ -2,7 +2,7 @@
 <!-- Modal -->
 <div id="addUser" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
-      
+
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header" style="background: #04B381 ">
@@ -12,7 +12,14 @@
             <div class="modal-body">
                 <form method="POST" action="{{route('users.store')}}">
                 @csrf
-                
+
+                {{-- <span id="personiv_employee_searcing_label" style="display: none"></span>
+                <label style="margin-top: 10px;display: none" for="" id="employee_name_label">Employee Name </label>
+                <h5 style="font-weight: bold;margin-bottom: 15px"><span id="first_name"></span> <span id="middle_name"></span> <span id="last_name"></span></h5>
+
+                <label for="">Employee Number <span style="color: red; font-weight: bold">*</span></label>
+                <input type="text" placeholder="Input Employee Number" autocomplete="off" value="{{ old('emp_code') }}" class="form-control" name="emp_code"  onkeyup="userDetails()" id="personiv_employee_emp_code"> --}}
+
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -37,7 +44,7 @@
                                     @endif
                                     @endforeach
                                     </select>
-                                
+
                                 @error('supervisor')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -45,7 +52,7 @@
                                 @enderror
                             </div>
                     </div>
-            
+
                     <div class="col-md-12">
                         <div class="form-group">
                                 <label for="manager">Manager</label>
@@ -57,13 +64,13 @@
                                         @endif
                                         @endforeach
                                         </select>
-                                    
+
                                     @error('manager')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
-                            
+
                         </div>
                     </div>
 
@@ -80,7 +87,7 @@
                                     @endif
                                     @endforeach
                                     </select>
-                                
+
                                 @error('department_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -103,13 +110,13 @@
                                     @endif
                                     @endforeach
                                     </select>
-                                
+
                                 @error('position_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
-                        
+
                           </div>
                       </div>
 
@@ -127,13 +134,13 @@
                                       @endif
                                       @endforeach
                                       </select>
-                                  
+
                                   @error('role')
                                       <span class="invalid-feedback" role="alert">
                                           <strong>{{ $message }}</strong>
                                       </span>
                                   @enderror
-                          
+
                             </div>
                         </div>
 
@@ -143,24 +150,24 @@
                                 <input id="password" type="password" value="" class="form-control @error('password') is-invalid @enderror" name="password" required>
                                 </div>
                             </div>
-            
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label for="manager">Status <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                                 <select name="status" required id="status" class="form-control fform">
                                     @if(old('status'))
                                         <option value="{{old('status')}}">{{old('status')}}</option>
-                                    @else 
+                                    @else
                                     <option value="active">Active</option>
                                     <option value="deactivate">Deactivate</option>
                                     @endif
-                                
+
                                 </select>
                             </div>
                         </div>
                 </div>
-    
-             
+
+
             </div><!--body-->
             <div class="modal-footer">
                 <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure you want to add this User?')"><i class="mdi mdi-content-save"></i> Save</button>
@@ -168,7 +175,7 @@
               <button type="button" class="btn btn-default" data-dismiss="modal"> Close</button>
             </div>
           </div>
-      
+
         </div>
       </div>
 @endsection

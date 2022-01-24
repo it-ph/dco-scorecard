@@ -16,14 +16,14 @@
     </div>
 </div>
 <div class="row">
- 
+
     <div class="col-md-12">
         @include('notifications.success')
         @include('notifications.error')
         <div class="card">
             <div class="card-body">
             <div class="table-responsive">
-            <table id="scorecard_datatable" class="display nowrap table table-hover table-bordered dataTable " cellspacing="0" width="100%">            
+            <table id="scorecard_datatable" class="display nowrap table table-hover table-bordered dataTable " cellspacing="0" width="100%">
                 <thead  style="background: #04b381; color: white; font-weight: bold">
                     <tr>
                         <th>Employee ID</th>
@@ -31,7 +31,7 @@
                         <th>Position</th>
                         <th>Department</th>
                         <th>Supervisor</th>
-                        <th>Manager</th> 
+                        <th>Manager</th>
                         <th>Role</th>
                         <th></th>
                     </tr>
@@ -52,10 +52,10 @@
                                     Action
                                 </button>
                                 <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                    
+
                                     <span class="dropdown-item text-center">
                                         <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#edit{{$user->id}}"><i class="fa fa-edit"></i> Edit</button>
-                                    
+
                                     </span>
 
                                    <span class="dropdown-item text-center">
@@ -75,7 +75,7 @@
                 </tbody>
             </table>
         </div><!--table-responsive-->
-            
+
             </div><!--card-body-->
         </div><!--card-->
     </div><!--col-md-12-->
@@ -99,10 +99,43 @@
               buttons: [
                   'excel', 'print'
               ],
-                 
-      
-      
+
+
+
           } );
       } );
+
+    function userDetails()
+    {
+        $('#personiv_employee_searcing_label').fadeOut('').fadeIn();
+        $('#personiv_employee_searcing_label').html('');
+        $('#personiv_employee_searcing_label').html('Employee Searching...');
+        var search_key = $('#personiv_employee_emp_code').val();
+        $.ajax({
+                type:'GET',
+                url:"{{url('user/api/users/details')}}",
+                dataType: 'json',
+                data: {search_key: search_key},
+                success:function(result)
+                {
+
+                    if(result.found)
+                    {
+                        console.log(result);
+                        $('#personiv_employee_searcing_label').fadeOut();
+                        $('#first_name').html(result.first_name);
+                        $('#middle_name').html(result.middle_name);
+                        $('#last_name').html(result.last_name);
+                        $('#employee_name_label').fadeIn();
+
+                    }else{
+                        $('#first_name').html("");
+                        $('#middle_name').html("");
+                        $('#last_name').html("");
+                        $('#employee_name_label').fadeOut();
+                    }
+                }
+        })//Ajax
+    }
 </script>
 @endsection

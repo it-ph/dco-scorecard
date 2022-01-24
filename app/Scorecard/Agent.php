@@ -35,5 +35,5 @@ class Agent extends Model
             $q->where($this->position,$this->authID);
         });
     }
-  
+
 }
