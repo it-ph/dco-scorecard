@@ -148,20 +148,29 @@ th{
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->theagent->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($score->theagent->name)}}</td>
                     <td class="table-dark-border">
-                        @if($score->theagent->thedepartment)
-                        {{ucwords($score->theagent->thedepartment->department)}}
+                        {{-- @if($score->theagent->thedepartment)
+                            {{ucwords($score->theagent->thedepartment->department)}}
+                        @endif --}}
+
+                        @if($score->theposition->thedepartment)
+                            {{ $score->theposition->thedepartment->department }}
+                        @endif
+
+                    </td>
+
+                    <td class="table-dark-border">
+                        {{-- @if($score->theagent->thesupervisor)
+                            {{ucwords($score->theagent->thesupervisor->name)}}
+                        @endif --}}
+
+                        @if($score->theposition->thesupervisor)
+                            {{ucwords($score->theposition->thesupervisor->name)}}
                         @endif
                     </td>
 
                     <td class="table-dark-border">
-                        @if($score->theagent->thesupervisor)
-                        {{ucwords($score->theagent->thesupervisor->name)}}
-                        @endif
-                    </td>
-
-                    <td class="table-dark-border">
-                        @if($score->theagent->themanager)
-                        {{ucwords($score->theagent->themanager->name)}}
+                        @if($score->theposition->themanager)
+                        {{ucwords($score->theposition->themanager->name)}}
                         @endif
                     </td>
                     {{-- <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->quality}}</td>

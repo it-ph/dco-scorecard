@@ -377,14 +377,22 @@ class ScoreController extends Controller
         }
         //Supervisor
         elseif(Auth::user()->isSupervisor()){
-            $scores->agentsuperior('supervisor',$this->userId);
-            $avail_months =  agentScoreCard::agentsuperior('supervisor',$this->userId)
+            // $scores->agentsuperior('supervisor',$this->userId);
+            // $avail_months =  agentScoreCard::agentsuperior('supervisor',$this->userId)
+            // ->month();
+
+            $scores->agentsuperior('supervisor_id',$this->userId);
+            $avail_months =  agentScoreCard::agentsuperior('supervisor_id',$this->userId)
             ->month();
 
         }//Manager
         elseif(Auth::user()->isManager()){
-            $scores->agentsuperior('manager',$this->userId);
-            $avail_months =  agentScoreCard::agentsuperior('manager',$this->userId)
+            // $scores->agentsuperior('manager',$this->userId);
+            // $avail_months =  agentScoreCard::agentsuperior('manager',$this->userId)
+            // ->month();
+
+            $scores->agentsuperior('manager_id',$this->userId);
+            $avail_months =  agentScoreCard::agentsuperior('manager_id',$this->userId)
             ->month();
 
         }

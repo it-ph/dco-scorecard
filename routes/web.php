@@ -51,6 +51,11 @@ Route::group(['middleware' => ['auth','web'],],
     Route::group(['middleware' => ['adminOnly'],'prefix'=>'admin' ],
         function(){
             Route::resource('users','Admin\AdminController');
+
+            Route::POST('positions', 'Admin\AdminController@storePosition')->name('users.position.store');
+            Route::PUT('position/{positionId}', 'Admin\AdminController@updatePosition')->name('users.position.update');
+            Route::DELETE('position/{positionId}', 'Admin\AdminController@deletePosition')->name('users.position.destroy');
+
             Route::GET('/api/users/details', 'Admin\AdminController@getHrPortalEmployeesAPI')->name('users.details.api');
 
             //Setup

@@ -66,7 +66,7 @@
                 </button>
             </a> --}}
             @endif
-{{-- 
+{{--
             @if(Auth::user()->id == $score->agent_id && $score->acknowledge_by_agent == 0)
                 <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
                     @csrf
@@ -149,9 +149,14 @@
             <div class="col-md-12">
                 <table  width="100%"  cellspacing="5" cellpadding="5">
                     <tr>
-                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">@if($score->theagent->thedepartment)
-                            {{strtoupper($score->theagent->thedepartment->department)}}
-                            @endif - AGENT</td>
+                        <td colspan="4" style="background: gray; text-align: center; font-weight: bold;font-size: 22px">
+                            {{-- @if($score->theagent->thedepartment)
+                                {{strtoupper($score->theagent->thedepartment->department)}}
+                            @endif - AGENT --}}
+                            @if($score->theposition->thedepartment)
+                                {{strtoupper($score->theposition->thedepartment->department)}}
+                            @endif - AGENT
+                        </td>
                     </tr>
 
                     <tr>
@@ -169,15 +174,21 @@
 
                     <tr>
                         <td class="lbl-bold">Position</td>
-                        <td>{{ucwords($score->theagent->theposition->position)}}</td>
+                        {{-- <td>{{ucwords($score->theagent->theposition->position)}}</td> --}}
+                        <td>{{ucwords($score->theposition->theposition->position)}}</td>
                         <td class="lbl-bold">Month:</td>
                         <td>{{$score->month}}</td>
                     </tr>
 
                     <tr>
                         <td class="lbl-bold">Department</td>
-                        <td>@if($score->theagent->thedepartment)
-                            {{ucwords($score->theagent->thedepartment->department)}}
+                        <td>
+                            {{-- @if($score->theagent->thedepartment)
+                                {{ucwords($score->theagent->thedepartment->department)}}
+                            @endif --}}
+
+                            @if($score->theposition->thedepartment)
+                                {{ucwords($score->theposition->thedepartment->department)}}
                             @endif
                         </td>
                         <td class="lbl-bold">Target:</td>
@@ -446,8 +457,11 @@
                                     @endif
                                 </span>
                                 <span style="text-decoration: underline; font-weight: bold;">
-                                    @if($score->theagent->thesupervisor)
+                                    {{-- @if($score->theagent->thesupervisor)
                                         <br> {{strtoupper($score->theagent->thesupervisor->name)}}
+                                    @endif --}}
+                                    @if($score->theposition->thesupervisor)
+                                        <br> {{strtoupper($score->theposition->thesupervisor->name)}}
                                     @endif
                                 </span>
                                 <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
@@ -462,8 +476,12 @@
                                         @endif
                                     </span>
                                     <span style="text-decoration: underline; font-weight: bold;">
-                                            @if($score->theagent->themanager)
+                                            {{-- @if($score->theagent->themanager)
                                                 <br> {{strtoupper($score->theagent->themanager->name)}}
+                                            @endif --}}
+
+                                            @if($score->theposition->themanager)
+                                                <br> {{strtoupper($score->theposition->themanager->name)}}
                                             @endif
                                     </span>
                                     <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>

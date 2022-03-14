@@ -6,6 +6,7 @@ use App\Role;
 use App\User;
 use App\Position;
 use App\Department;
+use App\UserPositions;
 use App\HrPortalEmployees;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -23,9 +24,11 @@ class AdminController extends Controller
         $roles = Role::orderBy('role','ASC')->get();
         $departments = Department::orderBy('department','ASC')->get();
         $positions = Position::orderBy('position','ASC')->get();
-        $users = User::whereNotIn('role', ['superadmin'])->orderBy('id','ASC')->get();
+        // $users = User::whereNotIn('role', ['superadmin'])->orderBy('id','ASC')->get();
         $supervisors = User::where('role','supervisor')->orderBy('name','ASC')->get();
         $managers = User::where('role','manager')->orderBy('name','ASC')->get();
+
+        $users = User::with('thepositions')->whereNotIn('role', ['superadmin'])->orderBy('id','ASC')->get();
 
         return view('admin.users.list',compact(
             'users',
@@ -125,6 +128,54 @@ class AdminController extends Controller
             $user->update($request->all() );
         }
         return redirect()->back()->with('with_success', 'Account for ' . strtoupper($user->name) .' was Updated succesfully!');
+    }
+
+    public function storePosition(Request $request)
+    {
+        $this->validate($request,
+            [
+                'user_id'    => 'required',
+                'department_id'       => 'required',
+                'position_id' => ['required'],
+            ],
+                $messages = array(
+                    'user_id.required' => 'Employee ID is Required!',
+                    'department_id.required' => 'Department is Required!',
+                    'position_id.required' => 'Position is Required!',
+                )
+            );
+
+            $user = UserPositions::create($request->all());
+            return redirect()->back()->with('with_success', 'Position Added succesfully for ' . strtoupper($user->theuser->name));
+    }
+
+    public function updatePosition(Request $request, $positionId)
+    {
+        $this->validate($request,
+            [
+                'user_id'    => 'required',
+                'department_id'       => 'required',
+                'position_id' => ['required'],
+            ],
+                $messages = array(
+                    'user_id.required' => 'Employee ID is Required!',
+                    'department_id.required' => 'Department is Required!',
+                    'position_id.required' => 'Position is Required!',
+                )
+            );
+
+            $user_position = UserPositions::update($request->all());
+            return redirect()->back()->with('with_success', 'Position updated succesfully for ' . strtoupper($user_position->theuser->name));
+    }
+
+    public function deletePosition($positionId)
+    {
+
+        $user_position = UserPositions::findorfail($positionId);
+        $user_position->delete();
+
+        return redirect()->back()->with('with_success', 'Position Deleted succesfully for ' . strtoupper($user_position->theuser->name));
+
     }
 
     /**

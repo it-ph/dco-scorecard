@@ -4,12 +4,15 @@ namespace App\Imports;
 
 use App\User;
 use App\Setting;
-use App\Scorecard\Agent as agentScoreCard;
+use App\Position;
 use Carbon\Carbon;
+use App\Department;
+use App\UserPositions;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\ToModel;
+use App\Scorecard\Agent as agentScoreCard;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -24,18 +27,57 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
         $ctr_error = 0;
         array_push($this->has_error,"Something went wrong, Please check all entries that you have encoded.");
 
-        $agent = User::where('emp_id', $row['employee_number'])->where('role', 'agent')->where('status', 'active')->pluck('id');
-
         $this->row_number += 1;
-        if($agent->count() > 0)
+
+        $agent = User::where('emp_id', $row['employee_number'])->where('role', 'agent')->where('status', 'active')->first();
+        if($agent)
         {
             // dd('found');
-            $agent_id = $agent[0];
+            $agent_id = $agent->id;
         }
         else
         {
             array_push($this->has_error, "Check Cell B". $this->row_number.", ". "Employee Number: ". $row['employee_number']. " not exist.");
             $ctr_error += 1;
+        }
+
+        $department = Department::where('department', $row['department'])->first();
+        if($department)
+        {
+            // dd('found');
+            $department_id = $department->id;
+        }
+        else
+        {
+            array_push($this->has_error, "Check Cell D". $this->row_number.", ". "Department: ". $row['department']. " not exist.");
+            $ctr_error += 1;
+        }
+
+        $position = Position::where('position', $row['position'])->first();
+        if($position)
+        {
+            // dd('found');
+            $position_id = $position->id;
+        }
+        else
+        {
+            array_push($this->has_error, "Check Cell E". $this->row_number.", ". "Position: ". $row['position']. " not exist.");
+            $ctr_error += 1;
+        }
+
+        if($department && $position)
+        {
+            $agent_position = UserPositions::where('user_id',$agent_id)->where('department_id', $department_id)->where('position_id', $position->id)->first();
+            if($agent_position)
+            {
+                // dd('found');
+                $agent_position_id = $agent_position->id;
+            }
+            else
+            {
+                array_push($this->has_error, "Check Cell D". $this->row_number.", ". "Department: ". $row['department']. " and Check Cell E". $this->row_number.", ". "Position: ". $row['position']. " does not match to any Employee Position record.");
+                $ctr_error += 1;
+            }
         }
 
         $month = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['month']))->format('M Y');
@@ -64,6 +106,7 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
             agentScoreCard::updateOrCreate(
                 [
                     'agent_id' => $agent_id,
+                    'agent_position' => $agent_position_id,
                     'month' => $month,
                 ],
                 [
@@ -105,6 +148,8 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
             '*.month' => ['required'],
             '*.employee_number' => ['required'],
             '*.employee_name' => ['required'],
+            '*.department' => ['required'],
+            '*.position' => ['required'],
             '*.quality' => ['required'],
             '*.productivity' => ['required'],
             '*.reliability' => ['required'],

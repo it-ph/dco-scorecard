@@ -10,9 +10,12 @@
 <h3><strong>USERS LIST</strong></h3>
 
 <div class="row" style="margin-bottom: 10px">
-    <div class="col-md-11"></div>
-    <div class="col-md-1">
-        <button title="Add User" class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#addUser" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
+    {{-- <div class="col-md-11"></div>
+    <div class="col-md-1"> --}}
+    <div class="col-md-12">
+        <div style="float: right;">
+            <button title="Add User" class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#addUser" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
+        </div>
     </div>
 </div>
 <div class="row">
@@ -29,10 +32,13 @@
                         <th>Employee ID</th>
                         <th>Name</th>
                         <th>Position</th>
+                        {{-- <th>Position</th>
                         <th>Department</th>
                         <th>Supervisor</th>
-                        <th>Manager</th>
+                        <th>Manager</th> --}}
                         <th>Role</th>
+                        <th></th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -41,12 +47,57 @@
                     <tr>
                     <td class="table-dark-border">{{$user->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($user->name)}}</td>
-                    <td class="table-dark-border">{{ucwords($user->theposition['position'])}}</td>
+                    <td class="table-dark-border" style ="word-wrap: break-word; white-space: nowrap;">
+                        @foreach ($user->thepositions as $position)
+                            <div class="row" style="margin-bottom: 5px">
+                                <div class="col-md-10">
+                                    <span class="label label-rouded label-themecolor" style="font-size: 13px">
+                                        {{ ucwords($position->thedepartment['department']) }} - {{ ucwords($position->theposition['position']) }}
+                                        @if ($position->thesupervisor)
+                                            <br>
+                                            Supervisor: {{ ucwords($position->thesupervisor['name']) }}
+                                        @endif
+                                        @if ($position->themanager)
+                                            <br>
+                                            Manager: {{ ucwords($position->themanager['name']) }}
+                                        @endif
+                                    </span>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="btn-group">
+                                        {{-- <button title="Edit Position" data-toggle="modal" data-target="#edit_position{{$position->id}}" class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></button>
+                                        &nbsp;&nbsp; --}}
+                                        <form action="{{route('users.position.destroy',['positionId'=> $position->id])}}" method="POST">
+                                            @csrf
+                                            @method("DELETE")
+                                            <button title="Delete Position" type="submit" style="font-weight: bold" class="btn btn-secondary btn-sm" onclick="return confirm('Are you sure you want to delete this Position?')"><i class="fa fa-times"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                                {{-- @include('admin.users.edit_position_modal') --}}
+                            </div>
+                        @endforeach
+                    </td>
+
+                    {{-- <td class="table-dark-border">{{ucwords($user->theposition['position'])}}</td>
                     <td class="table-dark-border">{{ucwords($user->thedepartment['department'])}}</td>
                     <td class="table-dark-border">{{ ucwords($user->thesupervisor['name']) }}</td>
-                    <td class="table-dark-border">{{ ucwords($user->themanager['name']) }}</td>
+                    <td class="table-dark-border">{{ ucwords($user->themanager['name']) }}</td> --}}
                     <td class="table-dark-border">{{ucwords($user->role)}}</td>
-                    <td class="table-dark-border" style="width: 150px; text-align: center">
+                    <td class="table-dark-border">
+                        <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#add_position{{ $user->id }}"><i class="fa fa-plus"></i> position</button>
+                    </td>
+                    <td class="table-dark-border">
+                        <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#edit{{$user->id}}"><i class="fa fa-edit"></i></button>
+                    </td>
+                    <td class="table-dark-border">
+                        <form method="POST" action="{{route('users.destroy', ['id' => $user->id])}}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete, {{$user->role}}?')" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button>
+                        </form>
+                    </td>
+                    {{-- <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
@@ -67,10 +118,13 @@
                                     </span>
                                 </div>
                             </div><!--btn-group-->
-                    </td>
+                    </td> --}}
                     </tr>
 
+                    @include('admin.users.add_position_modal')
                     @include('admin.users.edit_modal')
+                    {{-- @include('admin.users.edit_position_modal') --}}
+
                     @endforeach
                 </tbody>
             </table>
@@ -82,7 +136,6 @@
 </div><!--row-->
 
 @endsection
-
 @include('admin.users.add_modal')
 
 @section('js')
@@ -90,7 +143,7 @@
 <script>
         $(document).ready(function() {
          var table = $('#scorecard_datatable').DataTable( {
-            // @if(\Auth::user()->isAdmin()) "pageLength": 25, @endif
+            // @if(\Auth::user()->isAdmin()) "pageLength": 100, @endif
             "pagingType": "full_numbers",
             "order": [[ 1, "asc" ]],
               orderCellsTop: true,

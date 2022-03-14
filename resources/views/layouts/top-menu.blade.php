@@ -26,7 +26,7 @@
                                                 <div class="mail-contnet">
                                                     <h5> You have <span style="font-weight: bold">{{agentHasUnAcknowledgeCard()}}</span></h5> <span class="mail-desc"> UnAcknowledge Scorecard!</span> </div>
                                             </a>
-                                            
+
                                         </div>
                                     </li>
                                     <li>
@@ -36,7 +36,7 @@
                             </div>
                         </li>
                         <!--TL -->
-                        @elseif(tlHasUnAcknowledgeCard() > 0 && \Auth::user()->isSupervisor() || memberUnacknowledgeCard('supervisor')> 0 && \Auth::user()->isSupervisor() )
+                        @elseif(tlHasUnAcknowledgeCard() > 0 && \Auth::user()->isSupervisor() || memberUnacknowledgeCard('supervisor_id')> 0 && \Auth::user()->isSupervisor() )
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
                                 <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
@@ -52,9 +52,9 @@
                                             <a href="{{url('/scores/agent?not_acknowledge')}}">
                                                 <div class="btn btn-danger btn-circle"><i class="fa fa-link fa-spin"></i></div>
                                                 <div class="mail-contnet">
-                                                    <h5> Your Team has <span style="font-weight: bold">{{memberUnacknowledgeCard('supervisor')}}</span></h5> <span class="mail-desc"> UnAcknowledge Scorecard!</span> </div>
+                                                    <h5> Your Team has <span style="font-weight: bold">{{memberUnacknowledgeCard('supervisor_id')}}</span></h5> <span class="mail-desc"> UnAcknowledge Scorecard!</span> </div>
                                             </a>
-                                            
+
                                         </div>
 
                                         <div class="message-center">
@@ -64,7 +64,7 @@
                                                 <div class="mail-contnet">
                                                     <h5> You have <span style="font-weight: bold">{{tlHasUnAcknowledgeCard()}}</span></h5> <span class="mail-desc"> UnAcknowledge Scorecard!</span> </div>
                                             </a>
-                                            
+
                                         </div>
                                     </li>
                                     <li>
@@ -74,7 +74,7 @@
                             </div>
                         </li>
                         <!-- Manager -->
-                        @elseif(memberUnacknowledgeCard('manager')> 0 && \Auth::user()->isManager() || memberTLUnacknowledgeCard() > 0 && \Auth::user()->isManager()  )
+                        @elseif(memberUnacknowledgeCard('manager_id')> 0 && \Auth::user()->isManager() || memberTLUnacknowledgeCard() > 0 && \Auth::user()->isManager()  )
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
                                 <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
@@ -90,9 +90,9 @@
                                             <a href="{{url('/scores/agent?not_acknowledge')}}">
                                                 <div class="btn btn-danger btn-circle"><i class="fa fa-link fa-spin"></i></div>
                                                 <div class="mail-contnet">
-                                                    <h5> Agent has <span style="font-weight: bold">{{memberUnacknowledgeCard('manager')}}</span></h5> <span class="mail-desc"> UnAcknowledge Scorecard!</span> </div>
+                                                    <h5> Agent has <span style="font-weight: bold">{{memberUnacknowledgeCard('manager_id')}}</span></h5> <span class="mail-desc"> UnAcknowledge Scorecard!</span> </div>
                                             </a>
-                                            
+
                                         </div>
 
                                         @if(memberTLUnacknowledgeCard() > 0)
@@ -103,7 +103,7 @@
                                                 <div class="mail-contnet">
                                                     <h5> Team Leaders has <span style="font-weight: bold">{{memberTLUnacknowledgeCard()}}</span></h5> </div>
                                             </a>
-                                            
+
                                         </div>
                                         @endif
 
@@ -116,7 +116,7 @@
                         </li>
 
                         <!--admin-->
-                        @elseif( \Auth::user()->isAdmin() && allAgentUnacknowledgeCard() > 0 ||  \Auth::user()->isAdmin() && allTLUnacknowledgeCard() > 0) 
+                        @elseif( \Auth::user()->isAdmin() && allAgentUnacknowledgeCard() > 0 ||  \Auth::user()->isAdmin() && allTLUnacknowledgeCard() > 0)
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
@@ -136,7 +136,7 @@
                                                 <div class="mail-contnet">
                                                     <h5> Agent has <span style="font-weight: bold">{{allAgentUnacknowledgeCard()}}</span></h5> </div>
                                             </a>
-                                            
+
                                         </div>
                                         @endif
                                         @if(allTLUnacknowledgeCard() > 0)
@@ -147,7 +147,7 @@
                                                 <div class="mail-contnet">
                                                     <h5> Team Leaders has <span style="font-weight: bold">{{allTLUnacknowledgeCard()}}</span></h5> </div>
                                             </a>
-                                            
+
                                         </div>
                                         @endif
                                     </li>

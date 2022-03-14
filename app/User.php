@@ -35,7 +35,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-    ];  
+    ];
 
 
     //check if admin . = 1
@@ -104,8 +104,13 @@ class User extends Authenticatable
         return $this->belongsTo('App\Department','department_id');
     }
 
+    public function thepositions()
+    {
+        return $this->hasMany('App\UserPositions','user_id');
+    }
 
-  
+
+
 
 
 }
