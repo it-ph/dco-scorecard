@@ -69,3 +69,73 @@ function removeBraces($val)
 
     return $b;
 }
+
+function getAgentQualityScore($score)
+{
+    if($score < 80)
+    {
+        $score = 0;
+    }
+    elseif($score >= 80 && $score <= 84)
+    {
+        $score = 15;
+    }
+    elseif($score >= 85 && $score <= 94)
+    {
+        $score = 30;
+    }
+    elseif($score >= 95)
+    {
+        $score = 40;
+    }
+
+    return $score;
+}
+
+function getAgentProductivityScore($score)
+{
+    if($score < 80)
+    {
+        $score = 0;
+    }
+    elseif($score >= 80 && $score <= 89)
+    {
+        $score = 10;
+    }
+    elseif($score >= 90 && $score <= 99)
+    {
+        $score = 20;
+    }
+    elseif($score >= 100)
+    {
+        $score = 40;
+    }
+
+    return $score;
+}
+
+function getAgentReliabilityScore($score)
+{
+    if($score < 80)
+    {
+        $score = 0;
+    }
+    elseif($score >= 80 && $score <= 84)
+    {
+        $score = 5;
+    }
+    elseif($score >= 85 && $score <= 89)
+    {
+        $score = 10;
+    }
+    elseif($score >= 90 && $score <= 94)
+    {
+        $score = 15;
+    }
+    elseif($score >= 95)
+    {
+        $score = 20;
+    }
+
+    return $score;
+}

@@ -512,9 +512,10 @@ class ScoreController extends Controller
         );
 
         $score = agentScoreCard::findorfail($id);
+        $action = $score->agent_feedback <> null ? 'Updated' : 'Added';
         $score->update(['agent_feedback'=> $request['agent_feedback']]);
 
-        return redirect()->back()->with('with_success', 'Feedback Succesfully Added!');
+        return redirect()->back()->with('with_success', 'Feedback Succesfully ' .$action. '!');
     }
 
     public function agentActionPlan(Request $request, $id)
@@ -527,9 +528,10 @@ class ScoreController extends Controller
         );
 
         $score = agentScoreCard::findorfail($id);
+        $action = $score->action_plan <> null ? 'Updated' : 'Added';
         $score->update(['action_plan'=> $request['action_plan']]);
 
-        return redirect()->back()->with('with_success', 'Action Plan Succesfully Added!');
+        return redirect()->back()->with('with_success', 'Action Plan Succesfully ' .$action. '!');
     }
 
     public function acknowledgeScore(Request $request, $id)

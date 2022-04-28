@@ -66,7 +66,7 @@
                 </button>
             </a> --}}
             @endif
-{{-- 
+{{--
             @if(Auth::user()->id == $score->agent_id && $score->acknowledge_by_agent == 0)
                 <form method="POST" action="{{route('agent-acknowledge.store',['id' => $score->id])}}">
                     @csrf
@@ -142,9 +142,10 @@
         </div>
         </div>
 
+        <br>
         @include('notifications.success')
         @include('notifications.error')
-        <div class="row" style="margin-top: 40px;">
+        <div class="row" style="margin-top: 20px;">
 
             <div class="col-md-12">
                 <table  width="100%"  cellspacing="5" cellpadding="5">
@@ -158,7 +159,14 @@
                         <td class="lbl-bold">Employee Name:</td>
                         <td>{{ucwords($score->theagent->name)}}</td>
                         <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 18px;"> FINAL SCORE</span> </td>
-                        <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 22px"> {{$score->final_score}}%</span></td>
+                        <?php
+                            $score_quality = getAgentQualityScore($score->actual_quality);
+                            $score_productivity = getAgentProductivityScore($score->actual_productivity);
+                            $score_reliability = getAgentReliabilityScore($score->actual_reliability);
+                            $final_score = $score_quality + $score_productivity + $score_reliability;
+                        ?>
+                        {{-- <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 22px"> {{$score->final_score}}%</span></td> --}}
+                        <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 22px"> {{$final_score}}%</span></td>
                     </tr>
 
                     <tr>
@@ -209,8 +217,8 @@
                                 <span style="font-weight: 500">30%</span> -  85% to 94% quality average <br>
                                 <span style="font-weight: 500">15%</span> -  80% to 84% quality average <br>
                                 <span style="font-weight: 500">0%</span>  -  < 80% quality average </span> </td>
-                            <td class="ttxt-center lbl-bold">{{$score->actual_quality}}%</td>
-                            <td class="ttxt-center lbl-bold">{{$score->quality}}%</td>
+                            <td class="ttxt-center lbl-bold">{{number_format($score->actual_quality,2)}}%</td>
+                            <td class="ttxt-center lbl-bold">{{$score_quality}}%</td>
                         </tr>
 
                         <tr>
@@ -223,8 +231,8 @@
                                 <span style="font-weight: 500">10%</span> - 80% to 89% productivity average<br>
                                 <span style="font-weight: 500">0%</span> - < 80% productivity average<br>
                                 </span> </td>
-                            <td class="ttxt-center lbl-bold">{{$score->actual_productivity}}%</td>
-                            <td class="ttxt-center lbl-bold">{{$score->productivity}}%</td>
+                            <td class="ttxt-center lbl-bold">{{number_format($score->actual_productivity,2)}}%</td>
+                            <td class="ttxt-center lbl-bold">{{$score_productivity}}%</td>
                         </tr>
 
 
@@ -239,14 +247,15 @@
                                     <span style="font-weight: 500">5%</span> - 80% to 84% Reliability<br>
                                     <span style="font-weight: 500">0%</span> - < 80% Reliability<br>
                                 </span> </td>
-                            <td class="ttxt-center lbl-bold">{{$score->actual_reliability}}%</td>
-                            <td class="ttxt-center lbl-bold">{{$score->reliability}}%</td>
+                            <td class="ttxt-center lbl-bold">{{number_format($score->actual_reliability,2)}}%</td>
+                            <td class="ttxt-center lbl-bold">{{$score_reliability}}%</td>
                         </tr>
 
                         <tr>
                             <td colspan="4"></td>
                             <td class="ttxt-center lbl-bold">TOTAL SCORE</td>
-                            <td class="ttxt-center lbl-bold" style="font-size: 20px">{{$score->final_score}}%</td>
+                            <?php $total_score = $score_quality + $score_productivity + $score_reliability; ?>
+                            <td class="ttxt-center lbl-bold" style="font-size: 20px">{{$total_score}}%</td>
                         </tr>
 
                     </table>
@@ -290,40 +299,66 @@
                                         </div>
                                     </div>
 
-                                 @elseif(\Auth::user()->id == $score->agent_id && !empty($score->agent_feedback) && $score->acknowledge == 0)
+                                @elseif(\Auth::user()->id == $score->agent_id && !empty($score->agent_feedback) && $score->acknowledge == 0)
                                     <td>
-                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
-                                    <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateFeedback" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Feedback</button>
-                                </td>
-                                <!-- Modal -->
-                                <div id="updateFeedback" class="modal fade" role="dialog">
+                                        <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                        <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateFeedback" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Feedback</button>
+                                    </td>
+
+                                    <!-- Modal -->
+                                    <div id="updateFeedback" class="modal fade" role="dialog">
                                         <div class="modal-dialog modal-lg">
-
-                                        <!-- Modal content-->
-                                        <div class="modal-content">
-                                            <div class="modal-header" style="background: #026B4D;">
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                            <h4 class="modal-title" style="color: white">Update Feedback </h4>
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: #026B4D;">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title" style="color: white">Update Feedback </h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="{{route('agent-feedback.store',['id' => $score->id])}}">
+                                                    @csrf
+                                                    <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10">{{$score->agent_feedback}}</textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="submit" onclick="return confirm('Are you sure you want to update your feedback?')" class="btn btn-info">Save</button>
+                                                    </form>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
                                             </div>
-                                            <div class="modal-body">
-                                                <form method="POST" action="{{route('agent-feedback.store',['id' => $score->id])}}">
-                                                @csrf
-                                                <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10">{{$score->agent_feedback}}</textarea>
-                                            </div>
-                                            <div class="modal-footer">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to update your feedback?')" class="btn btn-info">Save</button>
-                                                </form>
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-
                                         </div>
                                     </div>
 
                                 @else
+                                    {{-- <td>
+                                        <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                    </td> --}}
                                     <td>
-                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                        <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                        <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateFeedback" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Feedback</button>
                                     </td>
+
+                                    <!-- Modal -->
+                                    <div id="updateFeedback" class="modal fade" role="dialog">
+                                        <div class="modal-dialog modal-lg">
+                                            <!-- Modal content-->
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background: #026B4D;">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title" style="color: white">Update Feedback </h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="{{route('agent-feedback.store',['id' => $score->id])}}">
+                                                    @csrf
+                                                    <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10">{{$score->agent_feedback}}</textarea>
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="submit" onclick="return confirm('Are you sure you want to update your feedback?')" class="btn btn-info">Save</button>
+                                                    </form>
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             </tr>
 
@@ -372,40 +407,64 @@
                                                     </div>
                                                 </div>
 
-                                             @elseif(Auth::user()->id == $score->agent_id && !empty($score->action_plan) && $score->acknowledge == 0)
+                                            @elseif(Auth::user()->id == $score->agent_id && !empty($score->action_plan) && $score->acknowledge == 0)
                                                 <td>
-                                                <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
-                                                <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateActionPlan" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Action Plan</button>
-                                            </td>
-                                            <!-- Modal -->
-                                            <div id="updateActionPlan" class="modal fade" role="dialog">
+                                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
+                                                    <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateActionPlan" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Action Plan</button>
+                                                </td>
+                                                <!-- Modal -->
+                                                <div id="updateActionPlan" class="modal fade" role="dialog">
                                                     <div class="modal-dialog modal-lg">
-
-                                                    <!-- Modal content-->
-                                                    <div class="modal-content">
-                                                        <div class="modal-header" style="background: #026B4D;">
-                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                        <h4 class="modal-title" style="color: white">Update Action Plan </h4>
+                                                        <!-- Modal content-->
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background: #026B4D;">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            <h4 class="modal-title" style="color: white">Update Action Plan </h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="POST" action="{{route('agent-action-plan.store',['id' => $score->id])}}">
+                                                                @csrf
+                                                                <textarea name="action_plan" class="form-control" id="" cols="30" rows="10">{{$score->action_plan}}</textarea>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="submit" onclick="return confirm('Are you sure you want to update your action plan?')" class="btn btn-info">Save</button>
+                                                                </form>
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <form method="POST" action="{{route('agent-action-plan.store',['id' => $score->id])}}">
-                                                            @csrf
-                                                            <textarea name="action_plan" class="form-control" id="" cols="30" rows="10">{{$score->action_plan}}</textarea>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                        <button type="submit" onclick="return confirm('Are you sure you want to update your action plan?')" class="btn btn-info">Save</button>
-                                                            </form>
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-
                                                     </div>
                                                 </div>
 
                                             @else
-                                                <td>
+                                                {{-- <td>
                                                 <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
+                                                </td> --}}
+                                                <td>
+                                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
+                                                    <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateActionPlan" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Action Plan</button>
                                                 </td>
+                                                <!-- Modal -->
+                                                <div id="updateActionPlan" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <!-- Modal content-->
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background: #026B4D;">
+                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            <h4 class="modal-title" style="color: white">Update Action Plan </h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="POST" action="{{route('agent-action-plan.store',['id' => $score->id])}}">
+                                                                @csrf
+                                                                <textarea name="action_plan" class="form-control" id="" cols="30" rows="10">{{$score->action_plan}}</textarea>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                            <button type="submit" onclick="return confirm('Are you sure you want to update your action plan?')" class="btn btn-info">Save</button>
+                                                                </form>
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             @endif
                                         </tr>
 
