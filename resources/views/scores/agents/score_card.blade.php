@@ -160,8 +160,8 @@
                         <td>{{ucwords($score->theagent->name)}}</td>
                         <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 18px;"> FINAL SCORE</span> </td>
                         <?php
-                            $score_quality = getAgentQualityScore($score->actual_quality);
-                            $score_productivity = getAgentProductivityScore($score->actual_productivity);
+                            $score_quality = $score->quality;
+                            $score_productivity = $score->productivity;
                             $score_reliability = getAgentReliabilityScore($score->actual_reliability);
                             $final_score = $score_quality + $score_productivity + $score_reliability;
                         ?>
