@@ -212,11 +212,13 @@
                             <td style="width: 200px" class="lbl-bold ttxt-center">QUALITY <br> (OVER-ALL)</td>
                             <td class="ttxt-center">@if($quality) {{$quality->value}} @else {{ 0 }} @endif%</td>
                             <td class="ttxt-center"><span>95% <br>Quality <br>Monthly Average</span> </td>
-                            <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
-                                <span style="font-weight: 500">40%</span> -  >= 95%  Quality average <br>
+                            <td style="text-align: center; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
+                                <span style="font-weight: 500">N/A</span>
+                                {{-- <span style="font-weight: 500">40%</span> -  >= 95%  Quality average <br>
                                 <span style="font-weight: 500">30%</span> -  85% to 94% quality average <br>
                                 <span style="font-weight: 500">15%</span> -  80% to 84% quality average <br>
-                                <span style="font-weight: 500">0%</span>  -  < 80% quality average </span> </td>
+                                <span style="font-weight: 500">0%</span>  -  < 80% quality average </span> --}}
+                            </td>
                             <td class="ttxt-center lbl-bold">{{number_format($score->actual_quality,2)}}%</td>
                             <td class="ttxt-center lbl-bold">{{$score_quality}}%</td>
                         </tr>
@@ -225,12 +227,13 @@
                             <td style="width: 200px" class="lbl-bold ttxt-center">PRODUCTIVITY</td>
                             <td class="ttxt-center">@if($productivity) {{$productivity->value}} @else {{ 0 }} @endif%</td>
                             <td class="ttxt-center"><span>90% <br>Productivity <br> Average</span> </td>
-                            <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
-                                <span style="font-weight: 500">40%</span> - >=100% productivity average<br>
+                            <td style="text-align: center; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
+                                <span style="font-weight: 500">N/A</span>
+                                {{-- <span style="font-weight: 500">40%</span> - >=100% productivity average<br>
                                 <span style="font-weight: 500">20%</span> - 90% to 99% productivity average<br>
                                 <span style="font-weight: 500">10%</span> - 80% to 89% productivity average<br>
-                                <span style="font-weight: 500">0%</span> - < 80% productivity average<br>
-                                </span> </td>
+                                <span style="font-weight: 500">0%</span> - < 80% productivity average<br></span> --}}
+                            </td>
                             <td class="ttxt-center lbl-bold">{{number_format($score->actual_productivity,2)}}%</td>
                             <td class="ttxt-center lbl-bold">{{$score_productivity}}%</td>
                         </tr>
