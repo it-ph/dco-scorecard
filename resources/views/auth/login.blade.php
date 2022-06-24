@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon.ico')}}">
     <title>DCO - Scorecard</title>
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('css/dco-scorecard.css')}}" rel="stylesheet">
@@ -19,13 +19,13 @@
     <!-- Custom CSS -->
     <link href="{{asset('css/login/login.css')}}" rel="stylesheet">
     <style>
-    
+
     .login-form-txt{
         border: 0px !important;
         border-bottom: 1px solid #d8d8d8 !important;
     }
 
- 
+
     input:focus {
         border-bottom: 2px solid #1976d2 !important;nt;
 }
@@ -39,15 +39,15 @@
           padding: 0;
           font-weight: 300;
         }
-        
-        
+
+
         form {
           padding: 20px 0;
           position: relative;
           z-index: 2;
         }
-        
-        
+
+
         .bg-bubbles {
           position: absolute;
           top: 0;
@@ -159,7 +159,7 @@
           }
         }
         </style>
-    
+
     <!-- You can change the theme colors from here -->
     {{-- <link href="css/colors/default-dark.css" id="theme" rel="stylesheet"> --}}
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -184,7 +184,7 @@
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     {{-- <section id="wrapper" class="login-register login-sidebar" style="background-image:url({{asset('images/login.jpg')}});"> --}}
-        <section id="wrapper" class="login-register login-sidebar" style="background-image:url({{asset('images/login.jpg')}}); background: #003b5d">     
+        <section id="wrapper" class="login-register login-sidebar" style="background-image:url({{asset('images/login.jpg')}}); background: #003b5d">
             <ul class="bg-bubbles">
                 <li></li>
                 <li></li>
@@ -202,8 +202,7 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
                     <a href="javascript:void(0)" class="text-center db"><img src="{{asset('images/personiv/logo.png')}}" style="width: 50px;color: black" alt="Home" /><br/>
-                        {{-- <img src="../assets/images/logo-text.png" alt="Home" /> --}}
-                       <span style="color: black; font-weight: bold">  DCO SCORECARD</span>
+                        <span style="color: black; font-weight: bold">  DCO SCORECARD</span>
                     </a>
                     <div class="form-group m-t-40">
                         <div class="col-xs-12">
@@ -237,24 +236,15 @@
                                     {{ __('Remember Me') }}
                                 </label>
                             </div>
+                        </div>
                             {{-- <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div> --}}
                     </div>
-                    <div class="form-group text-center m-t-20">
-                     
+                    <div class="form-group m-t-10">
+
                         <div class="col-xs-4">
-                            <button style="margin-left: 20px" class="btn btn-warning btn-md btn-block text-uppercase btn-rounded" type="submit">Log In</button>
+                            <button class="btn btn-warning btn-md text-uppercase btn-rounded" type="submit">Log In</button>
                         </div>
                     </div>
-                    {{-- <div class="row">
-                        <div class="col-xs-12 col-sm-12 col-md-12 m-t-10 text-center">
-                            <div class="social"><a href="javascript:void(0)" class="btn  btn-facebook" data-toggle="tooltip" title="Login with Facebook"> <i aria-hidden="true" class="fa fa-facebook"></i> </a> <a href="javascript:void(0)" class="btn btn-googleplus" data-toggle="tooltip" title="Login with Google"> <i aria-hidden="true" class="fa fa-google-plus"></i> </a> </div>
-                        </div>
-                    </div>
-                    <div class="form-group m-b-0">
-                        <div class="col-sm-12 text-center">
-                            Don't have an account? <a href="pages-register2.html" class="text-primary m-l-5"><b>Sign Up</b></a>
-                        </div>
-                    </div> --}}
                 </form>
                 <form class="form-horizontal" id="recoverform" action="index.html">
                     <div class="form-group ">
@@ -295,15 +285,15 @@
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
         });
-        // ============================================================== 
-        // Login and Recover Password 
-        // ============================================================== 
+        // ==============================================================
+        // Login and Recover Password
+        // ==============================================================
         $('#to-recover').on("click", function() {
             $("#loginform").slideUp();
             $("#recoverform").fadeIn();
         });
     </script>
-    
+
 </body>
 
 </html>

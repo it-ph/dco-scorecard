@@ -27,6 +27,17 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
         $agent = User::where('emp_id', $row['employee_number'])->where('role', 'agent')->where('status', 'active')->pluck('id');
 
         $this->row_number += 1;
+
+        if(strtolower($row['month_type']) == 'mid' || strtolower($row['month_type']) == 'end')
+        {
+            $month_type = $row['month_type'];
+        }
+        else
+        {
+            array_push($this->has_error, "Check Cell A". $this->row_number.", ". "Month Type: ". $row['month_type']. " is invalid.");
+            $ctr_error += 1;
+        }
+
         if($agent->count() > 0)
         {
             // dd('found');
@@ -34,7 +45,7 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
         }
         else
         {
-            array_push($this->has_error, "Check Cell B". $this->row_number.", ". "Employee Number: ". $row['employee_number']. " not exist.");
+            array_push($this->has_error, "Check Cell C". $this->row_number.", ". "Employee Number: ". $row['employee_number']. " not exist.");
             $ctr_error += 1;
         }
 
@@ -64,6 +75,7 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
             agentScoreCard::updateOrCreate(
                 [
                     'agent_id' => $agent_id,
+                    'month_type' => $month_type,
                     'month' => $month,
                 ],
                 [

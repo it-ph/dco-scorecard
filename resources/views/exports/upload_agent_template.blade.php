@@ -1,6 +1,7 @@
 <table>
     <thead>
     <tr>
+        <th style="width: 100px; text-align: center">month_type</th>
         <th style="width: 100px; text-align: center">month</th>
         <th style="width: 150px; text-align: center">employee_number</th>
         <th style="width: 150px; text-align: center">employee_name</th>
@@ -16,6 +17,9 @@
         </tr>
         <tr>
             <td colspan="4" style="color: red; font-weight: bold"> Note: All Fields are required.</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="color: red; font-weight: bold"> Note: Month Type - use mid or end only.</td>
         </tr>
         <tr>
             <td colspan="4" style="color: red; font-weight: bold">Note: Month format: mm-yyyy</td>

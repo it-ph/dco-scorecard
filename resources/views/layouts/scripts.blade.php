@@ -20,12 +20,14 @@
     <!-- ============================================================== -->
     <script src="{{asset('js/theme/jQuery.style.switcher.js')}}"></script>
 
+    
     <script src="{{asset('js/theme/jquery.dataTables.min.js')}}"></script>
-
+    
     <script src="{{asset('themes/assets/plugins/moment/moment.js')}}"></script>
     <script src="{{asset('themes/assets/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
     <script src="{{asset('themes/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('themes/assets/plugins/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+    <script src="{{asset('themes/assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
     <script>
 
     $('.mdate').bootstrapMaterialDatePicker({

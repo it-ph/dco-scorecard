@@ -4,8 +4,7 @@
 <h3><strong>Departments</strong></h3>
 
 <div class="row" style="margin-bottom: 10px">
-    <div class="col-md-11"></div>
-    <div class="col-md-1">
+    <div class="col-md-12 text-right">
         <button title="Add Department" class="btn btn-success waves-effect waves-light" data-toggle="modal" data-target="#addDepartment" type="button"><span class="btn-label"><i class="mdi mdi-account-box"></i></span>Add</button>
     </div>
 </div>

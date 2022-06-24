@@ -14,7 +14,23 @@
                 @csrf
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="month_type">Month Type <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                            <select name="month_type" id="month_type" class="form-control">
+                                <option value=""></option>
+                                <option value="mid">mid</option>
+                                <option value="end">end</option>
+                            </select>
+                            @error('month_type')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="month">Month <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                             <select name="month" id="month" class="form-control">
@@ -31,7 +47,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     {{-- <div class="form-group">
                         <label for="target">Target % <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                         <span style="font-size: 20px; text-align: center; font-weight: bold" id="target">0% </span> <input type="hidden" required name="target" value="{{ $target->value }}" class="form-control" id="target">

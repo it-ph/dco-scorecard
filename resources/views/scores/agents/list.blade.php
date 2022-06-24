@@ -42,7 +42,7 @@ th{
 </div>
 
 <div class="row" style="margin-bottom: 10px">
-    <div class="col-md-11">
+    <div class="col-md-10">
 
             <div class="btn-group">
                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,7 +70,7 @@ th{
         {{-- <button onclick="toggleMonthFilter()" title="Click to Filter Month" class="btn btn-sm btn-primary waves-effect waves-light" type="button"><span class="btn-label"> <i class="fa fa-search"></i> </span>Month </button> --}}
     </div>
     @if(\Auth::user()->isAdmin())
-    <div class="col-md-1">
+    <div class="col-md-2 text-right">
         <button title="Create Scorcard" class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#addAgentScore" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
     </div>
     @endif
@@ -99,7 +99,7 @@ th{
                         <th ></th>
                         @if(Auth::user()->isAdmin())
                         <th ></th>
-                         @endif
+                        @endif
                     </tr>
                 </thead>
                 <tbody> @foreach($scores as $score)
@@ -143,7 +143,7 @@ th{
                         @endif
 
 
-                        <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard"> {{$score->month}} </a>
+                        <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard"> {{$score->month}} - {{ $score->month_type }} </a>
                     </td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->theagent->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($score->theagent->name)}}</td>
@@ -167,7 +167,14 @@ th{
                     {{-- <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->quality}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->productivity}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td> --}}
-                    <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->final_score}}%</td>
+                    <?php
+                        $score_quality = $score->quality;
+                        $score_productivity = $score->productivity;
+                        $score_reliability = getAgentReliabilityScore($score->actual_reliability);
+                        $final_score = $score_quality + $score_productivity + $score_reliability;
+                    ?>
+                    {{-- <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->final_score}}%</td> --}}
+                    <td class="table-dark-border" style="width: 150px; text-align: center">{{ $final_score }}%</td>
 
                     @if(Auth::user()->isAdmin())
                     <td class="table-dark-border" style="width: 150px; text-align: center">

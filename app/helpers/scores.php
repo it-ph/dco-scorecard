@@ -54,12 +54,40 @@ function allUnAcknowledgeCard()
     return ($agent + $tl);
 }
 
-function getAgentScore($agent_id, $month)
-{
-    $agent_score = agentScoreCard::where('agent_id', $agent_id)->where('month', $month)->value('final_score');
-    $agent_score = $agent_score <> null ? number_format($agent_score, 2) : '';
+// function getAgentScore($agent_id, $month)
+// {
+//     $agent_score = agentScoreCard::where('agent_id', $agent_id)->where('month', $month)->value('final_score');
 
-    return $agent_score;
+//     $agent_score = $agent_score <> null ? number_format($agent_score, 2) : '';
+
+//     return $agent_score;
+// }
+
+function getAgentScore($agent_id, $month, $period)
+{
+    $agent_score = agentScoreCard::query()
+        ->where('agent_id', $agent_id)
+        ->where('month_type',$period)
+        ->where('month', $month)
+        ->select('quality','productivity','actual_reliability','final_score')
+        ->first();
+
+    if($agent_score)
+    {
+        $score_quality = $agent_score->quality;
+        $score_productivity = $agent_score->productivity;
+        $score_reliability = getAgentReliabilityScore($agent_score->actual_reliability);
+        $agent_score = $score_quality + $score_productivity + $score_reliability;
+
+        $agent_score = $agent_score <> null ? number_format($agent_score, 2) : '';
+
+        return $agent_score;
+    }
+    else
+    {
+        return '';
+    }
+
 }
 
 function removeBraces($val)

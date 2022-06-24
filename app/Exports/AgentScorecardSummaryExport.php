@@ -39,15 +39,6 @@ class AgentScorecardSummaryExport implements FromView, WithEvents, WithTitle
      */
     public function title(): string
     {
-
-
-        // if($this->request['date_from'] == $this->request['date_to'] )
-        // {
-        //     $sheetname = "DCO_AGENT_SCORECARD_SUMMARY_". $this->request['date_from'] ;
-        // }else{
-        //     $sheetname = "DCO_AGENT_SCORECARD_SUMMARY_". $this->request['date_from'] .'_to_'.$this->request['date_to'];
-        // }
-
         return $sheetname = "DCO_AGENT_SCORECARD_SUMMARY";
     }
 

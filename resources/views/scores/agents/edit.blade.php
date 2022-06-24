@@ -19,13 +19,30 @@ $dt1 = carbon::now();
     </div>
 
     <div class="col-md-1"></div>
-    <div class="col-md-6">
+    <div class="col-md-9">
         <form method="POST" action="{{route('agent-score.update',['id' => $score->id])}}">
         @csrf
         @method('PUT')
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="month_type">Month Type <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                            <input type="hidden" value="{{$score->month_type}}" name="month_type">
+                            <select name="mt" id="mt" class="form-control" disabled>
+                                <option value=""></option>
+                                <option value="mid" @if($score->month_type == 'mid') selected @endif>mid</option>
+                                <option value="end" @if($score->month_type == 'end') selected @endif>end</option>
+                            </select>
+                            @error('mt')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-3">
                     <div class="form-group">
                         <label for="month">Month <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                             <select name="month" id="month" class="form-control">
@@ -43,7 +60,7 @@ $dt1 = carbon::now();
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     {{-- <div class="form-group">
                         <label for="target">Target % <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
                         <input type="text" required name="target" value="{{$score->target}}" class="form-control" id="target">
@@ -57,7 +74,7 @@ $dt1 = carbon::now();
 
                 <div class="col-md-3">
                         <h4><strong> FINAL SCORE : <br><span style="font-size: 26px; text-align: center; font-weight: bold; margin-left: 20px;margin-top: 100px" id="totalScoreLbl">{{$score->final_score}}% </span></strong></h4>
-                         <input type="hidden" value="{{$score->final_score}}" name="final_score" id="final_score">
+                        <input type="hidden" value="{{$score->final_score}}" name="final_score" id="final_score">
 
                 </div>
 

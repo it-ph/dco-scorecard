@@ -10,9 +10,8 @@
 <h3><strong>USERS LIST</strong></h3>
 
 <div class="row" style="margin-bottom: 10px">
-    <div class="col-md-11"></div>
-    <div class="col-md-1">
-        <button title="Add User" class="btn btn-info waves-effect waves-light" data-toggle="modal" data-target="#addUser" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
+    <div class="col-md-12 text-right">
+        <button title="Add User" class="btn btn-success waves-effect waves-light" data-toggle="modal" data-target="#addUser" type="button"><span class="btn-label"> <i class="mdi mdi-account-plus"></i> </span>Add </button>
     </div>
 </div>
 <div class="row">

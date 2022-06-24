@@ -57,7 +57,7 @@
     <div class="container">
         <div class="row noprint" style="margin-top: 20px;">
             <div class="col-md-12">
-            <button type="button" title="Click to go back to Lists" class="btn btn-success btn-sm" onclick="goBack()"><i class="fa fa-chevron-left"></i> Back to Lists</button>
+            <button type="button" title="Click to go back to Lists" class="btn btn-success btn-sm" onclick="goBack()"><i class="fa fa-chevron-left"></i> Back to Scorecard</button>
             <button type="button" title="Click to Print Scorecard" class="btn btn-info bt-sm pull-right" onclick="printThis()"><i class="fa fa-print"></i> Print</button>
         </div>
         </div>
@@ -186,68 +186,125 @@
                 </div><!--row-->
 
                 <div class="row">
-                        <div class="col-md-12">
-                            <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
-                                <tr>
-                                    <td colspan="4" style="background: gray; font-weight: bold">ACTION PLAN/S:</td>
-                                </tr>
-                                
-                                <tr>
-                                    <td>
-                                        <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->action_plan}}</textarea>
-                                    </td>
-                                </tr>
-                                
-                                
-                            </table>
-            
-                        </div><!--col-md-12-->
-                    </div><!--row-->
+                    <div class="col-md-12">
+                        <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
+                            <tr>
+                                <td colspan="4" style="background: gray; font-weight: bold">ACTION PLAN/S:</td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->action_plan}}</textarea>
+                                </td>
+                            </tr>
+                            
+                            
+                        </table>
+        
+                    </div><!--col-md-12-->
+                </div><!--row-->
 
-                    <div class="row" style="margin-top: 20px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
+                            <tr>
+                                <td colspan="4" style="background: gray; font-weight: bold">STRENGTHS AND OPPORTUNITIES:</td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->opportunities_strengths}}</textarea>
+                                </td>
+                            </tr>
+                            
+                            
+                        </table>
+        
+                    </div><!--col-md-12-->
+                </div><!--row-->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table  width="100%" style="margin-top: 40px; font-size: 14px; font-style: italic" cellspacing="5" cellpadding="5">
+                            <tr>
+                                <td colspan="4" style="background: gray; font-weight: bold">SCREENSHOT/S:</td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    {{-- <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->screenshots}}</textarea> --}}
+                                    <p>
+                                        @if($score->screenshots)
+                                            <?php $screenshots = str_replace('<img', '<img style="height: 100%; width: 100%; object-fit: contain; padding: 0 2px"', $score->screenshots); ?>
+                                            {!! $screenshots !!}
+                                        @endif
+                                    </p>
+                                </td>
+                            </tr>
+                            
+                            
+                        </table>
+        
+                    </div><!--col-md-12-->
+                </div><!--row-->
+
+                {{-- SIGNATORIES --}}
+
+                <div class="row" style="margin-top: 20px">
+                    <div class="col-print-2"></div>
+                    <div class="col-print-4 text-center">
+                        @if($score->date_acknowledge_by_agent)
+                            <img src="{{ asset('storage')}}/{{ $score->theagentsignature->user_id }}/signatures/{{$score->theagentsignature->file}}" alt="">
+                            <br><small>{{ $score->date_acknowledge_by_agent->format('m/d/Y h:i:s a') }}</small>
+                        @endif
+                        <br> <span style="text-decoration: underline; font-weight: bold;">{{strtoupper($score->theagent->name)}}</span>
+                        <br> <span style="font-weight: normal;font-size: 14px">Agent Name</span> </p>
+                    </div><!--col-md-5-->
+
+                    <div class="col-print-6 text-center" @if($score->date_acknowledge_by_agent) style="margin-top: 98px" @endif>
+                            <span style="text-decoration: underline; font-weight: bold;">{{strtoupper(date('m/d/Y'))}}</span>
+                            <br> <span style="font-weight: normal;font-size: 14px">Date</span> </p>
+                        </div><!--col-md-5-->
+                </div><!--row-->
+
+                <div class="row" style="margin-top: 20px">
                         <div class="col-print-2"></div>
                         <div class="col-print-4 text-center">
-                            <span style="text-decoration: underline; font-weight: bold;">{{strtoupper($score->theagent->name)}}</span>
-                            <br> <span style="font-weight: normal;font-size: 14px">Agent Name</span> </p>
+                            @if($score->date_acknowledge_by_tl)
+                                <img src="{{ asset('storage')}}/{{ $score->thetlsignature->user_id }}/signatures/{{$score->thetlsignature->file}}" alt="">
+                                <br><small>{{ $score->date_acknowledge_by_agent->format('m/d/Y h:i:s a') }}</small>
+                            @endif
+                            <br> <span style="text-decoration: underline; font-weight: bold;">
+                                @if($score->theagent->thesupervisor)
+                                    {{strtoupper($score->theagent->thesupervisor->name)}}
+                                @endif
+                            </span>
+                            <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
                         </div><!--col-md-5-->
 
                         <div class="col-print-6 text-center">
-                                <span style="text-decoration: underline; font-weight: bold;">{{strtoupper(date('m/d/Y'))}}</span>
-                                <br> <span style="font-weight: normal;font-size: 14px">Date</span> </p>
-                            </div><!--col-md-5-->
-                    </div><!--row-->
-
-                    <div class="row" style="margin-top: 20px">
-                            <div class="col-print-2"></div>
-                            <div class="col-print-4 text-center">
-                                <span style="text-decoration: underline; font-weight: bold;">
-                                    @if($score->theagent->thesupervisor)
-                                    {{strtoupper($score->theagent->thesupervisor->name)}}
+                                @if($score->date_acknowledge_by_manager)
+                                    <img src="{{ asset('storage')}}/{{ $score->themanagersignature->user_id }}/signatures/{{$score->themanagersignature->file}}" alt="">
+                                    <br><small>{{ $score->date_acknowledge_by_agent->format('m/d/Y h:i:s a') }}</small>
+                                @endif
+                                <br> <span style="text-decoration: underline; font-weight: bold;">
+                                    @if($score->theagent->themanager)
+                                        {{strtoupper($score->theagent->themanager->name)}}
                                     @endif
-                            </span>
-                                <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
+                                </span>
+                                <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
                             </div><!--col-md-5-->
+                </div><!--row-->
+                <div class="row" style="margin-top: 20px">
+                        <div class="col-print-1"></div>
+                        <div class="col-print-11 text-center">
+                                <span style="text-decoration: underline; font-weight: bold;">
+                                    {{ucwords($towerhead->value)}}
+                                </span>
+                                <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
+                            </div><!--col-md-5-->
+                </div><!--row-->
     
-                            <div class="col-print-6 text-center">
-                                    <span style="text-decoration: underline; font-weight: bold;">
-                                            @if($score->theagent->themanager)
-                                            {{strtoupper($score->theagent->themanager->name)}}
-                                            @endif
-                                    </span>
-                                    <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
-                                </div><!--col-md-5-->
-                    </div><!--row-->
-                    <div class="row" style="margin-top: 20px">
-                            <div class="col-print-1"></div>
-                            <div class="col-print-11 text-center">
-                                    <span style="text-decoration: underline; font-weight: bold;">
-                                        {{ucwords($towerhead->value)}}
-                                    </span>
-                                    <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
-                                </div><!--col-md-5-->
-                    </div><!--row-->
-    
-
     </div><!--container-->
 </body>
 </html>

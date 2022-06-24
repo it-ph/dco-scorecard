@@ -10,6 +10,7 @@ class Agent extends Model
     // protected $dates = ['month'];
     protected $table = 'agent_scorecard';
     protected $guarded = [];
+    protected $dates = ['date_acknowledge_by_agent','date_acknowledge_by_tl','date_acknowledge_by_manager'];
 
 
     public function theagent()
@@ -34,6 +35,21 @@ class Agent extends Model
         return $query->whereHas('theagent', function($q){
             $q->where($this->position,$this->authID);
         });
+    }
+
+    public function theagentsignature()
+    {
+        return $this->belongsTo('App\Signature','agent_signature_id');
+    }
+
+    public function thetlsignature()
+    {
+        return $this->belongsTo('App\Signature','tl_signature_id');
+    }
+    
+    public function themanagersignature()
+    {
+        return $this->belongsTo('App\Signature','manager_signature_id');
     }
 
 }

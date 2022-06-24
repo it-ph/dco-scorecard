@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use Auth;
+
 use App\User;
-use Carbon\Carbon;
-use App\Scorecard\Agent as agentScoreCard;
-use App\Scorecard\tl as TLScoreCard;
 use App\Setting;
+use App\Signature;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Scorecard\tl as TLScoreCard;
+use App\Scorecard\Agent as agentScoreCard;
 
 class ScoreController extends Controller
 {
@@ -405,6 +406,7 @@ class ScoreController extends Controller
         $this->validate($request,
         [
             'agent_id'       => 'required',
+            'month_type'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
             'actual_quality'       => 'required|numeric',
@@ -421,7 +423,31 @@ class ScoreController extends Controller
 
         // $request['month'] = $request['month'] . " 00:00:00";
 
-        $agent = agentScoreCard::create($request->all());
+        // $agent = agentScoreCard::create($request->all());
+        agentScoreCard::updateOrCreate(
+            [
+                'agent_id' => $request['agent_id'],
+                'month_type' => $request['month_type'],
+                'month' => $request['month'],
+            ],
+            [
+                'target' => $request['target'],
+                'actual_productivity' => $request['actual_productivity'],
+                'actual_quality' => $request['actual_quality'],
+                'actual_reliability' => $request['actual_reliability'],
+                'productivity' => $request['productivity'],
+                'quality' => $request['quality'],
+                'reliability' => $request['reliability'],
+                'final_score' => $request['final_score'],
+                'acknowledge_by_agent' => 0,
+                'date_acknowledge_by_agent' => null,
+                'acknowledge_by_tl' => 0,
+                'date_acknowledge_by_tl' => null,
+                'acknowledge_by_manager' => 0,
+                'date_acknowledge_by_manager' => null,
+            ]
+        );
+
         return redirect()->back()->with('with_success', 'Scorecard created succesfully!');
     }
 
@@ -443,6 +469,7 @@ class ScoreController extends Controller
         $this->validate($request,
         [
             'agent_id'       => 'required',
+            'month_type'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
             'actual_quality'       => 'required|numeric',
@@ -458,6 +485,7 @@ class ScoreController extends Controller
         );
 
         $score = agentScoreCard::findorfail($id);
+
         $score->update($request->all());
 
         return redirect()->back()->with('with_success', 'Scorecard updated succesfully!');
@@ -506,7 +534,7 @@ class ScoreController extends Controller
     {
         $this->validate($request,
         [
-            'agent_feedback'       => 'required',
+            'agent_feedback' => 'required',
         ],
             $messages = array('agent_feedback.required' => 'Agent Feedback is Required!')
         );
@@ -522,7 +550,7 @@ class ScoreController extends Controller
     {
         $this->validate($request,
         [
-            'action_plan'       => 'required',
+            'action_plan' => 'required',
         ],
             $messages = array('action_plan.required' => 'Action Plan Feedback is Required!')
         );
@@ -534,8 +562,42 @@ class ScoreController extends Controller
         return redirect()->back()->with('with_success', 'Action Plan Succesfully ' .$action. '!');
     }
 
-    public function acknowledgeScore(Request $request, $id)
+    public function agentStrengthsOpportunities(Request $request, $id)
     {
+        $this->validate($request,
+        [
+            'opportunities_strengths' => 'required',
+        ],
+            $messages = array('opportunities_strengths.required' => 'Strengths and Opportunities are Required!')
+        );
+
+        $score = agentScoreCard::findorfail($id);
+        $action = $score->opportunities_strengths <> null ? 'Updated' : 'Added';
+        $score->update(['opportunities_strengths'=> $request['opportunities_strengths']]);
+
+        return redirect()->back()->with('with_success', 'Action Plan Succesfully ' .$action. '!');
+    }
+
+    public function agentScreenshots(Request $request, $id)
+    {
+        $this->validate($request,
+        [
+            'screenshots' => 'required',
+        ],
+            $messages = array('screenshots.required' => 'Screenshot/s is Required!')
+        );
+
+        $score = agentScoreCard::findorfail($id);
+        $action = $score->screenshots <> null ? 'Updated' : 'Added';
+        $score->update(['screenshots'=> $request['screenshots']]);
+
+        return redirect()->back()->with('with_success', 'Screenshot/s Succesfully ' .$action. '!');
+    }
+
+    public function acknowledgeScore($id)
+    {
+        $default_signature = Signature::where('user_id',Auth::user()->id)->where('is_default',1)->first();
+
         $score = agentScoreCard::findorfail($id);
         // $score->update(['acknowledge'=> 1]);
 
@@ -544,7 +606,8 @@ class ScoreController extends Controller
         {
             $score->update([
                 'acknowledge_by_agent' => 1,
-                'date_acknowledge_by_agent' => Carbon::now()->format('Y-m-d')
+                'agent_signature_id' => $default_signature->id,
+                'date_acknowledge_by_agent' => Carbon::now()
             ]);
         }
         // Acknowledged by Supervisor
@@ -552,7 +615,8 @@ class ScoreController extends Controller
         {
             $score->update([
                 'acknowledge_by_tl' => 1,
-                'date_acknowledge_by_tl' => Carbon::now()->format('Y-m-d')
+                'tl_signature_id' => $default_signature->id,
+                'date_acknowledge_by_tl' => Carbon::now()
             ]);
         }
         // Acknowledged by Manager
@@ -560,11 +624,26 @@ class ScoreController extends Controller
         {
             $score->update([
                 'acknowledge_by_manager' => 1,
-                'date_acknowledge_by_manager' => Carbon::now()->format('Y-m-d')
+                'manager_signature_id' => $default_signature->id,
+                'date_acknowledge_by_manager' => Carbon::now()
             ]);
         }
 
+        if($score->acknowledge_by_agent == 1 && $score->acknowledge_by_tl == 1 && $score->acknowledge_by_manager == 1)
+        {
+            $score->update(['acknowledge'=> 1]);
+        }
 
         return redirect()->back()->with('with_success', 'Scorecard Acknowledged Succesfully!');
+    }
+
+    public function imageUpload(Request $request)
+    {
+        // $fileName=$request->file('file')->getClientOriginalName();
+        // $path=$request->file('file')->storeAs('uploads', $fileName, 'public');
+        // return response()->json(['location'=>"/storage/$path"]);
+
+        $imgpath = request()->file('file')->store('uploads', 'public');
+        return response()->json(['location' => "/dco-scorecard/public/storage/$imgpath"]);
     }
 }
