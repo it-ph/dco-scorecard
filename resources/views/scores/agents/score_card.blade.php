@@ -289,30 +289,30 @@
                         <tr>
                             @if(\Auth::user()->id == $score->agent_id && empty($score->agent_feedback) )
                                 <td style="text-align: center">
-                                <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addFeedback">Add Feedback</button>
+                                    <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addFeedback">Add Feedback</button>
                                 </td>
-                            <!-- Modal -->
-                            <div id="addFeedback" class="modal fade" role="dialog">
-                                <div class="modal-dialog modal-lg">
-                                    <!-- Modal content-->
-                                    <div class="modal-content">
-                                        <div class="modal-header" style="background: #026B4D;">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title" style="color: white">Add Feedback </h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form method="POST" action="{{route('agent-feedback.store',['id' => $score->id])}}">
-                                            @csrf
-                                            <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10"></textarea>
-                                        </div>
-                                        <div class="modal-footer">
-                                        <button type="submit" onclick="return confirm('Are you sure you want to submit this feedback?')" class="btn btn-info">Save</button>
-                                            </form>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <!-- Modal -->
+                                <div id="addFeedback" class="modal fade" role="dialog">
+                                    <div class="modal-dialog modal-lg">
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header" style="background: #026B4D;">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title" style="color: white">Add Feedback </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="{{route('agent-feedback.store',['id' => $score->id])}}">
+                                                @csrf
+                                                <textarea name="agent_feedback" class="form-control" id="" cols="30" rows="10"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to submit this feedback?')" class="btn btn-info">Save</button>
+                                                </form>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             @elseif(\Auth::user()->id == $score->agent_id && !empty($score->agent_feedback) && $score->acknowledge == 0)
                                 <td>
                                     <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
@@ -340,6 +340,10 @@
                                         </div>
                                     </div>
                                 </div>
+                            @elseif(Auth::user()->isCBAOrTowerHead())
+                                <td>
+                                    <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
+                                </td>
                             @else
                                 <td>
                                     <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->agent_feedback}}</textarea>
@@ -434,6 +438,10 @@
                                             </div>
                                         </div>
                                     </div>
+                                @elseif(Auth::user()->isCBAOrTowerHead())
+                                    <td>
+                                        <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
+                                    </td>
                                 @else
                                     <td>
                                         <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->action_plan}}</textarea>
@@ -477,58 +485,16 @@
                             <tr>
                                 @if(Auth::user()->id == $score->agent_id && empty($score->opportunities_strengths) )
                                     <td style="text-align: center">
-                                        {{-- <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addStrenghtsOpportunities">Add Strengths and Opportunities</button> --}}
                                         <br>
                                     </td>
-                                    <!-- Modal -->
-                                    <div id="addStrenghtsOpportunities" class="modal fade" role="dialog">
-                                        <div class="modal-dialog modal-lg">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background: #026B4D;">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                <h4 class="modal-title" style="color: white">Add Strengths and Opportunities </h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="{{route('agent-opportunities-strengths.store',['id' => $score->id])}}">
-                                                    @csrf
-                                                    <textarea name="opportunities_strengths" class="form-control" id="" cols="30" rows="10"></textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                <button type="submit" onclick="return confirm('Are you sure you want to submit this strengths and opportunities?')" class="btn btn-info">Save</button>
-                                                    </form>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @elseif(Auth::user()->id == $score->agent_id && !empty($score->opportunities_strengths) && $score->acknowledge == 0)
+                                @elseif(Auth::user()->id == $score->agent_id && !empty($score->opportunities_strengths))
                                     <td>
                                         <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->opportunities_strengths}}</textarea>
-                                        <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateStrengthsOpportunities" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Strengths and Opportunities</button>
                                     </td>
-                                    <!-- Modal -->
-                                    <div id="updateStrengthsOpportunities" class="modal fade" role="dialog">
-                                        <div class="modal-dialog modal-lg">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background: #026B4D;">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                <h4 class="modal-title" style="color: white">Update Strengths and Opportunities </h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="{{route('agent-opportunities-strengths.store',['id' => $score->id])}}">
-                                                    @csrf
-                                                    <textarea name="opportunities_strengths" class="form-control" id="" cols="30" rows="10">{{$score->opportunities_strengths}}</textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                <button type="submit" onclick="return confirm('Are you sure you want to update strengths and opportunities?')" class="btn btn-info">Save</button>
-                                                    </form>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                @elseif(Auth::user()->isCBAOrTowerHead())
+                                    <td>
+                                        <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->opportunities_strengths}}</textarea>
+                                    </td>
                                 @else
                                     <td>
                                         <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{{$score->opportunities_strengths}}</textarea>
@@ -572,75 +538,38 @@
                             <tr>
                                 @if(Auth::user()->id == $score->agent_id && empty($score->screenshots) )
                                     <td style="text-align: center">
-                                        {{-- <button class="btn btn-info text-center" style="margin: 10px" data-toggle="modal" data-target="#addScreenshots">Add Screenshot</button> --}}
                                         <br>
                                     </td>
-                                    <!-- Modal -->
-                                    <div id="addScreenshots" class="modal fade" role="dialog">
-                                        <div class="modal-dialog modal-lg">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background: #026B4D;">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                <h4 class="modal-title" style="color: white">Add Screenshot </h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="{{route('agent-screenshots.store',['id' => $score->id])}}">
-                                                    @csrf
-                                                    {{-- <textarea name="screenshots" class="form-control" id="" cols="30" rows="10"></textarea> --}}
-                                                    <textarea name="screenshots" id="screenshots" rows="8" class="form-control tinymce">{!! $score->screenshots !!}</textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                <button type="submit" onclick="return confirm('Are you sure you want to submit this screenshots?')" class="btn btn-info">Save</button>
-                                                    </form>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @elseif(Auth::user()->id == $score->agent_id && !empty($score->screenshots) && $score->acknowledge == 0)
+                                @elseif(Auth::user()->id == $score->agent_id && !empty($score->screenshots))
                                     <td>
-                                        {{-- <p name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{!! $score->screenshots !!}</p> --}}
                                         <p>
                                             @if($score->screenshots)
                                                 <?php $screenshots = str_replace('<img', '<img style="height: 100%; width: 100%; object-fit: contain; padding: 0 2px"', $score->screenshots); ?>
                                                 {!! $screenshots !!}
                                             @endif
                                         </p>
-                                        <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateScreenshots" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Screenshots</button>
                                     </td>
-                                    <!-- Modal -->
-                                    <div id="updateScreenshots" class="modal fade" role="dialog">
-                                        <div class="modal-dialog modal-lg">
-                                            <!-- Modal content-->
-                                            <div class="modal-content">
-                                                <div class="modal-header" style="background: #026B4D;">
-                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                                <h4 class="modal-title" style="color: white">Update Screenshot </h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="{{route('agent-screenshots.store',['id' => $score->id])}}">
-                                                    @csrf
-                                                    {{-- <textarea name="screenshots" class="form-control" id="" cols="30" rows="10">{{$score->screenshots}}</textarea> --}}
-                                                    <textarea name="screenshots" id="screenshots" rows="8" class="form-control tinymce">{!! $score->screenshots !!}</textarea>
-                                                </div>
-                                                <div class="modal-footer">
-                                                <button type="submit" onclick="return confirm('Are you sure you want to update screenshot?')" class="btn btn-info">Save</button>
-                                                    </form>
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                @elseif(Auth::user()->isCBAOrTowerHead())
+                                    <td>
+                                        @if($score->screenshots)
+                                            <p>
+                                                <?php $screenshots = str_replace('<img', '<img style="height: 100%; width: 100%; object-fit: contain; padding: 0 2px"', $score->screenshots); ?>
+                                                {!! $screenshots !!}
+                                            </p>
+                                        @else
+                                            <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{!! $score->screenshots !!}</textarea>
+                                        @endif
+                                    </td>
                                 @else
                                     <td>
-                                        {{-- <p name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{!! $score->screenshots !!}</p> --}}
-                                        <p>
-                                            @if($score->screenshots)
+                                        @if($score->screenshots)
+                                            <p>
                                                 <?php $screenshots = str_replace('<img', '<img style="height: 100%; width: 100%; object-fit: contain; padding: 0 2px"', $score->screenshots); ?>
                                                 {!! $screenshots !!}
-                                            @endif
-                                        </p>
+                                            </p>
+                                        @else
+                                            <textarea name="" id="" readonly cols="30" rows="10" class="form-control" style="color: black;">{!! $score->screenshots !!}</textarea>
+                                        @endif
                                         <button class="btn btn-info btn-info btn-sm" data-toggle="modal" data-target="#updateScreenshots" style="margin-top: 10px"><i class="fa fa-pencil"></i> Edit Screenshot</button>
                                     </td>
                                     <!-- Modal -->

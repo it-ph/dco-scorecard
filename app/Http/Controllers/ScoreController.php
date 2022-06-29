@@ -507,7 +507,7 @@ class ScoreController extends Controller
         $reliability = Setting::where('setting','reliability')->first();
 
         //check if Not admin or not his/her scorecard
-        if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
+        if(!Auth::user()->isAdmin() && !Auth::user()->isCBAOrTowerHead() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
         {
             return view('notifications.401');
         }
@@ -522,7 +522,7 @@ class ScoreController extends Controller
         $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
-        if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
+        if(!Auth::user()->isAdmin() && !Auth::user()->isCBAOrTowerHead() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
         {
             return view('notifications.401');
         }

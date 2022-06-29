@@ -86,6 +86,15 @@ class User extends Authenticatable
         return false;
     }
 
+    public function isCBAOrTowerHead()
+    {
+        if(($this->role == 'cba' || $this->role == 'CBA') || ($this->role == 'tower head' || $this->role == 'Tower Head'))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function thesupervisor()
     {
         return $this->belongsTo('App\User','supervisor');

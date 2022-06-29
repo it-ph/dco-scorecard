@@ -14,7 +14,7 @@
                         <li>
                             <a class=" waves-effect waves-dark  @if (\Request::is('home')) active @endif" href="{{url('home')}}"><i class="mdi mdi-gauge" style="color: #04b381"></i><span class="hide-menu">Dashboard</span></a>
                         </li>
-                        @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor())
+                        @if(Auth::user()->isAdmin() || Auth::user()->isManager() || Auth::user()->isSupervisor() || Auth::user()->isCBAOrTowerHead())
                             <li>
                                 <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-bullseye" style="color: #04b381"></i><span class="hide-menu">Scores </span></a>
                                 <ul aria-expanded="false" class="collapse">
@@ -26,11 +26,13 @@
                                     <li><a class=" waves-effect waves-dark  @if (\Request::is('scores/tl')) active @endif" href="{{url('scores/tl')}}">Team Leaders </a></li>
                                 </ul>
                             </li>
-                            <li>
-                                <a class=" waves-effect waves-dark  @if (\Request::is('signatures')) active @endif" href="{{url('signatures')}}">
-                                    <i class="mdi mdi-book-open" style="color: #04b381"></i> <span class="hide-menu">My Signatures</span>
-                                </a>
-                            </li>
+                            @if(!Auth::user()->isCBAOrTowerHead())
+                                <li>
+                                    <a class=" waves-effect waves-dark  @if (\Request::is('signatures')) active @endif" href="{{url('signatures')}}">
+                                        <i class="mdi mdi-book-open" style="color: #04b381"></i> <span class="hide-menu">My Signatures</span>
+                                    </a>
+                                </li>
+                            @endif
                         @else
                             <li>
                                 <a class=" waves-effect waves-dark  @if (\Request::is('scores/agent')) active @endif" href="{{url('scores/agent')}}">

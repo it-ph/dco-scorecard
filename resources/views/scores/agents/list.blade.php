@@ -111,7 +111,7 @@ th{
                             <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledge by {{ucwords($score->theagent->name)}}"></i>
                         @endif --}}
 
-                        @if(Auth::user()->isAdmin())
+                        @if(Auth::user()->isAdmin() || Auth::user()->isCBAOrTowerHead())
                             @if($score->acknowledge_by_agent == "0" || $score->acknowledge_by_tl == "0" || $score->acknowledge_by_manager == "0")
                                 {{-- <i class="fa fa-warning" style="color: #dd4b39; font-size: 16px"></i> --}}
                                 @if($score->acknowledge_by_tl == "0")
