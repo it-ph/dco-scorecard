@@ -168,7 +168,8 @@ th{
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->productivity}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td> --}}
                     <?php
-                        $score_quality = $score->quality;
+                        // $score_quality = $score->quality;
+                        $score_quality = getAgentQualityScore($score->actual_quality); //implement new quality performance range july 20, 2022
                         $score_productivity = $score->productivity;
                         $score_reliability = getAgentReliabilityScore($score->actual_reliability);
                         $final_score = $score_quality + $score_productivity + $score_reliability;

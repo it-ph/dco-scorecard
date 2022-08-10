@@ -69,12 +69,14 @@ function getAgentScore($agent_id, $month, $period)
         ->where('agent_id', $agent_id)
         ->where('month_type',$period)
         ->where('month', $month)
-        ->select('quality','productivity','actual_reliability','final_score')
+        // ->select('quality','productivity','actual_reliability','final_score') //implement new quality performance range july 20, 2022
+        ->select('actual_quality','productivity','actual_reliability','final_score')
         ->first();
 
     if($agent_score)
     {
-        $score_quality = $agent_score->quality;
+        // $score_quality = $agent_score->quality; //implement new quality performance range july 20, 2022
+        $score_quality = getAgentQualityScore($agent_score->actual_quality);
         $score_productivity = $agent_score->productivity;
         $score_reliability = getAgentReliabilityScore($agent_score->actual_reliability);
         $agent_score = $score_quality + $score_productivity + $score_reliability;
@@ -104,11 +106,15 @@ function getAgentQualityScore($score)
     {
         $score = 0;
     }
-    elseif($score >= 80 && $score <= 84)
+    elseif($score >= 80 && $score <= 84.99)
     {
-        $score = 15;
+        $score = 10;
     }
-    elseif($score >= 85 && $score <= 94)
+    elseif($score >= 85 && $score <= 89.99)
+    {
+        $score = 20;
+    }
+    elseif($score >= 90 && $score <= 94.99)
     {
         $score = 30;
     }

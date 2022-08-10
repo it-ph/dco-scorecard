@@ -16,7 +16,7 @@
         }
         td, th {
         border: 1px solid black;
-        
+
         }
         .lbl-bold{
             font-weight: bold
@@ -48,8 +48,8 @@
         .col-print-10{width:83%; float:left;}
         .col-print-11{width:92%; float:left;}
         .col-print-12{width:100%; float:left;}
-        
-        
+
+
     </style>
     <title>DCO Scorecard</title>
 </head>
@@ -69,18 +69,26 @@
                             {{strtoupper($score->theagent->thedepartment->department)}}
                             @endif - AGENT</td>
                     </tr>
-                    
+
                     <tr>
                         <td class="lbl-bold">Employee Name:</td>
                         <td>{{ucwords($score->theagent->name)}}</td>
                         <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 18px;"> FINAL SCORE</span> </td>
-                        <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 22px"> {{$score->final_score}}%</span></td>
+                        <?php
+                            // $score_quality = $score->quality;
+                            $score_quality = getAgentQualityScore($score->actual_quality); //implement new quality performance range july 20, 2022
+                            $score_productivity = $score->productivity;
+                            $score_reliability = getAgentReliabilityScore($score->actual_reliability);
+                            $final_score = $score_quality + $score_productivity + $score_reliability;
+                        ?>
+                        {{-- <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 22px"> {{$score->final_score}}%</span></td> --}}
+                        <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 22px"> {{$final_score}}%</span></td>
                     </tr>
 
                     <tr>
                         <td class="lbl-bold">Emp ID:</td>
                         <td>{{$score->theagent->emp_id}}</td>
-                      
+
                     </tr>
 
                     <tr>
@@ -112,32 +120,37 @@
                             <td>ACTUAL SCORE</td>
                             <td>SCORE</td>
                         </tr>
-                        
+
                         <tr>
                             <td style="width: 200px" class="lbl-bold ttxt-center">QUALITY <br> (OVER-ALL)</td>
                             <td class="ttxt-center">40%</td>
                             <td class="ttxt-center"><span>95% <br>Quality <br>Monthly Average</span> </td>
-                            <td style="text-align: justify; padding-left: 20px; width: 250px"><span>40% - >= 95% Quality average <br>
-                                    30% - 85% to 94% quality average <br>
-                                    15% - 80% to 84% quality average <br>
-                                    0% - < 80% quality average </span> </td>
-                            <td class="ttxt-center lbl-bold">{{$score->actual_quality}}%</td>
-                            <td class="ttxt-center lbl-bold">{{$score->quality}}%</td>
+                            <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
+                                {{-- <span style="font-weight: 500">N/A</span> --}}
+                                {{-- implement new quality performance range july 20, 2022 --}}
+                                <span style="font-weight: 500">40%</span> -  95% above Quality average <br>
+                                <span style="font-weight: 500">30%</span> -  90% to 94.99% Quality average <br>
+                                <span style="font-weight: 500">20%</span> -  85% to 89.99% Quality average <br>
+                                <span style="font-weight: 500">10%</span> -  80% to 84.99% Quality average <br>
+                                <span style="font-weight: 500">0%</span>  -  79.99% below Quality average </span>
+                            </td>
+                            <td class="ttxt-center lbl-bold">{{number_format($score->actual_quality,2)}}%</td>
+                            <td class="ttxt-center lbl-bold">{{$score_quality}}%</td>
                         </tr>
-    
+
                         <tr>
                             <td style="width: 200px" class="lbl-bold ttxt-center">PRODUCTIVITY</td>
                             <td class="ttxt-center">40%</td>
                             <td class="ttxt-center"><span>90% <br>Productivity <br> Average</span> </td>
-                            <td style="text-align: justify; padding-left: 20px; width: 250px;">
-                                <span>
-                                40% - >=100% productivity average<br>
-                                20% - 90% to 99% productivity average<br>
-                                10% - 80% to 89% productivity average<br>
-                                0% - < 80% productivity average<br>
-                                </span> </td>
-                            <td class="ttxt-center lbl-bold">{{$score->actual_productivity}}%</td>
-                            <td class="ttxt-center lbl-bold">{{$score->productivity}}%</td>
+                            <td style="text-align: center; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
+                                <span style="font-weight: 500">N/A</span>
+                                {{-- <span style="font-weight: 500">40%</span> - >=100% productivity average<br>
+                                <span style="font-weight: 500">20%</span> - 90% to 99% productivity average<br>
+                                <span style="font-weight: 500">10%</span> - 80% to 89% productivity average<br>
+                                <span style="font-weight: 500">0%</span> - < 80% productivity average<br></span> --}}
+                            </td>
+                            <td class="ttxt-center lbl-bold">{{number_format($score->actual_productivity,2)}}%</td>
+                            <td class="ttxt-center lbl-bold">{{$score_productivity}}%</td>
                         </tr>
 
 
@@ -151,17 +164,19 @@
                                     10% - 85% to 89% Reliability<br>
                                     5% - 80% to 84% Reliability<br>
                                     0% - < 80% Reliability<br>
-                                </span> </td>
-                            <td class="ttxt-center lbl-bold">{{$score->actual_reliability}}%</td>
-                            <td class="ttxt-center lbl-bold">{{$score->reliability}}%</td>
+                                </span>
+                            </td>
+                            <td class="ttxt-center lbl-bold">{{number_format($score->actual_reliability,2)}}%</td>
+                            <td class="ttxt-center lbl-bold">{{$score_reliability}}%</td>
                         </tr>
 
                         <tr>
                             <td colspan="4"></td>
                             <td class="ttxt-center lbl-bold">TOTAL SCORE</td>
-                            <td class="ttxt-center lbl-bold">{{$score->final_score}}%</td>
+                            <?php $total_score = $score_quality + $score_productivity + $score_reliability; ?>
+                            <td class="ttxt-center lbl-bold" style="font-size: 20px">{{$total_score}}%</td>
                         </tr>
-    
+
                     </table>
                 </div><!--col-md-12-->
             </div><!--row-->
@@ -172,16 +187,16 @@
                             <tr>
                                 <td colspan="4" style="background: gray; font-weight: bold">EMPLOYEE FEEDBACK:</td>
                             </tr>
-                            
+
                             <tr>
                                 <td>
                                     <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->agent_feedback}}</textarea>
                                 </td>
                             </tr>
-                            
-                            
+
+
                         </table>
-        
+
                     </div><!--col-md-12-->
                 </div><!--row-->
 
@@ -191,16 +206,16 @@
                             <tr>
                                 <td colspan="4" style="background: gray; font-weight: bold">ACTION PLAN/S:</td>
                             </tr>
-                            
+
                             <tr>
                                 <td>
                                     <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->action_plan}}</textarea>
                                 </td>
                             </tr>
-                            
-                            
+
+
                         </table>
-        
+
                     </div><!--col-md-12-->
                 </div><!--row-->
 
@@ -210,16 +225,16 @@
                             <tr>
                                 <td colspan="4" style="background: gray; font-weight: bold">STRENGTHS AND OPPORTUNITIES:</td>
                             </tr>
-                            
+
                             <tr>
                                 <td>
                                     <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->opportunities_strengths}}</textarea>
                                 </td>
                             </tr>
-                            
-                            
+
+
                         </table>
-        
+
                     </div><!--col-md-12-->
                 </div><!--row-->
 
@@ -229,7 +244,7 @@
                             <tr>
                                 <td colspan="4" style="background: gray; font-weight: bold">SCREENSHOT/S:</td>
                             </tr>
-                            
+
                             <tr>
                                 <td>
                                     {{-- <textarea name="" id="" style="color: black; font-size: 12px; background: transparent; border: 0px" readonly cols="30" rows="10" class="form-control">{{$score->screenshots}}</textarea> --}}
@@ -241,10 +256,10 @@
                                     </p>
                                 </td>
                             </tr>
-                            
-                            
+
+
                         </table>
-        
+
                     </div><!--col-md-12-->
                 </div><!--row-->
 
@@ -304,14 +319,14 @@
                                 <br> <span style="font-weight: normal;font-size: 14px">Tower Head</span> </p>
                             </div><!--col-md-5-->
                 </div><!--row-->
-    
+
     </div><!--container-->
 </body>
 </html>
 
 <script>
      window.print();
-     
+
     function goBack() {
         window.history.back();
     }

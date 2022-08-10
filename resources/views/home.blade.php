@@ -17,7 +17,7 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs customtab" role="tablist">
                         <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#download-report" role="tab" aria-expanded="true"><span class="hidden-sm-up"><i class="ti-home"></i></span> <span class="hidden-xs-down">Download</span></a> </li>
-                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#upload-report" role="tab" aria-expanded="false"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Upload</span></a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#upload-report" role="tab" aria-expanded="false"><span class="hidden-sm-up"><i class="ti-upload"></i></span> <span class="hidden-xs-down">Upload</span></a> </li>
                         {{-- <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#upload-report" role="tab" aria-expanded="false"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Upload Agent Scores</span></a> </li>
                         <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#upload-report1" role="tab" aria-expanded="false"><span class="hidden-sm-up"><i class="ti-user"></i></span> <span class="hidden-xs-down">Upload Team Leader Scores</span></a> </li> --}}
                     </ul>

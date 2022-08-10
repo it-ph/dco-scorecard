@@ -175,7 +175,8 @@
                         <td>{{ucwords($score->theagent->name)}}</td>
                         <td rowspan="2" style="text-align: center;"><span style="font-weight: bold; font-size: 18px;"> FINAL SCORE</span> </td>
                         <?php
-                            $score_quality = $score->quality;
+                            // $score_quality = $score->quality;
+                            $score_quality = getAgentQualityScore($score->actual_quality); //implement new quality performance range july 20, 2022
                             $score_productivity = $score->productivity;
                             $score_reliability = getAgentReliabilityScore($score->actual_reliability);
                             $final_score = $score_quality + $score_productivity + $score_reliability;
@@ -227,12 +228,14 @@
                         <td style="width: 200px" class="lbl-bold ttxt-center">QUALITY <br> (OVER-ALL)</td>
                         <td class="ttxt-center">@if($quality) {{$quality->value}} @else {{ 0 }} @endif%</td>
                         <td class="ttxt-center"><span>95% <br>Quality <br>Monthly Average</span> </td>
-                        <td style="text-align: center; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
-                            <span style="font-weight: 500">N/A</span>
-                            {{-- <span style="font-weight: 500">40%</span> -  >= 95%  Quality average <br>
-                            <span style="font-weight: 500">30%</span> -  85% to 94% quality average <br>
-                            <span style="font-weight: 500">15%</span> -  80% to 84% quality average <br>
-                            <span style="font-weight: 500">0%</span>  -  < 80% quality average </span> --}}
+                        <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
+                            {{-- <span style="font-weight: 500">N/A</span> --}}
+                            {{-- implement new quality performance range july 20, 2022 --}}
+                            <span style="font-weight: 500">40%</span> -  95% above Quality average <br>
+                            <span style="font-weight: 500">30%</span> -  90% to 94.99% Quality average <br>
+                            <span style="font-weight: 500">20%</span> -  85% to 89.99% Quality average <br>
+                            <span style="font-weight: 500">10%</span> -  80% to 84.99% Quality average <br>
+                            <span style="font-weight: 500">0%</span>  -  79.99% below Quality average </span>
                         </td>
                         <td class="ttxt-center lbl-bold">{{number_format($score->actual_quality,2)}}%</td>
                         <td class="ttxt-center lbl-bold">{{$score_quality}}%</td>
