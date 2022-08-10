@@ -1,0 +1,21 @@
+/* .nav-small-cap{
+    color: white !important;
+} */
+
+.sidebar-nav>ul>li>a.active {
+    font-weight: 400;
+    background: rgba(0,0,0,.12) !important;
+    color: #26c6da;
+}
+
+.topbar .navbar-light .navbar-nav .nav-item>a.nav-link {
+    color: white !important;
+}
+
+/* .sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
+    color: #ffb22b !important;
+} */
+
+.table-dark-border{
+    border: 1px solid #adadad !important;
+}
