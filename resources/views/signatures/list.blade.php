@@ -42,14 +42,14 @@
                         </td>
                         <td class="table-dark-border">{{$signature->created_at->format('Y-m-d h:i:s A')}}</td>
                         <td class="table-dark-border" style="width: 150px; text-align: center" class="table-dark-border">
-                            <form method="POST" action="{{route('signature.destroy', ['id' => $signature->id])}}">
+                            <form method="POST" action="{{route('signature.destroy', ['signatureId' => $signature->id])}}">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Are you sure you want to delete this signature?')" class="btn btn-sm btn-danger"><i class="fa fa-times"></i> </button>
                             </form>
                         </td>
                         <td class="table-dark-border" style="width: 150px; text-align: center" class="table-dark-border">
-                            <form method="POST" action="{{route('signature.default', ['id' => $signature->id])}}">
+                            <form method="POST" action="{{route('signature.default', ['signatureId' => $signature->id])}}">
                                 @csrf
                                 @method('PUT')
                                 <button type="submit" onclick="return confirm('Are you sure you want to set this as your default signature?')" class="btn btn-sm btn-info"> set to default</button>

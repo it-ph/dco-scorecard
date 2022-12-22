@@ -40,10 +40,12 @@
                     <tr>
                     <td class="table-dark-border">{{$user->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($user->name)}}</td>
-                    <td class="table-dark-border">{{ucwords($user->theposition['position'])}}</td>
-                    <td class="table-dark-border">{{ucwords($user->thedepartment['department'])}}</td>
-                    <td class="table-dark-border">{{ ucwords($user->thesupervisor['name']) }}</td>
-                    <td class="table-dark-border">{{ ucwords($user->themanager['name']) }}</td>
+
+                    <td class="table-dark-border">@if($user->theposition){{ucwords($user->theposition['position'])}}@endif</td>
+                    <td class="table-dark-border">@if($user->thedepartment){{ucwords($user->thedepartment['department'])}}@endif</td>
+                    <td class="table-dark-border">@if($user->thesupervisor){{ucwords($user->thesupervisor['name'])}}@endif</td>
+                    <td class="table-dark-border">@if($user->themanager){{ucwords($user->themanager['name'])}}@endif</td>
+
                     <td class="table-dark-border">{{ucwords($user->role)}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">

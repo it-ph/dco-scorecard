@@ -67,13 +67,13 @@ Route::group(['middleware' => ['auth','twofactor','web'],],
     /* Admin Links */
     Route::group(['middleware' => ['adminOnly'],'prefix'=>'admin' ],
         function(){
-            Route::resource('users','Admin\AdminController');
+            Route::resource('users','Admin\AdminController')->parameters(['users' => 'id']);
             Route::GET('/api/users/details', 'Admin\AdminController@getHrPortalEmployeesAPI')->name('users.details.api');
 
             //Setup
-            Route::resource('admin-roles','Admin\RoleController');
-            Route::resource('admin-positions','Admin\PositionController');
-            Route::resource('departments','Admin\DepartmentController');
+            Route::resource('admin-roles','Admin\RoleController')->parameters(['admin-roles' => 'id']);
+            Route::resource('admin-positions','Admin\PositionController')->parameters(['admin-positions' => 'id']);
+            Route::resource('departments','Admin\DepartmentController')->parameters(['departments' => 'id']);
 
             //Settings
             Route::GET('settings','Admin\SettingController@index');
@@ -88,18 +88,19 @@ Route::group(['middleware' => ['auth','twofactor','web'],],
         function(){
 
             //Agent
+            // php laravel version upgrade: change score_id to id
             Route::GET('agent','ScoreController@agentScore');
             Route::POST('agent','ScoreController@addAgentScore')->name('agent-score.store');
-            Route::GET('agent/{score_id}','ScoreController@editAgentScore')->name('agent-score.edit');
-            Route::PUT('agent/{score_id}','ScoreController@updateAgentScore')->name('agent-score.update');
-            Route::DELETE('agent/{score_id}','ScoreController@deleteAgentScore')->name('agent-score.destroy');
-            Route::GET('agent/show/{score_id}','ScoreController@showAgentScore')->name('agent-score.show');
-            Route::GET('agent/print/{score_id}','ScoreController@printAgentScore')->name('agent-score.print');
-            Route::POST('agent/feedback/{score_id}','ScoreController@agentFeedback')->name('agent-feedback.store');
-            Route::POST('agent/action_plan/{score_id}','ScoreController@agentActionPlan')->name('agent-action-plan.store');
-            Route::POST('agent/strengths_opportunities/{score_id}','ScoreController@agentStrengthsOpportunities')->name('agent-opportunities-strengths.store');
-            Route::POST('agent/screenshots/{score_id}','ScoreController@agentScreenshots')->name('agent-screenshots.store');
-            Route::POST('agent/acknowledge/{score_id}','ScoreController@acknowledgeScore')->name('agent-acknowledge.store');
+            Route::GET('agent/{id}','ScoreController@editAgentScore')->name('agent-score.edit');
+            Route::PUT('agent/{id}','ScoreController@updateAgentScore')->name('agent-score.update');
+            Route::DELETE('agent/{id}','ScoreController@deleteAgentScore')->name('agent-score.destroy');
+            Route::GET('agent/show/{id}','ScoreController@showAgentScore')->name('agent-score.show');
+            Route::GET('agent/print/{id}','ScoreController@printAgentScore')->name('agent-score.print');
+            Route::POST('agent/feedback/{id}','ScoreController@agentFeedback')->name('agent-feedback.store');
+            Route::POST('agent/action_plan/{id}','ScoreController@agentActionPlan')->name('agent-action-plan.store');
+            Route::POST('agent/strengths_opportunities/{id}','ScoreController@agentStrengthsOpportunities')->name('agent-opportunities-strengths.store');
+            Route::POST('agent/screenshots/{id}','ScoreController@agentScreenshots')->name('agent-screenshots.store');
+            Route::POST('agent/acknowledge/{id}','ScoreController@acknowledgeScore')->name('agent-acknowledge.store');
 
             //Supervisor & TL
             Route::GET('tl','ScoreController@tlScore');
