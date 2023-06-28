@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UploadAgentTemplateExport;
 use App\Exports\UploadTLTemplateExport;
 use App\Exports\AgentScorecardSummaryExport;
+use App\Exports\TlScorecardSummaryExport;
 
 class ExportController extends Controller
 {
@@ -36,6 +37,8 @@ class ExportController extends Controller
         }
         elseif($request['report'] == 'tl')
         {
+            return $this->exportTlScorecardSummary($request);
+
             // $tl  = tlScoreCard::whereBetween('month', [$date_from, $date_to])->get();
         }
     }
@@ -69,5 +72,28 @@ class ExportController extends Controller
     public function uploadTLTemplate()
     {
         return Excel::download(new UploadTLTemplateExport, 'DCO-upload-tl_template.xlsx');
+    }
+
+    public function exportTlScorecardSummary(Request $request)
+    {
+        $date_from = $request['date_from'];
+        $date_to = $request['date_to'];
+
+        $tlscores = User::where('role','supervisor')->orderBy('name','ASC')->get();
+
+        $months = CarbonPeriod::create($date_from, '1 month', $date_to);
+
+        // $agent = agentScoreCard::whereBetween('month', [$date_from, $date_to])->get();
+
+        if($request['date_from'] == $request['date_to'] )
+        {
+            $filename = "DCO_TL_SCORECARD_SUMMARY_". $request['date_from'] .".xlsx";
+
+        }else{
+            $filename = "DCO_TL_SCORECARD_SUMMARY_". $request['date_from'] .'_to_'.$request['date_to'].".xlsx";
+
+        }
+
+        return Excel::download(new TlScorecardSummaryExport($request, $tlscores, $months),  $filename);
     }
 }

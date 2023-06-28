@@ -52,4 +52,14 @@ class Agent extends Model
         return $this->belongsTo('App\Signature','manager_signature_id');
     }
 
+    public function thenewTl()
+    {
+        return $this->belongsTo('App\User','new_tl_id');
+    }
+
+    public function thenewManager()
+    {
+        return $this->belongsTo('App\User','new_manager_id');
+    }
+
 }

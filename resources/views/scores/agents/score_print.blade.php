@@ -290,8 +290,10 @@
                                 <br><small>{{ $score->date_acknowledge_by_agent->format('m/d/Y h:i:s a') }}</small>
                             @endif
                             <br> <span style="text-decoration: underline; font-weight: bold;">
-                                @if($score->theagent->thesupervisor)
-                                    {{strtoupper($score->theagent->thesupervisor->name)}}
+                                @if(!empty($score->thenewTl))
+                                    <br> {{strtoupper($score->thenewTl->name)}}
+                                @elseif($score->theagent->thesupervisor)
+                                    <br> {{strtoupper($score->theagent->thesupervisor->name)}}
                                 @endif
                             </span>
                             <br> <span style="font-weight: normal;font-size: 14px">Supervisor</span> </p>
@@ -303,9 +305,11 @@
                                     <br><small>{{ $score->date_acknowledge_by_agent->format('m/d/Y h:i:s a') }}</small>
                                 @endif
                                 <br> <span style="text-decoration: underline; font-weight: bold;">
-                                    @if($score->theagent->themanager)
-                                        {{strtoupper($score->theagent->themanager->name)}}
-                                    @endif
+                                @if(!empty($score->thenewManager))
+                                    <br> {{strtoupper($score->thenewManager->name)}}        
+                                @elseif($score->theagent->themanager)
+                                    <br> {{strtoupper($score->theagent->themanager->name)}}
+                                @endif
                                 </span>
                                 <br> <span style="font-weight: normal;font-size: 14px">Operations Manager</span> </p>
                             </div><!--col-md-5-->

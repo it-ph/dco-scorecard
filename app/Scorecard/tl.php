@@ -34,5 +34,26 @@ class tl extends Model
             $q->where($this->position,$this->authID);
         });
     }
+
+    public function thetlsignature()
+    {
+        return $this->belongsTo('App\Signature','tl_signature_id');
+    }
+    
+    public function themanagersignature()
+    {
+        return $this->belongsTo('App\Signature','manager_signature_id');
+    }
+    
+
+    public function thenewManager()
+    {
+        return $this->belongsTo('App\User','new_manager_id');
+    }
+
+    public function thetowerheadsignature()
+    {
+        return $this->belongsTo('App\Signature','towerhead_signature_id');
+    }
   
 }

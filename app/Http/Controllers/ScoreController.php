@@ -99,7 +99,6 @@ class ScoreController extends Controller
     **/
     public function tlScore(Request $request)
     {
-
         $this->userId = Auth::user()->id;
 
         //VIEW ALL AGENT (FOR CREATE CARD)
@@ -159,18 +158,14 @@ class ScoreController extends Controller
             'tl_id'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
-            'actual_quality'       => 'required|numeric',
             'quality'       => 'required|numeric',
-            'actual_productivity'       => 'required|numeric',
             'productivity'       => 'required|numeric',
-            'actual_admin_coaching'       => 'required',
-            'admin_coaching'       => 'required|numeric',
-            'actual_team_performance'    => 'required|numeric',
-            'team_performance'       => 'required|numeric',
-            'actual_initiative'    => 'required',
-            'initiative'       => 'required|numeric',
-            'actual_team_attendance'    => 'required|numeric',
-            'team_attendance'       => 'required|numeric',
+            'no_client_escalations'       => 'required|numeric',
+            'no_pay_dispute'       => 'required|numeric',
+            'linkedin_learning_compliance'       => 'required|numeric',
+            'eod_reporting'       => 'required|numeric',
+            'htl_compliance'       => 'required|numeric',
+            'other_compliances_required'       => 'required|numeric',
             'final_score'       => 'required|numeric'
 
 
@@ -198,18 +193,14 @@ class ScoreController extends Controller
             'tl_id'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
-            'actual_quality'       => 'required|numeric',
             'quality'       => 'required|numeric',
-            'actual_productivity'       => 'required|numeric',
             'productivity'       => 'required|numeric',
-            'actual_admin_coaching'       => 'required',
-            'admin_coaching'       => 'required|numeric',
-            'actual_team_performance'    => 'required|numeric',
-            'team_performance'       => 'required|numeric',
-            'actual_initiative'    => 'required',
-            'initiative'       => 'required|numeric',
-            'actual_team_attendance'    => 'required|numeric',
-            'team_attendance'       => 'required|numeric',
+            'no_client_escalations'       => 'required|numeric',
+            'no_pay_dispute'       => 'required|numeric',
+            'linkedin_learning_compliance'       => 'required|numeric',
+            'eod_reporting'       => 'required|numeric',
+            'htl_compliance'       => 'required|numeric',
+            'other_compliances_required'       => 'required|numeric',
             'final_score'       => 'required|numeric'
 
 
@@ -232,11 +223,11 @@ class ScoreController extends Controller
 
     public function showTLScore($id)
     {
-        $score = TLScoreCard::findorfail($id);
+        $score = TLScoreCard::with('thenewManager')->findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
-        if(!Auth::user()->isAdmin() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
+        if(!Auth::user()->isAdmin() && !Auth::user()->isManager() && !Auth::user()->isCBAOrTowerHead() && Auth::user()->id <> $score->tl_id)
         {
             return view('notifications.401');
         }
@@ -250,7 +241,7 @@ class ScoreController extends Controller
         $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
-        if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->tl_id)
+        if(!Auth::user()->isAdmin() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && !Auth::user()->isCBAOrTowerHead() && Auth::user()->id <> $score->tl_id)
         {
             return view('notifications.401');
         }
@@ -264,7 +255,7 @@ class ScoreController extends Controller
         [
             'feedback'       => 'required',
         ],
-            $messages = array('feedback.required' => 'Agent Feedback is Required!')
+            $messages = array('feedback.required' => 'TL Feedback is Required!')
         );
 
         $score = TLScoreCard::findorfail($id);
@@ -288,10 +279,53 @@ class ScoreController extends Controller
         return redirect()->back()->with('with_success', 'Action Plan Succesfully Added!');
     }
 
-    public function acknowledgeScoreTL(Request $request, $id)
+    public function acknowledgeScoreTL($id)
     {
+
+        $default_signature = Signature::where('user_id',Auth::user()->id)->where('is_default',1)->first();
+        
+        if($default_signature){
+            $signatureid = $default_signature->id;
+        }else{
+            return redirect()->back()->withErrors(['msg' => 'Kindly manage your signature first']);
+            
+        }
+
         $score = TLScoreCard::findorfail($id);
-        $score->update(['acknowledge'=> 1]);
+        // Acknowledged by Supervisor
+        if(Auth::user()->isSupervisor() || Auth::user()->isAdmin())
+        {
+            $score->update([
+                'acknowledge_by_tl' => 1,
+                'tl_signature_id' => $signatureid,
+                'date_acknowledge_by_tl' => Carbon::now()
+            ]);
+        }
+        // Acknowledged by Manager
+        elseif(Auth::user()->isManager() || Auth::user()->isAdmin())
+        {
+            $score->update([
+                'acknowledge_by_manager' => 1,
+                'manager_signature_id' => $signatureid,
+                'new_manager_id' => Auth::user()->id,
+                'date_acknowledge_by_manager' => Carbon::now()
+            ]);
+        }
+        // Acknowledged by TowerHead
+        elseif(Auth::user()->isCBAOrTowerHead() || Auth::user()->isAdmin())
+        {
+            $score->update([
+                'acknowledge_by_towerhead' => 1,
+                'towerhead_signature_id' => $default_signature->id,
+                'date_acknowledge_by_towerhead' => Carbon::now()
+            ]);
+        }
+
+
+        if($score->acknowledge_by_tl == 1 && $score->acknowledge_by_manager == 1 && $score->acknowledge_by_towerhead == 1)
+        {
+            $score->update(['acknowledge'=> 1]);
+        }
 
         return redirect()->back()->with('with_success', 'Scorecard Acknowledged Succesfully!');
     }
@@ -500,7 +534,7 @@ class ScoreController extends Controller
 
     public function showAgentScore($id)
     {
-        $score = agentScoreCard::findorfail($id);
+        $score = agentScoreCard::with('thenewTl','thenewManager')->findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
         $productivity = Setting::where('setting','productivity')->first();
         $quality = Setting::where('setting','quality')->first();
@@ -518,7 +552,7 @@ class ScoreController extends Controller
 
     public function printAgentScore($id)
     {
-        $score = agentScoreCard::findorfail($id);
+        $score = agentScoreCard::with('thenewTl','thenewManager')->findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
 
         //check if Not admin or not his/her scorecard
@@ -594,10 +628,25 @@ class ScoreController extends Controller
         return redirect()->back()->with('with_success', 'Screenshot/s Succesfully ' .$action. '!');
     }
 
+    public function TlScreenshots(Request $request, $id)
+    {
+        $this->validate($request,
+        [
+            'screenshots' => 'required',
+        ],
+            $messages = array('screenshots.required' => 'Screenshot/s is Required!')
+        );
+
+        $score = TLScoreCard::findorfail($id);
+        $action = $score->screenshots <> null ? 'Updated' : 'Added';
+        $score->update(['screenshots'=> $request['screenshots']]);
+
+        return redirect()->back()->with('with_success', 'Screenshot/s Succesfully ' .$action. '!');
+    }
+
     public function acknowledgeScore($id)
     {
         $default_signature = Signature::where('user_id',Auth::user()->id)->where('is_default',1)->first();
-
         $score = agentScoreCard::findorfail($id);
         // $score->update(['acknowledge'=> 1]);
 
@@ -616,6 +665,7 @@ class ScoreController extends Controller
             $score->update([
                 'acknowledge_by_tl' => 1,
                 'tl_signature_id' => $default_signature->id,
+                'new_tl_id' => Auth::user()->id,
                 'date_acknowledge_by_tl' => Carbon::now()
             ]);
         }
@@ -625,6 +675,7 @@ class ScoreController extends Controller
             $score->update([
                 'acknowledge_by_manager' => 1,
                 'manager_signature_id' => $default_signature->id,
+                'new_manager_id' => Auth::user()->id,
                 'date_acknowledge_by_manager' => Carbon::now()
             ]);
         }

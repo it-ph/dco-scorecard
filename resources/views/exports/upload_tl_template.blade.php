@@ -6,10 +6,13 @@
         <th style="width: 150px; text-align: center">employee_name</th>
         <th style="width: 80px; text-align: center;">productivity</th>
         <th style="width: 80px; text-align: center;">quality</th>
-        <th style="width: 120px; text-align: center;">admin_coaching</th>
-        <th style="width: 150px; text-align: center;">team_performance</th>
-        <th style="width: 80px; text-align: center;">initiative</th>
-        <th style="width: 120px; text-align: center;">team_attendance</th>
+        <th style="width: 120px; text-align: center;">no_client_escalations</th>
+        <th style="width: 150px; text-align: center;">no_pay_dispute</th>
+        <th style="width: 80px; text-align: center;">linkedin_learning_compliance</th>
+        <th style="width: 120px; text-align: center;">eod_reporting</th>
+        <th style="width: 120px; text-align: center;">htl_compliance</th>
+        <th style="width: 120px; text-align: center;">other_compliances_required</th>
+        <th style="width: 120px; text-align: center;">reliability</th>
 
     </tr>
     </thead>

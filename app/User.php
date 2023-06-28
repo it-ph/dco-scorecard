@@ -95,6 +95,15 @@ class User extends Authenticatable
         return false;
     }
 
+    public function isTowerHead()
+    {
+        if(($this->role == 'tower head' || $this->role == 'Tower Head'))
+        {
+            return true;
+        }
+        return false;
+    }
+
     public function thesupervisor()
     {
         return $this->belongsTo('App\User','supervisor');

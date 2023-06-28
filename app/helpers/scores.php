@@ -92,6 +92,27 @@ function getAgentScore($agent_id, $month, $period)
 
 }
 
+function getTlScore($tl_id, $month)
+{
+    $tl_score = TLScoreCard::query()
+        ->where('tl_id', $tl_id)
+        ->where('month', $month)
+        ->select('final_score')
+        ->first();
+
+    if($tl_score)
+    {
+        $tlscores = $tl_score->final_score <> null ? number_format($tl_score->final_score, 2) : '';
+
+        return $tlscores;
+    }
+    else
+    {
+        return '';
+    }
+
+}
+
 function removeBraces($val)
 {
     $a =  str_replace('["',"",$val);
@@ -169,6 +190,29 @@ function getAgentReliabilityScore($score)
     elseif($score >= 95)
     {
         $score = 20;
+    }
+
+    return $score;
+}
+
+
+function getTlReliabilityScore($score)
+{
+    if($score < 85)
+    {
+        $score = 0;
+    }
+    elseif($score >= 85 && $score <= 95)
+    {
+        $score = 5;
+    }
+    elseif($score >= 90 && $score <= 95)
+    {
+        $score = 7;
+    }
+    elseif($score >= 95)
+    {
+        $score = 10;
     }
 
     return $score;

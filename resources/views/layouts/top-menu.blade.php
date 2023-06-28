@@ -115,6 +115,38 @@
                             </div>
                         </li>
 
+                        <!--towerhead-->
+                        @elseif(\Auth::user()->isTowerHead() && allTLUnacknowledgeCard() > 0) 
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="mdi mdi-bell"></i>
+                                <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown">
+                                <ul>
+                                    <li>
+                                        <div class="drop-title">Un Acknowledge Scorecards </div>
+                                    </li>
+                                    <li>
+                                        @if(allTLUnacknowledgeCard() > 0)
+                                        <div class="message-center">
+                                            <!-- Message -->
+                                            <a href="{{url('/scores/tl?not_acknowledge')}}">
+                                                <div class="btn btn-danger btn-circle"><i class="fa fa-link fa-spin"></i></div>
+                                                <div class="mail-contnet">
+                                                    <h5> Team Leaders has <span style="font-weight: bold">{{allTLUnacknowledgeCard()}}</span></h5> </div>
+                                            </a>
+                                            
+                                        </div>
+                                        @endif
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-center" href="{{url('/scores/tl?not_acknowledge')}}"> <strong>View Scorecards</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
                         <!--admin-->
                         @elseif( \Auth::user()->isAdmin() && allAgentUnacknowledgeCard() > 0 ||  \Auth::user()->isAdmin() && allTLUnacknowledgeCard() > 0) 
 

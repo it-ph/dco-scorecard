@@ -14,37 +14,44 @@ class CreateTlScorecard extends Migration
     public function up()
     {
         Schema::create('tl_scorecard', function (Blueprint $table) {
+            
             $table->bigIncrements('id');
             $table->unsignedBigInteger('tl_id');
             $table->foreign('tl_id')->references('id')->on('users');
             $table->string('month');
             $table->string('target');
 
-            $table->string('actual_quality')->nullable();
             $table->string('quality')->nullable();
-
-            $table->string('actual_productivity')->nullable();
             $table->string('productivity')->nullable();
-
-            $table->string('actual_admin_coaching')->nullable();
-            $table->string('admin_coaching')->nullable();
-
-            $table->string('actual_team_performance')->nullable();
-            $table->string('team_performance')->nullable();
-
-            $table->string('actual_initiative')->nullable();
-            $table->string('initiative')->nullable();
-
-            $table->string('actual_team_attendance')->nullable();
-            $table->string('team_attendance')->nullable();
-
+            $table->string('no_client_escalations')->nullable();
+            $table->string('no_pay_dispute')->nullable();
+            $table->string('linkedin_learning_compliance')->nullable();
+            $table->string('eod_reporting')->nullable();
+            $table->string('htl_compliance')->nullable();
+            $table->string('other_compliances_required')->nullable();
+            $table->string('reliability')->nullable();
 
             $table->string('final_score');
             $table->string('acknowledge')->default(0);
 
+            $table->string('acknowledge_by_tl')->default(0);
+            $table->datetime('date_acknowledge_by_tl')->nullable();
+            $table->integer('tl_signature_id')->nullable();
+
+            $table->string('acknowledge_by_manager')->default(0);
+            $table->datetime('date_acknowledge_by_manager')->nullable();
+            $table->integer('manager_signature_id')->nullable();
+            $table->unsignedBigInteger('new_manager_id')->nullable();
+            $table->foreign('new_manager_id')->references('id')->on('users');
+
+            $table->string('acknowledge_by_towerhead')->default(0);
+            $table->datetime('date_acknowledge_by_towerhead')->nullable();
+            $table->integer('towerhead_signature_id')->nullable();
+
             $table->longtext('feedback')->nullable();
             $table->longtext('action_plan')->nullable();
-
+            $table->longtext('opportunities_strengths')->nullable();
+            $table->longtext('screenshots')->nullable();
 
             $table->timestamps();
         });

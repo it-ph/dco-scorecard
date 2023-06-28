@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth','twofactor','web'],],
     Route::get('/export_agent_template/upload-agent_template', 'ExportController@uploadAgentTemplate')->name('export-upload-agent_template');
     Route::get('/export_tl_template/upload-tl_template', 'ExportController@uploadTLTemplate')->name('export-upload-tl_template');
     Route::post('/import', 'ImportController@import')->name('import');
+    Route::post('/import-tl-scorecard', 'ImportController@importTlScorecard')->name('import.tl');
 
     Route::get('/profile', 'HomeController@profile')->name('profile');
 
@@ -105,14 +106,15 @@ Route::group(['middleware' => ['auth','twofactor','web'],],
             //Supervisor & TL
             Route::GET('tl','ScoreController@tlScore');
             Route::POST('tl','ScoreController@addTLScore')->name('tl-score.store');
-            Route::GET('tl/{score_id}','ScoreController@editTLScore')->name('tl-score.edit');
-            Route::PUT('tl/{score_id}','ScoreController@updateTLScore')->name('tl-score.update');
-            Route::DELETE('tl/{score_id}','ScoreController@deleteTLScore')->name('tl-score.destroy');
-            Route::GET('tl/show/{score_id}','ScoreController@showTLScore')->name('tl-score.show');
-            Route::GET('tl/print/{score_id}','ScoreController@printTLScore')->name('tl-score.print');
-            Route::POST('tl/feedback/{score_id}','ScoreController@tlFeedback')->name('tl-feedback.store');
-            Route::POST('tl/action_plan/{score_id}','ScoreController@tlActionPlan')->name('tl-action-plan.store');
-            Route::POST('tl/acknowledge/{score_id}','ScoreController@acknowledgeScoreTL')->name('tl-acknowledge.store');
+            Route::GET('tl/{id}','ScoreController@editTLScore')->name('tl-score.edit');
+            Route::PUT('tl/{id}','ScoreController@updateTLScore')->name('tl-score.update');
+            Route::DELETE('tl/{id}','ScoreController@deleteTLScore')->name('tl-score.destroy');
+            Route::GET('tl/show/{id}','ScoreController@showTLScore')->name('tl-score.show');
+            Route::GET('tl/print/{id}','ScoreController@printTLScore')->name('tl-score.print');
+            Route::POST('tl/feedback/{id}','ScoreController@tlFeedback')->name('tl-feedback.store');
+            Route::POST('tl/action_plan/{id}','ScoreController@tlActionPlan')->name('tl-action-plan.store');
+            Route::POST('tl/screenshots/{id}','ScoreController@tlScreenshots')->name('tl-screenshots.store');
+            Route::POST('tl/acknowledge/{id}','ScoreController@acknowledgeScoreTL')->name('tl-acknowledge.store');
         });// Scores
 
 

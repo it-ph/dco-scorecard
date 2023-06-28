@@ -24,8 +24,9 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
         $ctr_error = 0;
         array_push($this->has_error,"Something went wrong, Please check all entries that you have encoded.");
 
-        $agent = User::where('emp_id', $row['employee_number'])->where('role', 'agent')->where('status', 'active')->pluck('id');
+        $agent = User::where('emp_id', $row['employee_number'])->where('role', 'agent')->where('status', 'active')->select('id','supervisor','manager')->first();
 
+        // dd($agent);
         $this->row_number += 1;
 
         if(strtolower($row['month_type']) == 'mid' || strtolower($row['month_type']) == 'end')
@@ -41,7 +42,7 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
         if($agent->count() > 0)
         {
             // dd('found');
-            $agent_id = $agent[0];
+            $agent_id = $agent->id;
         }
         else
         {
@@ -90,8 +91,10 @@ class ScoresImport implements ToModel, WithHeadingRow, WithValidation,SkipsEmpty
                     'acknowledge_by_agent' => 0,
                     'date_acknowledge_by_agent' => null,
                     'acknowledge_by_tl' => 0,
+                    'new_tl_id' => $agent->supervisor,
                     'date_acknowledge_by_tl' => null,
                     'acknowledge_by_manager' => 0,
+                    'new_manager_id' => $agent->manager,
                     'date_acknowledge_by_manager' => null,
                 ]
             );

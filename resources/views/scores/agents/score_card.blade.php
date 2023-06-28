@@ -640,7 +640,9 @@
                                 @endif
                             </span>
                             <span style="text-decoration: underline; font-weight: bold;">
-                                @if($score->theagent->thesupervisor)
+                                @if(!empty($score->thenewTl))
+                                    <br> {{strtoupper($score->thenewTl->name)}}
+                                @elseif($score->theagent->thesupervisor)
                                     <br> {{strtoupper($score->theagent->thesupervisor->name)}}
                                 @endif
                             </span>
@@ -657,7 +659,9 @@
                                     @endif
                                 </span>
                                 <span style="text-decoration: underline; font-weight: bold;">
-                                        @if($score->theagent->themanager)
+                                        @if(!empty($score->thenewManager))
+                                            <br> {{strtoupper($score->thenewManager->name)}}        
+                                        @elseif($score->theagent->themanager)
                                             <br> {{strtoupper($score->theagent->themanager->name)}}
                                         @endif
                                 </span>

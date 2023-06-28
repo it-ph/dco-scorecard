@@ -103,7 +103,7 @@ th{
                         @else
                         <i class="mdi mdi-check-circle" style="color: #04b381; font-size: 16px" title="This Scorecard was Acknowledge by {{ucwords($score->thetl->name)}}"></i>
                         @endif 
-                        <a href="{{url('scores/agent/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard">
+                        <a href="{{url('scores/tl/show/' . $score->id)  }}" style="color: black;" title="Click to view Scorecard">
                         {{$score->month}} </a>
                     </td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->thetl->emp_id}}</td>
@@ -209,21 +209,27 @@ function sumTotalScore()
 {
     var quality = $("#quality").val();
     var productivity = $("#productivity").val();
-    var admin_coaching = $("#admin_coaching").val();
-    var team_performance = $("#team_performance").val();
-    var initiative = $("#initiative").val();
-    var team_attendance = $("#team_attendance").val();
+    var no_client_escalations = $("#no_client_escalations").val();
+    var no_pay_dispute = $("#no_pay_dispute").val();
+    var linkedin_learning_compliance = $("#linkedin_learning_compliance").val();
+    var eod_reporting = $("#eod_reporting").val();
+    var htl_compliance = $("#htl_compliance").val();
+    var other_compliances_required = $("#other_compliances_required").val();
+    var reliability = $("#reliability").val();
    
     quality = isNaN(quality) ? 0 : quality;
     productivity = isNaN(productivity) ? 0 : productivity;
-    admin_coaching = isNaN(admin_coaching) ? 0 : admin_coaching;
-    team_performance = isNaN(team_performance) ? 0 : team_performance;
-    initiative = isNaN(initiative) ? 0 : initiative;
-    team_attendance = isNaN(team_attendance) ? 0 : team_attendance;
+    no_client_escalations = isNaN(no_client_escalations) ? 0 : no_client_escalations;
+    no_pay_dispute = isNaN(no_pay_dispute) ? 0 : no_pay_dispute;
+    linkedin_learning_compliance = isNaN(linkedin_learning_compliance) ? 0 : linkedin_learning_compliance;
+    eod_reporting = isNaN(eod_reporting) ? 0 : eod_reporting;
+    htl_compliance = isNaN(htl_compliance) ? 0 : htl_compliance;
+    other_compliances_required = isNaN(other_compliances_required) ? 0 : other_compliances_required;
+    reliability = isNaN(reliability) ? 0 : reliability;
 
-    var totalScore = parseInt(quality) + parseInt(productivity) + parseInt(admin_coaching) + parseInt(team_performance) + parseInt(initiative) + parseInt(team_attendance);
-    $("#totalScoreLbl").html(totalScore + "%");
-    $("#final_score").val(totalScore)
+    var totalScore = parseFloat(quality) + parseFloat(productivity) + parseFloat(no_client_escalations) + parseFloat(no_pay_dispute) + parseFloat(linkedin_learning_compliance) + parseFloat(eod_reporting) + parseFloat(htl_compliance) + parseFloat(other_compliances_required) + parseFloat(reliability);
+    $("#totalScoreLbl").html(parseFloat(totalScore).toFixed(2) + "%");
+    $("#final_score").val(parseFloat(totalScore).toFixed(2))
     console.log(totalScore);
 }
 
