@@ -2,7 +2,7 @@
 
 @section('content')
 
-@if(Auth::user()->isAdmin())
+@if(Auth::user()->isAdmin() || Auth::user()->isManager())
 <div class="col-md-12" style="margin-top: 5px">
     @include('notifications.success')
     @include('notifications.error')
