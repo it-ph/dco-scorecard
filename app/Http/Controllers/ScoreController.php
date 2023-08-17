@@ -352,6 +352,7 @@ class ScoreController extends Controller
             if (Auth::user()->isAgent()) {
                 $scores = agentScoreCard::where('acknowledge_by_agent', 0);
             }
+                                        
             //Supervisor
             elseif(Auth::user()->isSupervisor()){
                 $scores = agentScoreCard::where('acknowledge_by_agent', 1)->where('acknowledge_by_tl',0);
@@ -424,7 +425,12 @@ class ScoreController extends Controller
 
         }
 
-        $scores = $scores->get();
+        $scores = $scores->select('id','agent_id','month_type','month',
+                                'target','actual_quality','actual_productivity','actual_reliability',
+                                'quality','productivity','reliability','final_score','acknowledge','acknowledge_by_agent',
+                                'agent_signature_id','date_acknowledge_by_agent','acknowledge_by_tl','tl_signature_id','new_tl_id',
+                                'date_acknowledge_by_tl','acknowledge_by_manager','manager_signature_id','new_manager_id','date_acknowledge_by_manager',
+                                'created_at','updated_at')->get();
         $avail_months = $avail_months->get();
 
         $target = Setting::where('setting','target')->first();
@@ -697,4 +703,5 @@ class ScoreController extends Controller
         $imgpath = request()->file('file')->store('uploads', 'public');
         return response()->json(['location' => "/dco-scorecard/public/storage/$imgpath"]);
     }
+     
 }

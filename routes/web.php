@@ -31,6 +31,12 @@ Route::get('unauthorized', function () {
     return view('notifications.401');
 })->name('unauthorized');
 
+//SSO
+Route::group(['middleware' => ['web', 'guest']], function(){
+    Route::get('login', 'Auth\AuthController@login')->name('login');
+    Route::get('connect', 'Auth\AuthController@connect')->name('connect');
+});
+
 // Auth::routes();
 Auth::routes(['register' => false]);
 
@@ -40,7 +46,8 @@ Route::POST('verify/send', 'Auth\TwoFactorController@send')->name('verify.send')
 Route::resource('verify', 'Auth\TwoFactorController')->only(['index', 'store']);
 
 /* Authorized Users */
-Route::group(['middleware' => ['auth','twofactor','web'],],
+Route::group(['middleware' => ['auth','verify.access','web'],],
+// Route::group(['middleware' => ['auth','twofactor','web'],],
     function ()
 {
 
@@ -125,3 +132,4 @@ Route::group(['middleware' => ['auth','twofactor','web'],],
 
 
 }); //Middleware auth
+

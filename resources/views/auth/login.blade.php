@@ -201,12 +201,13 @@
             </ul>
         <div class="login-box card">
             <div class="card-body">
-                <form method="POST" action="{{ route('login') }}">
+                <!-- <form method="POST" action="{{ route('login') }}"> -->
+                <form>
                     @csrf
                     <a href="javascript:void(0)" class="text-center db"><img src="{{asset('images/personiv/logo.png')}}" style="width: 50px;color: black" alt="Home" /><br/>
                         <span style="color: black; font-weight: bold">  DCO SCORECARD</span>
                     </a>
-                    <div class="form-group m-t-40">
+                    <!-- <div class="form-group m-t-40">
                         <div class="col-xs-12">
                             <input id="emp_id" type="text" placeholder="Employee ID" autofocus class="login-form-txt form-control @error('emp_id') is-invalid @enderror" name="emp_id" value="{{ old('emp_id') }}" required  autofocus>
 
@@ -240,15 +241,15 @@
                             </div>
                         </div>
                             {{-- <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div> --}}
-                    </div>
+                    </div> -->
                     <div class="form-group m-t-10">
 
-                        <div class="col-xs-4">
-                            <button class="btn btn-warning btn-md text-uppercase btn-rounded" type="submit">Log In</button>
+                        <div class="col-xs-12 text-center db">
+                            <a href="{{route('connect')}}" class="btn btn-warning btn-md text-uppercase btn-rounded">Single Sign-On</a>
                         </div>
                     </div>
                 </form>
-                <form class="form-horizontal" id="recoverform" action="index.html">
+                <!-- <form class="form-horizontal" id="recoverform" action="index.html">
                     <div class="form-group ">
                         <div class="col-xs-12">
                             <h3>Recover Password</h3>
@@ -265,7 +266,7 @@
                             <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
                         </div>
                     </div>
-                </form>
+                </form> -->
             </div>
         </div>
     </section>

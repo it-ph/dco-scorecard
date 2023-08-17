@@ -6,7 +6,9 @@ use Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\TwoFactorCode;
+use Dcblogdev\MsGraph\Models\MsGraphToken;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -51,6 +53,21 @@ class LoginController extends Controller
 
         // Notification::send($user, new TwoFactorCode());
         // Notification::route('mail', $request['email'])->notify(new TwoFactorCode($user->two_factor_code));
+    }
+
+    public function logout()
+    {
+        $is_logged_in = MsGraphToken::query()
+            ->where('user_id', Auth::user()->id)
+            ->delete();
+
+        if($is_logged_in)
+        {
+            Auth::logout();
+            Session()->flush();
+
+            return redirect('login');
+        }
     }
 
 

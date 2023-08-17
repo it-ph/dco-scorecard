@@ -33,7 +33,13 @@
                             <input type="text" required name="name" value="{{old('name')}}" class="form-control fform" id="name">
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email Address <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                            <input type="text" required name="email" value="{{old('email')}}" class="form-control fform" id="email">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                                 <label for="supervisor">Supervisor </label>
                                 <select name="supervisor" id="supervisor" class="form-control fform">

@@ -10,6 +10,8 @@ use App\HrPortalEmployees;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
 
 class AdminController extends Controller
 {
@@ -58,6 +60,7 @@ class AdminController extends Controller
             [
                 'emp_id'    => 'required',
                 'name'       => 'required|min:2',
+                'email'     => 'required|email|regex:/(.*)personiv\.com$/i|unique:users,email',
                 'position_id' => ['required'],
                 'role' => ['required'],
                 'password' => ['required', 'string', 'min:6'],
@@ -66,6 +69,7 @@ class AdminController extends Controller
             ],
                 $messages = array('emp_id.required' => 'Employee ID is Required!',
                 'name.required' => 'Username is Required!',
+                'email.regex'       => 'Please use @personiv.com only',
                 'position_id.required' => 'Position is Required!',
                 'emp_id.unique' => 'Employee cannot have the same Employee ID!',
                 )
@@ -112,9 +116,11 @@ class AdminController extends Controller
         [
             'emp_id'       => 'required',
             'name'       => 'required|min:2',
+            'email'     => ($id ? 'nullable' : 'required') . '|email|regex:/(.*)personiv\.com$/i',Rule::unique('users')->ignore($id),
             'role' => ['required'],
         ],
-            $messages = array('name.required' => 'Username is Required!')
+            $messages = array('name.required' => 'Username is Required!',
+            'email.regex'   => 'Please use @personiv.com only'),
         );
         $user = User::findorfail($id);
         if(empty( $request['password']))

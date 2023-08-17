@@ -27,11 +27,13 @@
                     <tr>
                         <th>Employee ID</th>
                         <th>Name</th>
+                        <th>Email</th>
                         <th>Position</th>
                         <th>Department</th>
                         <th>Supervisor</th>
                         <th>Manager</th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -40,6 +42,7 @@
                     <tr>
                     <td class="table-dark-border">{{$user->emp_id}}</td>
                     <td class="table-dark-border">{{ucwords($user->name)}}</td>
+                    <td class="table-dark-border">{{($user->email)}}</td>
 
                     <td class="table-dark-border">@if($user->theposition){{ucwords($user->theposition['position'])}}@endif</td>
                     <td class="table-dark-border">@if($user->thedepartment){{ucwords($user->thedepartment['department'])}}@endif</td>
@@ -47,6 +50,7 @@
                     <td class="table-dark-border">@if($user->themanager){{ucwords($user->themanager['name'])}}@endif</td>
 
                     <td class="table-dark-border">{{ucwords($user->role)}}</td>
+                    <td class="table-dark-border">{{ucwords($user->status)}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

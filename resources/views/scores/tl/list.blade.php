@@ -89,6 +89,7 @@ th{
                         <th>Productivity %</th>
                         <th>Reliability %</th> --}}
                         <th>Final Score</th>
+                        <th >Status</th>
                         <th ></th>
                         @if(Auth::user()->isAdmin()) 
                         <th ></th> 
@@ -123,6 +124,11 @@ th{
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->productivity}}</td>
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td> --}}
                     <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->final_score}}%</td>
+                    @if($score->acknowledge > 0)
+                    <td class="table-dark-border" style="width: 150px; text-align: center">Acknowledge</td>
+                    @else
+                    <td class="table-dark-border" style="width: 150px; text-align: center">Un Acknowledge</td>
+                    @endif
                     
                     @if(Auth::user()->isAdmin())
                     <td class="table-dark-border" style="width: 150px; text-align: center">
@@ -192,11 +198,12 @@ th{
             {
                 extend: 'excel',
                exportOptions: {
-                columns: [0,1,2,4]
+                columns: [0,1,2,4,6]
                 }
             }
             
-        ]
+        ],
+        "aoColumnDefs": [{ "bVisible": false, "aTargets": [6] }]
                  
       
       

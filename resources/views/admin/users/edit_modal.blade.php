@@ -27,7 +27,14 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email Address <span style="color: red; font-size: 12x" title="This Field is required!">*</span></label>
+                            <input type="text" value="{{$user->email}}" required name="email" class="form-control fform" id="email">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
                         {{-- <div class="form-group">
                             <label for="supervisor">Supervisor</label>
                             <input type="text" value="{{$user->supervisor}}" name="supervisor" class="form-control fform" id="supervisor">
