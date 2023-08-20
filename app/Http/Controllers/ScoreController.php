@@ -103,6 +103,13 @@ class ScoreController extends Controller
 
         //VIEW ALL AGENT (FOR CREATE CARD)
         $tls = User::where('role','supervisor')->orderBy('name','ASC')->get();
+        $scores = TLScoreCard::select('id','tl_id','month',
+                                    'target','quality','productivity','no_client_escalations',
+                                    'no_pay_dispute','linkedin_learning_compliance','eod_reporting','htl_compliance','other_compliances_required','reliability',
+                                    'final_score','acknowledge','acknowledge_by_tl','date_acknowledge_by_tl','tl_signature_id',
+                                    'acknowledge_by_manager','date_acknowledge_by_manager','manager_signature_id','new_manager_id','acknowledge_by_towerhead','date_acknowledge_by_towerhead',
+                                    'towerhead_signature_id','created_at','updated_at');
+
 
         //FILTER BY NOT-ACKNOWLEDGE
         if( $request->has('not_acknowledge') || $request->filled('not_acknowledge') )
@@ -344,6 +351,12 @@ class ScoreController extends Controller
 
         //VIEW ALL AGENT (FOR CREATE CARD)
         $agents = User::where('role','agent')->orderBy('name','ASC')->get();
+        $scores = agentScoreCard::select('id','agent_id','month_type','month',
+                                    'target','actual_quality','actual_productivity','actual_reliability',
+                                    'quality','productivity','reliability','final_score','acknowledge','acknowledge_by_agent',
+                                    'agent_signature_id','date_acknowledge_by_agent','acknowledge_by_tl','tl_signature_id','new_tl_id',
+                                    'date_acknowledge_by_tl','acknowledge_by_manager','manager_signature_id','new_manager_id','date_acknowledge_by_manager',
+                                    'created_at','updated_at');
 
         //FILTER BY NOT-ACKNOWLEDGE
         if( $request->has('not_acknowledge') || $request->filled('not_acknowledge') )
@@ -425,12 +438,7 @@ class ScoreController extends Controller
 
         }
 
-        $scores = $scores->select('id','agent_id','month_type','month',
-                                'target','actual_quality','actual_productivity','actual_reliability',
-                                'quality','productivity','reliability','final_score','acknowledge','acknowledge_by_agent',
-                                'agent_signature_id','date_acknowledge_by_agent','acknowledge_by_tl','tl_signature_id','new_tl_id',
-                                'date_acknowledge_by_tl','acknowledge_by_manager','manager_signature_id','new_manager_id','date_acknowledge_by_manager',
-                                'created_at','updated_at')->get();
+        $scores = $scores->get();
         $avail_months = $avail_months->get();
 
         $target = Setting::where('setting','target')->first();
