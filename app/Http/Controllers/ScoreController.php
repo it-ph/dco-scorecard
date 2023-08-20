@@ -114,26 +114,26 @@ class ScoreController extends Controller
         //FILTER BY NOT-ACKNOWLEDGE
         if( $request->has('not_acknowledge') || $request->filled('not_acknowledge') )
         {
-            $scores = TLScoreCard::where('acknowledge',0);
+            $scores = $scores->where('acknowledge',0);
 
         //FILTER BY ACKNOWLEDGE
         }elseif( $request->has('acknowledge') || $request->filled('acknowledge') )
         {
-            $scores = TLScoreCard::where('acknowledge',1);
+            $scores = $scores->where('acknowledge',1);
 
         //FILTER BY MONTH
         }elseif( $request->has('filter_month') && $request->filled('filter_month') )
         {
-            $scores = TLScoreCard::where('month',$request['filter_month']);
+            $scores = $scores->where('month',$request['filter_month']);
 
         //VIEW ALL
         }elseif( $request->has('view_all') || $request->filled('view_all') )
         {
-            $scores = TLScoreCard::orderBy('id','desc');
+            $scores = $scores->orderBy('id','desc');
 
         //DEFAULT MONTH NOW
         }else{
-            $scores = TLScoreCard::where('month',Carbon::now()->format('M Y'));
+            $scores = $scores->where('month',Carbon::now()->format('M Y'));
         }
 
 
@@ -363,20 +363,20 @@ class ScoreController extends Controller
         {
             //Agent
             if (Auth::user()->isAgent()) {
-                $scores = agentScoreCard::where('acknowledge_by_agent', 0);
+                $scores = $scores->where('acknowledge_by_agent', 0);
             }
                                         
             //Supervisor
             elseif(Auth::user()->isSupervisor()){
-                $scores = agentScoreCard::where('acknowledge_by_agent', 1)->where('acknowledge_by_tl',0);
+                $scores = $scores->where('acknowledge_by_agent', 1)->where('acknowledge_by_tl',0);
             }
             //Manager
             elseif(Auth::user()->isManager()){
-                $scores = agentScoreCard::where('acknowledge_by_agent', 1)->where('acknowledge_by_tl', 1)->where('acknowledge_by_manager', 0);
+                $scores = $scores->where('acknowledge_by_agent', 1)->where('acknowledge_by_tl', 1)->where('acknowledge_by_manager', 0);
             }
             else
             {
-                $scores = agentScoreCard::where('acknowledge_by_agent', 0)->Orwhere('acknowledge_by_tl', 0)->Orwhere('acknowledge_by_manager', 0);
+                $scores = $scores->where('acknowledge_by_agent', 0)->Orwhere('acknowledge_by_tl', 0)->Orwhere('acknowledge_by_manager', 0);
             }
 
         //FILTER BY ACKNOWLEDGE
@@ -385,34 +385,34 @@ class ScoreController extends Controller
             // $scores = agentScoreCard::where('acknowledge',1);
             //Agent
             if (Auth::user()->isAgent()) {
-                $scores = agentScoreCard::where('acknowledge_by_agent', 1);
+                $scores = $scores->where('acknowledge_by_agent', 1);
             }
             //Supervisor
             elseif(Auth::user()->isSupervisor()){
-                $scores = agentScoreCard::where('acknowledge_by_tl',1);
+                $scores = $scores->where('acknowledge_by_tl',1);
             }
             //Manager
             elseif(Auth::user()->isManager()){
-                $scores = agentScoreCard::where('acknowledge_by_manager', 1);
+                $scores = $scores->where('acknowledge_by_manager', 1);
             }
             else
             {
-                $scores = agentScoreCard::where('acknowledge_by_agent', 1)->Orwhere('acknowledge_by_tl', 1)->Orwhere('acknowledge_by_manager', 1);
+                $scores = $scores->where('acknowledge_by_agent', 1)->Orwhere('acknowledge_by_tl', 1)->Orwhere('acknowledge_by_manager', 1);
             }
 
         //FILTER BY MONTH
         }elseif( $request->has('filter_month') && $request->filled('filter_month') )
         {
-            $scores = agentScoreCard::where('month',$request['filter_month']);
+            $scores = $scores->where('month',$request['filter_month']);
 
         //VIEW ALL
         }elseif( $request->has('view_all') || $request->filled('view_all') )
         {
-            $scores = agentScoreCard::orderBy('id','desc');
+            $scores = $scores->orderBy('id','desc');
 
         //DEFAULT MONTH NOW
         }else{
-            $scores = agentScoreCard::where('month',Carbon::now()->format('M Y'));
+            $scores = $scores->where('month',Carbon::now()->format('M Y'));
         }
 
         $avail_months = agentScoreCard::month();
