@@ -137,7 +137,12 @@ class ScoreController extends Controller
         }
 
 
-        $avail_months = TLScoreCard::month();
+        $avail_months = TLScoreCard::month()->select('id','tl_id','month',
+                                    'target','quality','productivity','no_client_escalations',
+                                    'no_pay_dispute','linkedin_learning_compliance','eod_reporting','htl_compliance','other_compliances_required','reliability',
+                                    'final_score','acknowledge','acknowledge_by_tl','date_acknowledge_by_tl','tl_signature_id',
+                                    'acknowledge_by_manager','date_acknowledge_by_manager','manager_signature_id','new_manager_id','acknowledge_by_towerhead','date_acknowledge_by_towerhead',
+                                    'towerhead_signature_id','created_at','updated_at');
 
         //TL
         if(Auth::user()->isSupervisor()){
@@ -415,7 +420,12 @@ class ScoreController extends Controller
             $scores = $scores->where('month',Carbon::now()->format('M Y'));
         }
 
-        $avail_months = agentScoreCard::month();
+        $avail_months = agentScoreCard::month()->select('id','agent_id','month_type','month',
+                                                'target','actual_quality','actual_productivity','actual_reliability',
+                                                'quality','productivity','reliability','final_score','acknowledge','acknowledge_by_agent',
+                                                'agent_signature_id','date_acknowledge_by_agent','acknowledge_by_tl','tl_signature_id','new_tl_id',
+                                                'date_acknowledge_by_tl','acknowledge_by_manager','manager_signature_id','new_manager_id','date_acknowledge_by_manager',
+                                                'created_at','updated_at');
 
         //Agent
         if(Auth::user()->isAgent()){
