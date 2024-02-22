@@ -98,7 +98,7 @@
 
 @section('js')
 @include('js_addons')
-<script>
+<script nonce="{{csp_nonce()}}">
         $(document).ready(function() {
           var table = $('#scorecard_datatable').DataTable( {
             "pagingType": "full_numbers",

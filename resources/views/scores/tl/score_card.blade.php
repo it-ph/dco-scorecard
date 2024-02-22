@@ -204,6 +204,7 @@
 
                     <?php
                     $totalkpis = $score->quality + $score->productivity;
+                    $score_remarks = $score->actual_remarks;
                     $totaldeliverables = $score->no_client_escalations + $score->no_pay_dispute + $score->linkedin_learning_compliance + $score->eod_reporting + $score->htl_compliance + $score->other_compliances_required;
                     // $final_reliablityscore = getTlReliabilityScore($score->reliability);
                     $final_score = $totalkpis + $totaldeliverables + $score->reliability;
@@ -244,8 +245,15 @@
     <div class="row">
         <div class="col-md-12">
 
-            <table width="100%" style="margin-top: 40px; font-size: 14px" cellspacing="5" cellpadding="5">
+            <table width="100%" style="margin-top: 40px; font-size: 11px" cellspacing="5" cellpadding="5">
                 <tr style="background: gray; text-align: center; font-weight: bold;">
+                    <td>KRA</td>
+                    <td>GOAL</td>
+                    <td>GOAL DESCRIPTION</td>
+                    <td>KBA WEIGHTAGE</td>
+                    <td>TARGET/PERFORMANCE RANGE</td>
+                    <td>SELF ASSESSMENT RATING</td>
+                    <td>EMPLOYEE REMARKS</td>
                     <td>METRICS</td>
                     <td>WEIGHT</td>
                     <td>TARGET</td>
@@ -254,6 +262,16 @@
                     <td>SCORE</td>
                 </tr>
                 <tr>
+                    <!--start 1st column-->
+                    <td rowspan="2" style="width: 200px" class="lbl-bold ttxt-center">Performance</td>
+                    <td class="ttxt-center">Quality</td>
+                    <td class="ttxt-center">LOB Quality Performance Score</td>
+                    <td class="ttxt-center">20.00%</td>
+                    <td style="text-align: center; width: 350px;  font-style: italic">Straight Percentage Calculation</td>
+                    <td></td>
+                    <td>{{$score_remarks}}</td>
+                    <!--end 1st column done-->
+
                     <td rowspan="2" style="width: 200px" class="lbl-bold ttxt-center">Team KPIs</td>
                     <td rowspan="2" class="ttxt-center">40%</td>
                     <td rowspan="2" class="ttxt-center"><span>LOB-Specific KPIs</span> </td>
@@ -263,10 +281,17 @@
                     <td class="ttxt-center lbl-bold">20%</td>
                     <td class="ttxt-center lbl-bold">{{$score->productivity}}%</td>
                     <td rowspan="2" class="ttxt-center lbl-bold">{{$totalkpis}}%</td>
-
-
                 </tr>
                 <tr>
+                    <!--start 2nd column-->
+                    <td class="ttxt-center">Productivity</td>
+                    <td class="ttxt-center">Overall Team Productivity</td>
+                    <td class="ttxt-center">20.00%</td>
+                    <td style="text-align: center;  width: 350px;  font-style: italic">100% Productivity Average</td>
+                    <td></td>
+                    <td></td>
+                    <!--end 2nd column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             Passed Team Quality (Weekly SLA)
                     </td>
@@ -275,6 +300,16 @@
                 </tr>
 
                 <tr>
+                    <!--start 3rd column-->
+                    <td rowspan="2" style="width: 200px" class="lbl-bold ttxt-center">Profit</td>
+                    <td class="ttxt-center">Reliability</td>
+                    <td class="ttxt-center">LOB Quality Performance Score</td>
+                    <td class="ttxt-center">20.00%</td>
+                    <td style="text-align: center; width: 350px;  font-style: italic">Straight Percentage Calculation</td>
+                    <td></td>
+                    <td></td>
+                    <!--end 3rd column-->
+
                     <td rowspan="6" style="width: 200px" class="lbl-bold ttxt-center">TL Deliverables</td>
                     <td rowspan="6" class="ttxt-center">50%</td>
                     <td rowspan="6" class="ttxt-center"><span>TL Specific action items</span> </td>
@@ -286,6 +321,15 @@
                     <td rowspan="6" class="ttxt-center lbl-bold">{{$totaldeliverables}}%</td>
                 </tr>
                 <tr>
+                    <!--start 4th column-->
+                    <td class="ttxt-center">Escalation</td>
+                    <td class="ttxt-center">Overall Team Productivity</td>
+                    <td class="ttxt-center">20.00%</td>
+                    <td style="text-align: center;  width: 350px;  font-style: italic">100% Productivity Average</td>
+                    <td></td>
+                    <td></td>
+                    <!--end 4th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             No or 1 pay dispute
                     </td>
@@ -293,13 +337,36 @@
                     <td class="ttxt-center lbl-bold">{{$score->no_pay_dispute}}%</td>
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center">People</td>
+                    <td class="ttxt-center">Payroll</td>
+                    <td class="ttxt-center">Pay Dispute</td>
+                    <td class="ttxt-center">5.00%</td>
+                    <td style="text-align: center; width: 350px;  font-style: italic">All or nothing</td>
+                    <td></td>
+                    <td></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             Linkedin Learning Compliance
                     </td>
                     <td class="ttxt-center lbl-bold">5%</td>
                     <td class="ttxt-center lbl-bold">{{$score->linkedin_learning_compliance}}%</td>
+
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center">Partnership</td>
+                    <td class="ttxt-center">Client Partnership</td>
+                    <td class="ttxt-center">Weekly Bonuses Review decks submitted to the Clients.</td>
+                    <td class="ttxt-center">5.00%</td>
+                    <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic">
+                        <span>All or nothing</span>
+                    </td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             EOD Reporting
                     </td>
@@ -307,6 +374,20 @@
                     <td class="ttxt-center lbl-bold">{{$score->eod_reporting}}%</td>
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td rowspan="2" style="width: 200px" class="lbl-bold ttxt-center">Priority</td>
+                    <td class="ttxt-center">TL Requirements</td>
+                    <td class="ttxt-center">HTL, EOD and linkedIn Learning.</td>
+                    <td class="ttxt-center">15.00%</td>
+                    <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic">
+                        <span style="font-weight: 500">5%</span> - HTL <br>
+                        <span style="font-weight: 500">5%</span> - EOD <br>
+                        <span style="font-weight: 500">5%</span> - LinkedIn Learning <br>
+                    </td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             HTL compliance
                     </td>
@@ -314,6 +395,17 @@
                     <td class="ttxt-center lbl-bold">{{$score->htl_compliance}}%</td>
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td class="ttxt-center">Special Projects</td>
+                    <td class="ttxt-center">Other TL Deliverables</td>
+                    <td class="ttxt-center">20.00%</td>
+                    <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic">
+                        <span style="font-weight: 500"></span> Weights equally divided to the number of monthly tasks. <br>
+                    </td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             Other Compliance Required
                     </td>
@@ -322,6 +414,16 @@
                 </tr>
 
                 <tr>
+                    <!--start blank column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td style="text-align: center; width: 350px;  font-style: italic"></td>
+                    <td></td>
+                    <td></td>
+                    <!--end blank column-->
+
                     <td rowspan="4" style="width: 200px" class="lbl-bold ttxt-center">RELIABILITY <br> <span style="font-weight: normal">(Absenteeism, Tardiness, Overbreak, Undertime)</span></td>
                     <td rowspan="4" class="ttxt-center">10%</td>
                     <td rowspan="4" class="ttxt-center"><span>95% Over-all Reliability</span> </td>
@@ -333,22 +435,62 @@
                     <td rowspan="4" class="ttxt-center lbl-bold">{{$score->reliability}}%</td>
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td style="text-align: center; width: 350px;  font-style: italic"></td>
+                    <td></td>
+                    <td></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             <95%>=90% reliability
                     </td>
                     <td class="ttxt-center lbl-bold">7%</td>
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td style="text-align: center; width: 350px;  font-style: italic"></td>
+                    <td></td>
+                    <td></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             <95%>=85% reliability
                     </td>
                     <td class="ttxt-center lbl-bold">5%</td>
                 </tr>
                 <tr>
+                    <!--start blank column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td style="text-align: center; width: 350px;  font-style: italic"></td>
+                    <td></td>
+                    <td></td>
+                    <!--end 5th column-->
+
                     <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                             <85% reliability </td> <td class="ttxt-center lbl-bold">0%</td>
                 </tr>
                 <tr>
+                    <!--start 5th column-->
+                    <td style="width: 200px" class="lbl-bold ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td class="ttxt-center"></td>
+                    <td style="text-align: center; width: 350px;  font-style: italic"></td>
+                    <td></td>
+                    <td></td>
+                    <!--end 5th column-->
+                    
                     <td colspan="5"></td>
                     <td class="ttxt-center lbl-bold">TOTAL SCORE</td>
                     <td class="ttxt-center lbl-bold" style="font-size: 20px">{{$final_score}}%</td>

@@ -104,7 +104,7 @@ class ScoreController extends Controller
         //VIEW ALL AGENT (FOR CREATE CARD)
         $tls = User::where('role','supervisor')->orderBy('name','ASC')->get();
         $scores = TLScoreCard::select('id','tl_id','month',
-                                    'target','quality','productivity','no_client_escalations',
+                                    'target','actual_remarks','quality','productivity','no_client_escalations',
                                     'no_pay_dispute','linkedin_learning_compliance','eod_reporting','htl_compliance','other_compliances_required','reliability',
                                     'final_score','acknowledge','acknowledge_by_tl','date_acknowledge_by_tl','tl_signature_id',
                                     'acknowledge_by_manager','date_acknowledge_by_manager','manager_signature_id','new_manager_id','acknowledge_by_towerhead','date_acknowledge_by_towerhead',
@@ -138,7 +138,7 @@ class ScoreController extends Controller
 
 
         $avail_months = TLScoreCard::month()->select('id','tl_id','month',
-                                    'target','quality','productivity','no_client_escalations',
+                                    'target','actual_remarks','quality','productivity','no_client_escalations',
                                     'no_pay_dispute','linkedin_learning_compliance','eod_reporting','htl_compliance','other_compliances_required','reliability',
                                     'final_score','acknowledge','acknowledge_by_tl','date_acknowledge_by_tl','tl_signature_id',
                                     'acknowledge_by_manager','date_acknowledge_by_manager','manager_signature_id','new_manager_id','acknowledge_by_towerhead','date_acknowledge_by_towerhead',
@@ -170,6 +170,7 @@ class ScoreController extends Controller
             'tl_id'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
+            'actual_remarks'      => 'required',
             'quality'       => 'required|numeric',
             'productivity'       => 'required|numeric',
             'no_client_escalations'       => 'required|numeric',
@@ -205,6 +206,7 @@ class ScoreController extends Controller
             'tl_id'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
+            'actual_remarks'       => 'required',
             'quality'       => 'required|numeric',
             'productivity'       => 'required|numeric',
             'no_client_escalations'       => 'required|numeric',
@@ -357,8 +359,8 @@ class ScoreController extends Controller
         //VIEW ALL AGENT (FOR CREATE CARD)
         $agents = User::where('role','agent')->orderBy('name','ASC')->get();
         $scores = agentScoreCard::select('id','agent_id','month_type','month',
-                                    'target','actual_quality','actual_productivity','actual_reliability',
-                                    'quality','productivity','reliability','final_score','acknowledge','acknowledge_by_agent',
+                                    'target', 'actual_remarks', 'actual_quality','quality_actual_remarks','actual_productivity','productivity_actual_remarks','actual_reliability','reliability_actual_remarks','actual_profit','profit_actual_remarks','actual_engagement','engagement_actual_remarks','actual_behavior','behavior_actual_remarks','actual_partnership','partnership_actual_remarks','actual_priority','priority_actual_remarks',
+                                    'remarks','quality','quality_remarks','productivity','productivity_remarks','reliability','reliability_remarks','profit','profit_remarks','engagement','engagement_remarks','behavior','behavior_remarks','partnership','partnership_remarks','priority','priority_remarks','final_score','acknowledge','acknowledge_by_agent',
                                     'agent_signature_id','date_acknowledge_by_agent','acknowledge_by_tl','tl_signature_id','new_tl_id',
                                     'date_acknowledge_by_tl','acknowledge_by_manager','manager_signature_id','new_manager_id','date_acknowledge_by_manager',
                                     'created_at','updated_at');
@@ -421,8 +423,8 @@ class ScoreController extends Controller
         }
 
         $avail_months = agentScoreCard::month()->select('id','agent_id','month_type','month',
-                                                'target','actual_quality','actual_productivity','actual_reliability',
-                                                'quality','productivity','reliability','final_score','acknowledge','acknowledge_by_agent',
+                                                'target', 'actual_remarks','actual_quality','quality_actual_remarks','actual_productivity','productivity_actual_remarks','actual_reliability','reliability_actual_remarks','actual_profit','profit_actual_remarks','actual_engagement','engagement_actual_remarks','actual_behavior','behavior_actual_remarks','actual_partnership','partnership_actual_remarks','actual_priority','priority_actual_remarks',
+                                                'remarks','quality','quality_remarks','productivity','productivity_remarks','reliability','reliability_remarks','profit','profit_remarks','people','people_remarks','partnership','partnership_remarks','priority','priority_remarks','final_score','acknowledge','acknowledge_by_agent',
                                                 'agent_signature_id','date_acknowledge_by_agent','acknowledge_by_tl','tl_signature_id','new_tl_id',
                                                 'date_acknowledge_by_tl','acknowledge_by_manager','manager_signature_id','new_manager_id','date_acknowledge_by_manager',
                                                 'created_at','updated_at');
@@ -451,12 +453,27 @@ class ScoreController extends Controller
         $scores = $scores->get();
         $avail_months = $avail_months->get();
 
+        $remarks = Setting::where('setting', 'remarks')->first();
         $target = Setting::where('setting','target')->first();
-        $quality = Setting::where('setting','quality')->first();
-        $productivity = Setting::where('setting','productivity')->first();
-        $reliability = Setting::where('setting','reliability')->first();
 
-        return view('scores.agents.list',compact('agents','scores','avail_months','target','quality','productivity','reliability'));
+        $quality = Setting::where('setting','quality')->first();
+        $quality_remarks = Setting::where('setting', 'quality_remarks')->first();
+        $productivity = Setting::where('setting','productivity')->first();
+        $productivity_remarks = Setting::where('setting', 'productivity_remarks')->first();
+        $reliability = Setting::where('setting','reliability')->first();
+        $reliability_remarks = Setting::where('setting', 'reliability_remarks')->first();
+        $profit = Setting::where('setting','profit')->first();
+        $profit_remarks = Setting::where('setting', 'profit_remarks')->first();
+        $engagement = Setting::where('setting','engagement')->first();
+        $engagement_remarks = Setting::where('setting', 'engagement_remarks')->first();
+        $behavior = Setting::where('setting','behavior')->first();
+        $behavior_remarks = Setting::where('setting', 'behavior_remarks')->first();
+        $partnership = Setting::where('setting','partnership')->first();
+        $partnership_remarks = Setting::where('setting', 'partnership_remarks')->first();
+        $priority = Setting::where('setting','priority')->first();
+        $priority_remarks = Setting::where('setting', 'priority_remarks')->first();
+
+        return view('scores.agents.list',compact('agents','scores','avail_months','target','remarks','quality','quality_remarks','productivity','productivity_remarks','reliability','reliability_remarks','profit','profit_remarks','engagement','engagement_remarks','behavior','behavior_remarks','partnership','partnership_remarks','priority','priority_remarks'));
     }
 
     public function addAgentScore(Request $request)
@@ -467,12 +484,25 @@ class ScoreController extends Controller
             'month_type'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
+
             'actual_quality'       => 'required|numeric',
             'actual_productivity'       => 'required|numeric',
             'actual_reliability'       => 'required|numeric',
+            'actual_profit'       => 'required|numeric',
+            'actual_engagement'       => 'required|numeric',
+            'actual_behavior'       => 'required|numeric',
+            'actual_partnership'       => 'required|numeric',
+            'actual_priority'       => 'required|numeric',
+
             'quality'       => 'required|numeric',
             'productivity'       => 'required|numeric',
             'reliability'       => 'required|numeric',
+            'profit'        => 'required|numeric',
+            'engagement'        => 'required|numeric',
+            'behavior'        => 'required|numeric',
+            'reliability'       => 'required|numeric',
+            'partnership'        => 'required|numeric',
+            'priority'        => 'required|numeric',
             'final_score'       => 'required|numeric'
 
         ],
@@ -490,13 +520,47 @@ class ScoreController extends Controller
             ],
             [
                 'target' => $request['target'],
+
+                'actual_remarks' => $request['actual_remarks'],
+
                 'actual_productivity' => $request['actual_productivity'],
+                'productivity_actual_remarks' => $request['productivity_actual_remarks'],
                 'actual_quality' => $request['actual_quality'],
+                'quality_actual_remarks' => $request['quality_actual_remarks'],
                 'actual_reliability' => $request['actual_reliability'],
+                'reliability_actual_remarks' => $request['reliability_actual_remarks'],
+                'actual_profit' => $request['actual_profit'],
+                'profit_actual_remarks' => $request['profit_actual_remarks'],
+                'actual_engagement' => $request['actual_engagement'],
+                'actual_behavior' => $request['actual_behavior'],
+                'engagement_actual_remarks' => $request['engagement_actual_remarks'],
+                'behavior_actual_remarks' => $request['behavior_actual_remarks'],
+                'actual_partnership' => $request['actual_partnership'],
+                'partnership_actual_remarks' => $request['partnership_actual_remarks'],
+                'actual_priority' => $request['actual_priority'],
+                'priority_actual_remarks' => $request['priority_actual_remarks'],
+
+                'remarks' => $request['remarks'],
+
                 'productivity' => $request['productivity'],
+                'productivity_remarks' => $request['productivity_remarks'],
                 'quality' => $request['quality'],
+                'quality_remarks' => $request['quality_remarks'],
                 'reliability' => $request['reliability'],
+                'reliability_remarks' => $request['reliability_remarks'],
+                'profit' => $request['profit'],
+                'profit_remarks' => $request['profit_remarks'],
+                'engagement' => $request['engagement'],
+                'engagement_remarks' => $request['engagement_remarks'],
+                'behavior' => $request['behavior'],
+                'behavior_remarks' => $request['behavior_remarks'],
+                'partnership' => $request['partnership'],
+                'partnership_remarks' => $request['partnership_remarks'],
+                'priority' => $request['priority'],
+                'priority_remarks' => $request['priority_remarks'],
+
                 'final_score' => $request['final_score'],
+
                 'acknowledge_by_agent' => 0,
                 'date_acknowledge_by_agent' => null,
                 'acknowledge_by_tl' => 0,
@@ -515,11 +579,26 @@ class ScoreController extends Controller
         $score = agentScoreCard::findorfail($id);
 
         $target = Setting::where('setting','target')->first();
-        $quality = Setting::where('setting','quality')->first();
-        $productivity = Setting::where('setting','productivity')->first();
-        $reliability = Setting::where('setting','reliability')->first();
+        $remarks = Setting::where('setting', 'remarks')->first();
 
-        return view('scores.agents.edit',compact('agents','score','target','quality','productivity','reliability'));
+        $quality = Setting::where('setting','quality')->first();
+        $quality_remarks = Setting::where('setting','quality_remarks')->first();
+        $productivity = Setting::where('setting','productivity')->first();
+        $productivity_remarks = Setting::where('setting','productivity_remarks')->first();
+        $reliability = Setting::where('setting','reliability')->first();
+        $reliability_remarks = Setting::where('setting','reliability_remarks')->first();
+        $profit = Setting::where('setting','profit')->first();
+        $profit_remarks = Setting::where('setting','profit_remarks')->first();
+        $engagement = Setting::where('setting','engagement')->first();
+        $engagement_remarks = Setting::where('setting','engagement_remarks')->first();
+        $behavior = Setting::where('setting','behavior')->first();
+        $behavior_remarks = Setting::where('setting','behavior_remarks')->first();
+        $partnership = Setting::where('setting','partnership')->first();
+        $partnership_remarks = Setting::where('setting','partnership_remarks')->first();
+        $priority = Setting::where('setting','priority')->first();
+        $priority_remarks = Setting::where('setting','priority_remarks')->first();
+
+        return view('scores.agents.edit',compact('agents','score','target','remarks','quality','quality_remarks','productivity','productivity_remarks','reliability','reliability_remarks', 'profit','profit_remarks','engagement','engagement_remarks','behavior','behavior_remarks','partnership','partnership_remarks','priority','priority_remarks'));
     }
 
     public function updateAgentScore(Request $request, $id)
@@ -530,12 +609,24 @@ class ScoreController extends Controller
             'month_type'       => 'required',
             'month'       => 'required',
             'target'       => 'required',
+
             'actual_quality'       => 'required|numeric',
             'actual_productivity'       => 'required|numeric',
             'actual_reliability'       => 'required|numeric',
+            'actual_profit'       => 'required|numeric',
+            'actual_engagement'       => 'required|numeric',
+            'actual_behavior'       => 'required|numeric',
+            'actual_partnership'       => 'required|numeric',
+            'actual_priority'       => 'required|numeric',
+
             'quality'       => 'required|numeric',
             'productivity'       => 'required|numeric',
             'reliability'       => 'required|numeric',
+            'profit'       => 'required|numeric',
+            'engagement'       => 'required|numeric',
+            'behavior'       => 'required|numeric',
+            'partnership'       => 'required|numeric',
+            'priority'       => 'required|numeric',
             'final_score'       => 'required|numeric'
 
         ],
@@ -560,9 +651,24 @@ class ScoreController extends Controller
     {
         $score = agentScoreCard::with('thenewTl','thenewManager')->findorfail($id);
         $towerhead = Setting::where('setting','towerhead')->first();
+        $remarks = Setting::where('setting', 'remarks')->first();
+
         $productivity = Setting::where('setting','productivity')->first();
+        $productivity_remarks = Setting::where('setting','productivity_remarks')->first();
         $quality = Setting::where('setting','quality')->first();
+        $quality_remarks = Setting::where('setting','quality_remarks')->first();
         $reliability = Setting::where('setting','reliability')->first();
+        $reliability_remarks = Setting::where('setting','reliability_remarks')->first();
+        $profit = Setting::where('setting','profit')->first();
+        $profit_remarks = Setting::where('setting','profit_remarks')->first();
+        $engagement = Setting::where('setting','engagement')->first();
+        $engagement_remarks = Setting::where('setting','engagement_remarks')->first();
+        $behavior = Setting::where('setting','behavior')->first();
+        $behavior_remarks = Setting::where('setting','behavior_remarks')->first();
+        $partnership = Setting::where('setting','partnership')->first();
+        $partnership_remarks = Setting::where('setting','partnership_remarks')->first();
+        $priority = Setting::where('setting','priority')->first();
+        $priority_remarks = Setting::where('setting','priority_remarks')->first();
 
         //check if Not admin or not his/her scorecard
         if(!Auth::user()->isAdmin() && !Auth::user()->isCBAOrTowerHead() && !Auth::user()->isSupervisor() && !Auth::user()->isManager() && Auth::user()->id <> $score->agent_id)
@@ -571,7 +677,7 @@ class ScoreController extends Controller
         }
 
 
-      return view('scores.agents.score_card',compact('score','towerhead','productivity','quality','reliability'));
+      return view('scores.agents.score_card',compact('score','towerhead','remarks','productivity','productivity_remarks','quality','quality_remarks','reliability','reliability_remarks','profit','profit_remarks','engagement','engagement_remarks','behavior','behavior_remarks','partnership','partnership_remarks','priority','priority_remarks'));
     }
 
     public function printAgentScore($id)

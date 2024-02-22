@@ -88,6 +88,42 @@
                                     <small> (Absenteeism, Tardiness, Overbreak, Undertime)</small></span>   </td>
                             <td><input id="reliability" required name="reliability" value="0" onkeyup="sumTotalScore()" type="number" class="form-control" placeholder="%"></td>
                         </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold"> PROFIT <small>10%</small><br>
+                                    <small></small>
+                                </span>   </td>
+                            <td><input id="profit" required name="profit" value="0" onkeyup="sumTotalScore()" type="number" class="form-control" placeholder="%"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold"> ENGAGEMENT <small>5%</small><br>
+                                    <small></small>
+                                </span>   </td>
+                            <td><input id="engagement" required name="engagement" value="0" onkeyup="sumTotalScore()" type="number" class="form-control" placeholder="%"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold"> BEHAVIOR <small>5%</small><br>
+                                    <small></small>
+                                </span>   </td>
+                            <td><input id="behavior" required name="behavior" value="0" onkeyup="sumTotalScore()" type="number" class="form-control" placeholder="%"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold"> PARTNERSHIP <small>10%</small><br>
+                                    <small></small>
+                                </span>   </td>
+                            <td><input id="partnership" required name="partnership" value="0" onkeyup="sumTotalScore()" type="number" class="form-control" placeholder="%"></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold"> PRIORITY <small>10%</small><br>
+                                    <small></small>
+                                </span>   </td>
+                            <td><input id="priority" required name="priority" value="0" onkeyup="sumTotalScore()" type="number" class="form-control" placeholder="%"></td>
+                        </tr>
+
                     </table>
                 </div>
 
@@ -106,18 +142,29 @@
 @endsection
 
 @section('js')
-<script>
+<script nonce="{{csp_nonce()}}">
 function sumTotalScore()
 {
-    var quality = $("#quality").val();
-    var productivity = $("#productivity").val();
-    var reliability = $("#reliability").val();
+    let quality = $("#quality").val();
+    let productivity = $("#productivity").val();
+    let reliability = $("#reliability").val();
+    let profit = $("#profit").val();
+    let engagement = $("#engagement").val();
+    let behavior = $("#behavior").val();
+    let partnership = $("#partnership").val();
+    let priority = $("#priority").val();
 
     quality = isNaN(quality) ? 0 : quality;
     productivity = isNaN(productivity) ? 0 : productivity;
     reliability = isNaN(reliability) ? 0 : reliability;
+    profit = isNaN(profit) ? 0 : profit;
+    engagement = isNaN(engagement) ? 0 : engagement;
+    behavior = isNaN(behavior) ? 0 : behavior;
+    partnership = isNaN(partnership) ? 0 : partnership;
+    priority = isNaN(priority) ? 0 : priority;
+    alert(profit)
 
-    var totalScore = parseInt(quality) + parseInt(productivity) + parseInt(reliability);
+    let totalScore = parseInt(quality) + parseInt(productivity) + parseInt(reliability) + parseInt(profit) + parseInt(engagement) + parseInt(behavior) + parseInt(partnership) + parseInt(priority);
     $("#totalScoreLbl").html(totalScore + "%");
     $("#final_score").val(totalScore)
     console.log(totalScore);

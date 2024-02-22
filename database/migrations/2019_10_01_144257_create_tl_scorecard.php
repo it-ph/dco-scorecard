@@ -21,6 +21,7 @@ class CreateTlScorecard extends Migration
             $table->string('month');
             $table->string('target');
 
+            $table->string('remarks')->nullable();
             $table->string('quality')->nullable();
             $table->string('productivity')->nullable();
             $table->string('no_client_escalations')->nullable();

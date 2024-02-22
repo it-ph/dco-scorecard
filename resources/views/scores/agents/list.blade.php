@@ -97,8 +97,12 @@ $dt1 = carbon::now();
                                 <th>Supervisor</th>
                                 <th>Manager</th>
                                 {{-- <th>Quality %</th>
-                        <th>Productivity %</th>
-                        <th>Reliability %</th> --}}
+                                     <th>Productivity %</th>
+                                     <th>Reliability %</th>
+                                     <th>Profit %</th>
+                                     <th>People %</th> 
+                                     <th>Parnership %</th>
+                                     <th>Priority %</th>--}}
                                 <th>Final Score</th>
                                 <th>Status</th>
                                 <th></th>
@@ -171,13 +175,24 @@ $dt1 = carbon::now();
                                 </td>
                                 {{-- <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->quality}}</td>
                                 <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->productivity}}</td>
-                                <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td> --}}
+                                <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->reliability}}</td>
+                                <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->profit}}</td>
+                                <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->people}}</td>
+                                <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->parnership}}</td>
+                                <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->priority}}</td> --}}
                                 <?php
                                 // $score_quality = $score->quality;
+                                
                                 $score_quality = getAgentQualityScore($score->actual_quality); //implement new quality performance range july 20, 2022
                                 $score_productivity = $score->productivity;
+                                $score_profit = getAgentProfitScore($score->actual_profit);
+                                $score_people = getAgentPeopleScore($score->actual_people);
+                                $score_engagement = getAgentPeopleEngScore($score->actual_engagement);
+                                $score_behavior = getAgentPeopleBehScore($score->actual_behavior);
+                                $score_partnership = getAgentPartnershipScore($score->actual_partnership);
+                                $score_priority = getAgentPriorityScore($score->actual_priority);
                                 $score_reliability = getAgentReliabilityScore($score->actual_reliability);
-                                $final_score = $score_quality + $score_productivity + $score_reliability;
+                                $final_score = $score_quality + $score_productivity + $score_reliability + $score_profit + $score_engagement + $score_behavior + $score_partnership + $score_priority;
                                 ?>
                                 {{-- <td class="table-dark-border" style="width: 150px; text-align: center">{{$score->final_score}}%</td> --}}
                                 <td class="table-dark-border" style="width: 150px; text-align: center">{{ $final_score }}%</td>
@@ -250,7 +265,7 @@ $dt1 = carbon::now();
 @include('js_addons')
 <script>
     $(document).ready(function() {
-        var table = $('#scorecard_datatable').DataTable({
+        let table = $('#scorecard_datatable').DataTable({
             // @if(\Auth::user()->isAdmin()) "pageLength": 25, @endif
             "pagingType": "full_numbers",
             "order": [2, "asc"],
@@ -275,40 +290,76 @@ $dt1 = carbon::now();
 <script>
     function sumTotalScore() {
 
-        // var quality = $("#quality").val();
-        // var productivity = $("#productivity").val();
-        // var reliability = $("#reliability").val();
+        // let quality = $("#quality").val();
+        // let productivity = $("#productivity").val();
+        // let reliability = $("#reliability").val();
 
-        var q = $("#q").val();
-        var p = $("#p").val();
-        var r = $("#r").val();
+        let q = $("#q").val();
+        let p = $("#p").val();
+        let r = $("#r").val();
+        let pt = $("#pt").val();
+        let e = $("#e").val();
+        let b = $("#b").val();
+        let ps = $("#ps").val();
+        let py = $("#py").val();
 
-        var actual_quality = $("#actual_quality").val();
-        var actual_productivity = $("#actual_productivity").val();
-        var actual_reliability = $("#actual_reliability").val();
+        let actual_quality = $("#actual_quality").val();
+        let actual_productivity = $("#actual_productivity").val();
+        let actual_reliability = $("#actual_reliability").val();
+        let actual_profit = $("#actual_profit").val();
+        let actual_engagement = $("#actual_engagement").val();
+        let actual_behavior = $("#actual_behavior").val();
+        let actual_partnership = $("#actual_partnership").val();
+        let actual_priority = $("#actual_priority").val();
 
-        var quality = (q / 100) * actual_quality;
-        var productivity = (p / 100) * actual_productivity;
-        var reliability = (r / 100) * actual_reliability;
+        let quality = (q / 100) * actual_quality;
+        let productivity = (p / 100) * actual_productivity;
+        let reliability = (r / 100) * actual_reliability;
+        let profit = (pt / 100) * actual_profit;
+        let engagement = (e / 100) * actual_engagement;
+        let behavior = (b / 100) * actual_behavior;
+        let partnership = (ps / 100) * actual_partnership;
+        let priority = (py / 100) * actual_priority;
+
 
         quality = isNaN(quality) ? 0 : quality;
         productivity = isNaN(productivity) ? 0 : productivity;
         reliability = isNaN(reliability) ? 0 : reliability;
+        profit = isNaN(profit) ? 0 : profit;
+        engagement = isNaN(engagement) ? 0 : engagement;
+        behavior = isNaN(behavior) ? 0 : behavior;
+        partnership = isNaN(partnership) ? 0 : partnership;
+        priority = isNaN(priority) ? 0 : priority;
 
         quality = quality > q ? q : quality;
         productivity = productivity > p ? p : productivity;
         reliability = reliability > r ? r : reliability;
+        profit = profit > pt ? pt : profit;
+        engagement = engagement > e ? e : engagement;
+        behavior = behavior > b ? b : behavior;
+        partnership = partnership > ps ? ps : partnership;
+        priority = priority > py ? py : priority;
 
         $("#q_val").val(parseFloat(quality).toFixed(2));
         $("#p_val").val(parseFloat(productivity).toFixed(2));
         $("#r_val").val(parseFloat(reliability).toFixed(2));
+        $("#pt_val").val(parseFloat(profit).toFixed(2));
+        $("#e_val").val(parseFloat(engagement).toFixed(2));
+        $("#b_val").val(parseFloat(behavior).toFixed(2));
+        $("#ps_val").val(parseFloat(partnership).toFixed(2));
+        $("#py_val").val(parseFloat(priority).toFixed(2));
 
         $("#quality").html(parseFloat(quality).toFixed(2));
         $("#productivity").html(parseFloat(productivity).toFixed(2));
         $("#reliability").html(parseFloat(reliability).toFixed(2));
+        $("#profit").html(parseFloat(profit).toFixed(2));
+        $("#engagement").html(parseFloat(engagement).toFixed(2));
+        $("#behavior").html(parseFloat(behavior).toFixed(2));
+        $("#partnership").html(parseFloat(partnership).toFixed(2));
+        $("#priority").html(parseFloat(priority).toFixed(2));
 
 
-        var totalScore = parseFloat(quality) + parseFloat(productivity) + parseFloat(reliability);
+        let totalScore = parseFloat(quality) + parseFloat(productivity) + parseFloat(reliability) + parseFloat(profit) + parseFloat(engagement) + parseFloat(behavior) + parseFloat(partnership) + parseFloat(priority);
         $("#totalScoreLbl").html(parseFloat(totalScore).toFixed(2) + "%");
         $("#final_score").val(parseFloat(totalScore).toFixed(2));
         console.log(totalScore);

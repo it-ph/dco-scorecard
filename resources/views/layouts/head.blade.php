@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{asset('themes/assets/plugins/bootstrap-daterangepicker/daterangepicker.css')}}">
     <link rel="stylesheet" href="{{asset('themes/assets/plugins/sweetalert/sweetalert.css')}}">
     @yield('css')
-    <style>
+    <style nonce="{{csp_nonce()}}">
     .removesz{
       background: transparent!important;
 

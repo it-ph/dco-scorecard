@@ -95,11 +95,13 @@
                 <div class="col-md-12">
                     <table class="display nowrap table table-bordered dataTable">
                         <tr style="background: #026b4d; color: white">
+<!--                             <td>Remarks</td> -->
                             <td style="font-weight: 400">Metrics</td>
                             <td style="font-weight: 400">Actual Score</td>
                             <td style="font-weight: 400">Weightage</td>
                         </tr>
                         <tr>
+<!--                             <td><input id="actual_remarks"  name="actual_remarks" value="{{$score->actual_remarks}}" type="text"  class="form-control"></td> -->
                             <td><span style="font-weight: bold; "> QUALITY (OVER-ALL) <small>@if($quality) {{$quality->value}} @else {{ 0 }} @endif%</small></span>   </td>
                             <td><input id="actual_quality" required name="actual_quality" value="0" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
                             <td>
@@ -138,6 +140,77 @@
                                 </div>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold;"> PROFIT <small>@if($profit) {{$profit->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small> </small></span>   </td>
+                            <td><input id="actual_profit" required name="actual_profit" value="0" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <input id="pt" value="@if($profit) {{$profit->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                {{-- <input id="profit" required name="profit" value="0" type="text" class="form-control" placeholder="%"> --}}
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 4px;">
+                                    <span style="font-size: 16px; text-align: center;" id="profit">0.00 </span>
+                                    <input type="hidden" name="profit" id="pt_val" value="0.00">
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold;"> ENGAGEMENT <small>@if($engagement) {{$engagement->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small> </small></span>   </td>
+                            <td><input id="actual_engagement" required name="actual_engagement" value="0" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <input id="e" value="@if($engagement) {{$engagement->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                {{-- <input id="engagement" required name="engagement" value="0" type="text" class="form-control" placeholder="%"> --}}
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 4px;">
+                                    <span style="font-size: 16px; text-align: center;" id="engagement">0.00 </span>
+                                    <input type="hidden" name="engagement" id="e_val" value="0.00">
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold;"> BEHAVIOR <small>@if($behavior) {{$behavior->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small> </small></span>   </td>
+                            <td><input id="actual_behavior" required name="actual_behavior" value="0" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <input id="b" value="@if($behavior) {{$behavior->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                {{-- <input id="behavior" required name="behavior" value="0" type="text" class="form-control" placeholder="%"> --}}
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 4px;">
+                                    <span style="font-size: 16px; text-align: center;" id="behavior">0.00 </span>
+                                    <input type="hidden" name="behavior" id="b_val" value="0.00">
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold;"> PARTNERSHIP <small>@if($people) {{$partnership->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small> </small></span>   </td>
+                            <td><input id="actual_partnership" required name="actual_partnership" value="0" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <input id="ps" value="@if($partnership) {{$partnership->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                {{-- <input id="partnership" required name="partnership" value="0" type="text" class="form-control" placeholder="%"> --}}
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 4px;">
+                                    <span style="font-size: 16px; text-align: center;" id="partnership">0.00 </span>
+                                    <input type="hidden" name="partnership" id="ps_val" value="0.00">
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><span style="font-weight: bold;"> PRIORITY <small>@if($priority) {{$priority->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small> </small></span>   </td>
+                            <td><input id="actual_priority" required name="actual_priority" value="0" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <input id="ps" value="@if($priority) {{$priority->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                {{-- <input id="priority" required name="priority" value="0" type="text" class="form-control" placeholder="%"> --}}
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 4px;">
+                                    <span style="font-size: 16px; text-align: center;" id="priority">0.00 </span>
+                                    <input type="hidden" name="priority" id="py_val" value="0.00">
+                                </div>
+                            </td>
+                        </tr>
+
                     </table>
                 </div>
 

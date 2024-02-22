@@ -74,8 +74,7 @@ $dt1 = carbon::now();
 
                 <div class="col-md-3">
                         <h4><strong> FINAL SCORE : <br><span style="font-size: 26px; text-align: center; font-weight: bold; margin-left: 20px;margin-top: 100px" id="totalScoreLbl">{{$score->final_score}}% </span></strong></h4>
-                        <input type="hidden" value="{{$score->final_score}}" name="final_score" id="final_score">
-
+                        <input type="hidden" value="{{$score->final_score}}" name="final_score" id="final_score">                
                 </div>
 
             </div><!--row-->
@@ -107,14 +106,16 @@ $dt1 = carbon::now();
 
                 <div class="col-md-12">
                     <table class="display nowrap table table-bordered dataTable">
-                            <tr style="background: #026B4D; color: white">
-                                    <td>Metrics</td>
-                                    <td>Actual Score</td>
-                                    <td>Weightage</td>
-                                </tr>
+                        <tr style="background: #026B4D; color: white">
+                                <td>Remarks</td>
+                                <td>Metrics</td>
+                                <td>Actual Score</td>
+                                <td>Weightage</td>
+                        </tr>
                         <tr>
+                            <td><input id="quality_remarks" required name="quality_remarks" value="{{$score->quality_remarks}}" type="text"  class="form-control"></td>
                             <td><span style="font-weight: bold"> QUALITY (OVER-ALL) <small>@if($quality) {{$quality->value}} @else {{ 0 }} @endif%</small></span>   </td>
-                            <td><input id="actual_quality" required name="actual_quality" value="{{$score->actual_quality}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td><input id="actual_quality" required name="actual_quality" value="{{$score->actual_quality}}" type="text" class="form-control" placeholder="" onkeyup="sumTotalScore()"></td>
                             <td>
                                 <input id="q" value="@if($quality) {{$quality->value}} @else {{ 0 }} @endif" type="hidden" class="form-control" placeholder="%">
                                 <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 5px;">
@@ -126,6 +127,7 @@ $dt1 = carbon::now();
                         </tr>
 
                         <tr>
+                            <td><input id="productivity_remarks" required name="productivity_remarks" value="{{$score->productivity_remarks}}" type="text"  class="form-control"></td>
                             <td><span style="font-weight: bold"> PRODUCTIVITY <small>@if($productivity) {{$productivity->value}} @else {{ 0 }} @endif%</small></span>   </td>
                             <td><input id="actual_productivity" required name="actual_productivity" value="{{$score->actual_productivity}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
                             <td>
@@ -140,6 +142,7 @@ $dt1 = carbon::now();
                         </tr>
 
                         <tr>
+                            <td><input id="reliability_remarks" required name="reliability_remarks" value="{{$score->reliability_remarks}}" type="text"  class="form-control"></td>
                             <td><span style="font-weight: bold"> RELIABILITY <small>@if($reliability) {{$reliability->value}} @else {{ 0 }} @endif%</small><br>
                                     <small> (Absenteeism, Tardiness, Overbreak, Undertime)</small></span>   </td>
                             <td><input id="actual_reliability" required name="actual_reliability" value="{{$score->actual_reliability}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
@@ -153,6 +156,87 @@ $dt1 = carbon::now();
                                 </div>
                             </td>
                         </tr>
+
+                        <tr>
+                            <td><input id="profit_remarks" required name="profit_remarks" value="{{$score->profit_remarks}}" type="text"  class="form-control"></td>
+                            <td><span style="font-weight: bold"> PROFIT <small>@if($profit) {{$profit->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small></small></span>   </td>
+                            <td><input id="actual_profit" required name="actual_profit" value="{{$score->actual_profit}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 5px;">
+                                    <input id="pt" value="@if($profit) {{$profit->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                    {{-- <input id="profit" required name="profit" value="{{$score->profit}}" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"> --}}
+                                    <span style="font-size: 16px; text-align: center;" id="profit">{{$score->profit}} </span>
+                                    <input type="hidden" name="profit" id="pt_val" value="{{$score->profit}}">
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input id="engagement_remarks" required name="engagement_remarks" value="{{$score->engagement_remarks}}" type="text"  class="form-control"></td>
+                            <td><span style="font-weight: bold"> ENGAGEMENT <small>@if($engagement) {{$engagement->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small></small></span>   </td>
+                            <td><input id="actual_engagement" required name="actual_engagement" value="{{$score->actual_engagement}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 5px;">
+                                    <input id="e" value="@if($engagement) {{$engagement->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                    {{-- <input id="engagement" required name="engagement" value="{{$score->engagement}}" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"> --}}
+                                    <span style="font-size: 16px; text-align: center;" id="engagement">{{$score->engagement}} </span>
+                                    <input type="hidden" name="engagement" id="e_val" value="{{$score->engagement}}">
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input id="behavior_remarks" required name="behavior_remarks" value="{{$score->behavior_remarks}}" type="text"  class="form-control"></td>
+                            <td><span style="font-weight: bold"> BEHAVIOR <small>@if($behavior) {{$behavior->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small></small></span>   </td>
+                            <td><input id="actual_behavior" required name="actual_behavior" value="{{$score->actual_behavior}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 5px;">
+                                    <input id="b" value="@if($behavior) {{$behavior->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                    {{-- <input id="behavior" required name="behavior" value="{{$score->behavior}}" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"> --}}
+                                    <span style="font-size: 16px; text-align: center;" id="behavior">{{$score->behavior}} </span>
+                                    <input type="hidden" name="behavior" id="b_val" value="{{$score->behavior}}">
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input id="partnership_remarks" required name="partnership_remarks" value="{{$score->partnership_remarks}}" type="text"  class="form-control"></td>
+                            <td><span style="font-weight: bold"> PARTNERSHIP <small>@if($partnership) {{$partnership->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small></small></span>   </td>
+                            <td><input id="actual_partnership" required name="actual_partnership" value="{{$score->actual_partnership}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 5px;">
+                                    <input id="ps" value="@if($partnership) {{$partnership->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                    {{-- <input id="partnership" required name="partnership" value="{{$score->partnership}}" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"> --}}
+                                    <span style="font-size: 16px; text-align: center;" id="partnership">{{$score->partnership}} </span>
+                                    <input type="hidden" name="partnership" id="ps_val" value="{{$score->partnership}}">
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input id="priority_remarks" required name="priority_remarks" value="{{$score->priority_remarks}}" type="text"  class="form-control"></td>
+                            <td><span style="font-weight: bold"> PRIORITY <small>@if($priority) {{$priority->value}} @else {{ 0 }} @endif%</small><br>
+                                    <small></small></span>   </td>
+                            <td><input id="actual_priority" required name="actual_priority" value="{{$score->actual_priority}}" type="text" class="form-control" placeholder="%" onkeyup="sumTotalScore()"></td>
+                            <td>
+                                <div style="border: 1px solid #D9D9D9; border-radius:4px; padding: 5px;">
+                                    <input id="py" value="@if($priority) {{$priority->value}} @else {{ 0 }} @endif" type="hidden" class="form-control">
+                                    {{-- <input id="priority" required name="priority" value="{{$score->priority}}" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"> --}}
+                                    <span style="font-size: 16px; text-align: center;" id="priority">{{$score->priority}} </span>
+                                    <input type="hidden" name="priority" id="py_val" value="{{$score->priority}}">
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+
                     </table>
                 </div>
 
@@ -163,8 +247,7 @@ $dt1 = carbon::now();
                 <button class="btn btn-info pull-right" type="submit" onclick="return confirm('Are you sure you want to add this Score?')"><i class="mdi mdi-content-save"></i> Save</button>
             </form>
 
-
-</div>
+    </div>
 </div>
 
 
@@ -172,45 +255,77 @@ $dt1 = carbon::now();
 @endsection
 
 @section('js')
-<script>
-        function sumTotalScore()
-        {
-            // var quality = $("#quality").val();
-            // var productivity = $("#productivity").val();
-            // var reliability = $("#reliability").val();
+<script nonce="{{csp_nonce()}}">
 
-            var q = $("#q").val();
-            var p = $("#p").val();
-            var r = $("#r").val();
+function sumTotalScore() {
+        let q = parseFloat($("#q").val()) || 0;
+        let p = parseFloat($("#p").val()) || 0;
+        let r = parseFloat($("#r").val()) || 0;
+        let pt = parseFloat($("#pt").val()) || 0;
+        let e = parseFloat($("#e").val()) || 0;
+        let b = parseFloat($("#b").val()) || 0;
+        let ps = parseFloat($("#ps").val()) || 0;
+        let py = parseFloat($("#py").val()) || 0;
 
-            var actual_quality = $("#actual_quality").val();
-            var actual_productivity = $("#actual_productivity").val();
-            var actual_reliability = $("#actual_reliability").val();
+        let actual_quality = parseFloat($("#actual_quality").val()) || 0;
+        let actual_productivity = parseFloat($("#actual_productivity").val()) || 0;
+        let actual_reliability = parseFloat($("#actual_reliability").val()) || 0;
+        let actual_profit = parseFloat($("#actual_profit").val()) || 0;
+        let actual_engagement = parseFloat($("#actual_engagement").val()) || 0;
+        let actual_behavior = parseFloat($("#actual_behavior").val()) || 0;
+        let actual_partnership = parseFloat($("#actual_partnership").val()) || 0;
+        let actual_priority = parseFloat($("#actual_priority").val()) || 0;
 
-            var quality = (q / 100) * actual_quality;
-            var productivity = (p / 100) * actual_productivity;
-            var reliability = (r / 100) * actual_reliability;
+        let quality = (q / 100) * actual_quality;
+        let productivity = (p / 100) * actual_productivity;
+        let reliability = (r / 100) * actual_reliability;
+        let profit = (pt / 100) * actual_profit;
+        let engagement = (e / 100) * actual_engagement;
+        let behavior = (b / 100) * actual_behavior;
+        let partnership = (ps / 100) * actual_partnership;
+        let priority = (py / 100) * actual_priority;
 
-            quality = isNaN(quality) ? 0 : quality;
-            productivity = isNaN(productivity) ? 0 : productivity;
-            reliability = isNaN(reliability) ? 0 : reliability;
+        quality = isNaN(quality) ? 0 : quality;
+        productivity = isNaN(productivity) ? 0 : productivity;
+        reliability = isNaN(reliability) ? 0 : reliability;
+        profit = isNaN(profit) ? 0 : profit;
+        engagement = isNaN(engagement) ? 0 : engagement;
+        behavior = isNaN(behavior) ? 0 : behavior;
+        partnership = isNaN(partnership) ? 0 : partnership;
+        priority = isNaN(priority) ? 0 : priority;
 
-            quality = quality > q ? q : quality;
-            productivity = productivity > p ? p : productivity;
-            reliability = reliability > r ? r : reliability;
+        quality = quality > q ? q : quality;
+        productivity = productivity > p ? p : productivity;
+        reliability = reliability > r ? r : reliability;
+        profit = profit > pt ? pt : profit;
+        engagement = engagement > e ? e : engagement;
+        behavior = behavior > b ? b : behavior;
+        partnership = partnership > ps ? ps : partnership;
+        priority = priority > py ? py : priority;
 
-            $("#q_val").val(parseFloat(quality).toFixed(2));
-            $("#p_val").val(parseFloat(productivity).toFixed(2));
-            $("#r_val").val(parseFloat(reliability).toFixed(2));
+        $("#q_val").val(quality.toFixed(2));
+        $("#p_val").val(productivity.toFixed(2));
+        $("#r_val").val(reliability.toFixed(2));
+        $("#pt_val").val(profit.toFixed(2));
+        $("#e_val").val(engagement.toFixed(2));
+        $("#b_val").val(behavior.toFixed(2));
+        $("#ps_val").val(partnership.toFixed(2));
+        $("#py_val").val(priority.toFixed(2));
 
-            $("#quality").html(parseFloat(quality).toFixed(2));
-            $("#productivity").html(parseFloat(productivity).toFixed(2));
-            $("#reliability").html(parseFloat(reliability).toFixed(2));
+        $("#quality").html(quality.toFixed(2));
+        $("#productivity").html(productivity.toFixed(2));
+        $("#reliability").html(reliability.toFixed(2));
+        $("#profit").html(profit.toFixed(2));
+        $("#engagement").html(engagement.toFixed(2));
+        $("#behavior").html(behavior.toFixed(2));
+        $("#partnership").html(partnership.toFixed(2));
+        $("#priority").html(priority.toFixed(2));
 
-            var totalScore = parseFloat(quality) + parseFloat(productivity) + parseFloat(reliability);
-            $("#totalScoreLbl").html(parseFloat(totalScore).toFixed(2) + "%");
-            $("#final_score").val(parseFloat(totalScore).toFixed(2));
-            console.log(totalScore);
-        }
-        </script>
+        let totalScore = (quality + productivity + reliability + profit + engagement + behavior + partnership + priority);
+        $("#totalScoreLbl").html(totalScore.toFixed(2) + "%");
+        $("#final_score").val(totalScore.toFixed(2));
+        console.log(totalScore);
+    }
+
+</script>
 @endsection

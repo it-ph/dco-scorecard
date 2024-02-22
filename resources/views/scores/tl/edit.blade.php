@@ -91,21 +91,26 @@ $dt1 = carbon::now();
                 <div class="col-md-12">
                     <table class="display nowrap table table-bordered dataTable">
                         <tr style="background: #026b4d; color: white">
+                            <td>Remarks</td>
                             <td>Metrics</td>
                             <td colspan="2">Performance Ranges</td>
                             <td colspan="2">Actual Score</td>
                         </tr>
                         <tr>
+                            <td>
+                                <textarea id="actual_remarks" required name="actual_remarks" value="{{$score->actual_remarks}}" type="text"  class="form-control">
+                                    {{$score->actual_remarks}}
+                                </textarea>
+                            </td>
                             <td rowspan="2" style="font-weight: bold;">Team KPIs</td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                     <small>Passed Team Productivity (Weekly SLA)</small>
                             </td>
                             <td class="ttxt-center lbl-bold">20%</td>
                             <td><input id="productivity" autocomplete="off" required name="productivity" value="{{$score->productivity}}" onkeyup="sumTotalScore()" type="text" class="form-control" placeholder="%"></td>
-
-
                         </tr>
                         <tr>
+                            <td></td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                     <small>Passed Team Quality (Weekly SLA)</small>
                             </td>
@@ -114,6 +119,7 @@ $dt1 = carbon::now();
                         </tr>
 
                         <tr>
+                            <td rowspan="6"></td>
                             <td rowspan="6" style="font-weight: bold;">TL Deliverables</td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                     <small>No client escalations</small>
@@ -158,6 +164,7 @@ $dt1 = carbon::now();
                         </tr>
 
                         <tr>
+                            <td rowspan="4"></td>
                             <td rowspan="4" style="font-weight: bold;">RELIABILITY <br> <span style="font-weight: normal">(Absenteeism, <br> ardiness,<br> Overbreak,<br> Undertime)</span></td>
                             <td style="text-align: justify; padding-left: 25px; line-height: 1.5; width: 350px;  font-style: italic"><span>
                                     <small>>95% reliability</small>

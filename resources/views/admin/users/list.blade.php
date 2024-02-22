@@ -56,7 +56,7 @@
                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Action
                                 </button>
-                                <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <div class="dropdown-menu animated flipInY" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 50px; will-change: transform;">
 
                                     <span class="dropdown-item text-center">
                                         <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#edit{{$user->id}}"><i class="fa fa-edit"></i> Edit</button>

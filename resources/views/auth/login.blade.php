@@ -20,7 +20,7 @@
     <link href="{{asset('css/login/login-register-lock.css')}}" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{asset('css/login/login.css')}}" rel="stylesheet">
-    <style>
+    <style nonce="{{csp_nonce()}}">
 
     .login-form-txt{
         border: 0px !important;
@@ -29,11 +29,11 @@
 
 
     input:focus {
-        border-bottom: 2px solid #1976d2 !important;nt;
+        border-bottom: 2px solid #1976d2 !important;
 }
     </style>
 
-<style class="cp-pen-styles">@import    url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300);
+<style class="cp-pen-styles" nonce={{csp_nonce()}}>@import    url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300);
         * {
           -webkit-box-sizing: border-box;
                   box-sizing: border-box;
@@ -281,7 +281,7 @@
     <script src="{{asset('js/theme/popper.min.js')}}"></script>
     <script src="{{asset('js/theme/bootstrap.min.js')}}"></script>
     <!--Custom JavaScript -->
-    <script type="text/javascript">
+    <script nonce="{{csp_nonce()}}" type="text/javascript">
         $(function() {
             $(".preloader").fadeOut();
         });

@@ -67,11 +67,11 @@ function getAgentScore($agent_id, $month, $period)
 {
     $agent_score = agentScoreCard::query()
         ->where('agent_id', $agent_id)
-        ->where('month_type',$period)
+        ->where('month_type', $period)
         ->where('month', $month)
-        // ->select('quality','productivity','actual_reliability','final_score') //implement new quality performance range july 20, 2022
-        ->select('actual_quality','productivity','actual_reliability','final_score')
+        ->select('actual_quality', 'productivity', 'actual_reliability', 'actual_profit', 'actual_people','actual_engagement','actual_behavior','actual_partnership','actual_priority','final_score')
         ->first();
+
 
     if($agent_score)
     {
@@ -79,7 +79,14 @@ function getAgentScore($agent_id, $month, $period)
         $score_quality = getAgentQualityScore($agent_score->actual_quality);
         $score_productivity = $agent_score->productivity;
         $score_reliability = getAgentReliabilityScore($agent_score->actual_reliability);
-        $agent_score = $score_quality + $score_productivity + $score_reliability;
+        $score_profit = getAgentProfitScore($agent_score->actual_profit);
+        $score_people = getAgentPeopleScore($agent_score->actual_people);
+        $score_behavior = getAgentPeopleBehScore($agent_score->actual_behavior);
+        $score_engagement = getAgentPeopleEngScore($agent_score->actual_engagement);
+        $score_partnership = getAgentPeopleScore($agent_score->actual_partnership);
+        $score_priority = getAgentPeopleScore($agent_score->actual_priority);
+        
+        $agent_score = $score_quality + $score_productivity + $score_reliability + $score_profit + $score_engagement + $score_behavior + $score_partnership + $score_priority;
 
         $agent_score = $agent_score <> null ? number_format($agent_score, 2) : '';
 
@@ -121,7 +128,149 @@ function removeBraces($val)
     return $b;
 }
 
+ function getScore($score, $ranges)
+{
+    foreach ($ranges as $range => $value) {
+        [$min, $max] = explode('-', $range);
+
+        if ($score >= $min && $score <= $max) {
+            return $value;
+        }
+    }
+
+    return 0;
+}
+
 function getAgentQualityScore($score)
+{
+
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 10,
+        '85-89.99' => 20,
+        '90-94.99' => 30,
+        '95-100' => 40,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentProductivityScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-89.99' => 10,
+        '90-99.99' => 20,
+        '100-inf' => 40,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentReliabilityScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentProfitScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentPeopleScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentPeopleEngScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentPeopleBehScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentPartnershipScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getAgentPriorityScore($score)
+{
+    $ranges = [
+        '0-79.99' => 0,
+        '80-84.99' => 5,
+        '85-89.99' => 10,
+        '90-94.99' => 15,
+        '95-100' => 20,
+    ];
+
+    return getScore($score, $ranges);
+}
+
+function getTlReliabilityScore($score)
+{
+    $ranges = [
+        '0-84.99' => 0,
+        '85-95' => 5,
+        '90-95' => 7,
+        '95-100' => 10,
+    ];
+
+    return getScore($score, $ranges);
+} 
+/* 
+ function getAgentQualityScore($score)
 {
     if($score < 80)
     {
@@ -195,6 +344,31 @@ function getAgentReliabilityScore($score)
     return $score;
 }
 
+function getAgentProfitScore($score)
+{
+    if($score < 80)
+    {
+        $score = 0;
+    }
+    elseif($score >= 80 && $score <= 84)
+    {
+        $score = 5;
+    }
+    elseif($score >= 85 && $score <= 89)
+    {
+        $score = 10;
+    }
+    elseif($score >= 90 && $score <= 94)
+    {
+        $score = 15;
+    }
+    elseif($score >= 95)
+    {
+        $score = 20;
+    }
+
+    return $score;
+}
 
 function getTlReliabilityScore($score)
 {
@@ -217,3 +391,5 @@ function getTlReliabilityScore($score)
 
     return $score;
 }
+
+ */

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="{{asset('css/dco-scorecard.css')}}" rel="stylesheet">
     {{-- <link rel="stylesheet" href="{{asset('css/google.font.css')}}" > --}}
-    <style>
+    <style nonce="{{csp_nonce()}}">
         body{
             color: black;
         }
@@ -249,7 +249,7 @@
 </body>
 </html>
 
-<script>
+<script nonce="{{csp_nonce()}}">
     function goBack() {
         window.history.back();
     }

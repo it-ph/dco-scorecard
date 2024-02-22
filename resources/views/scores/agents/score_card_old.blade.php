@@ -1,6 +1,6 @@
 @extends('layouts.dco-app')
 @section('css')
-<style>
+<style nonce="{{csp_nonce()}}">
         table {
             color: black;
         border-collapse: collapse;
@@ -403,7 +403,7 @@
 
 @section('js')
 
-<script>
+<script nonce="{{csp_nonce()}}">
         function goBack() {
             window.history.back();
         }

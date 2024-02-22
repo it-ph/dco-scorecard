@@ -28,7 +28,7 @@
     <script src="{{asset('themes/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js')}}"></script>
     <script src="{{asset('themes/assets/plugins/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
     <script src="{{asset('themes/assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
-    <script>
+    <script nonce="{{csp_nonce()}}">
 
     $('.mdate').bootstrapMaterialDatePicker({
         weekStart: 0, time: false,
@@ -51,7 +51,7 @@
     </script>
 
 
-    <script>
+    <script nonce="{{csp_nonce()}}">
         function isTarget()
         {
             $("#date_div").slideDown();
